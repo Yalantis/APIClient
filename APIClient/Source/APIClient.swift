@@ -1,7 +1,5 @@
 import Foundation
-import UIKit.UIImage
 import BoltsSwift
-import Alamofire
 
 public class APIClient: NSObject {
     
