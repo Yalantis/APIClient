@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
 
   # Default subspec that includes the most commonly-used components
   s.subspec 'Default' do |default|
-    default.source_files = "APIClient/Source/*"
+    default.source_files = "APIClient/Source/**/*.swift"
     default.dependency 'Bolts-Swift', '1.1.0' 
   end
 

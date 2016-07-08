@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import BoltsSwift
+import APIClient
 
 public class AlamofireRequestExecutor: RequestExecutor {
     

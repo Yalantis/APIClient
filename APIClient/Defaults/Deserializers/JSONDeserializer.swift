@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import APIClient
 
 public class JSONDeserializer: Deserializer {
 

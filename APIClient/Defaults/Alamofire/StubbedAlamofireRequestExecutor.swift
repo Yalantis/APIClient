@@ -9,6 +9,7 @@
 import Foundation
 import OHHTTPStubs
 import BoltsSwift
+import APIClient
 
 public class StubbedAlamofireRequestExecutor: AlamofireRequestExecutor {
     
