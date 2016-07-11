@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import APIClient
 
 extension APIRequest {
     

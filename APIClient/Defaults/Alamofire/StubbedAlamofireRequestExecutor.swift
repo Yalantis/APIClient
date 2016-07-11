@@ -8,8 +8,8 @@
 
 import Foundation
 import OHHTTPStubs
+import OHHTTPStubs.Swift
 import BoltsSwift
-import APIClient
 
 public class StubbedAlamofireRequestExecutor: AlamofireRequestExecutor {
     

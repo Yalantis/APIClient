@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.authors      = { 'Eugene Andreyev' => 'eugene.andreyev@yalantis.com' }
 
-  s.source       = { :git => "git@git.yalantis.com:eugene.andreyev/APIClient.git", :tag => s.version.to_s }
+  s.source       = { :git => "git@git.yalantis.com:eugene.andreyev/APIClient.git", :tag => '0.1.2' }
 
   s.frameworks = 'Foundation'
 
@@ -34,6 +34,7 @@ Pod::Spec.new do |s|
   s.subspec 'Alamofire' do |alamofire|
     alamofire.dependency 'APIClient/Default'
     alamofire.dependency 'Alamofire', '3.3' 
+    alamofire.dependency 'OHHTTPStubs'
     alamofire.dependency 'OHHTTPStubs/Swift'
     alamofire.source_files = "APIClient/Defaults/Alamofire/*"
   end
