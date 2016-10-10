@@ -1,85 +1,74 @@
-//
-//  AlamofireRequestExecutor.swift
-//  RegistrationAndProfileFlow-Demo
-//
-//  Created by Eugene Andreyev on 5/13/16.
-//  Copyright © 2016 Eugene Andreyev. All rights reserved.
-//
-
 import Foundation
 import Alamofire
 import BoltsSwift
 
-public class AlamofireRequestExecutor: RequestExecutor {
+class AlamofireRequestExecutor: RequestExecutor {
     
-    let manager: Manager
-    let baseURL: NSURL
+    let manager: SessionManager
+    let baseURL: URL
     
-    public init(baseURL: NSURL, manager: Manager = Manager.sharedInstance) {
+    init(baseURL: URL, manager: SessionManager = SessionManager.default) {
         self.manager = manager
         self.baseURL = baseURL
     }
     
-    public func executeRequest(request: APIRequest) -> Task<APIClient.HTTPResponse> {
+    func execute(request: APIRequest) -> Task<APIClient.HTTPResponse> {
         let source = TaskCompletionSource<APIClient.HTTPResponse>()
         
-        let requestPath = baseURL
-            .URLByAppendingPathComponent(request.path)
+        let requestPath =  baseURL
+            .appendingPathComponent(request.path)
             .absoluteString
-            .stringByRemovingPercentEncoding
+            .removingPercentEncoding!
         
         manager.request(
-            request.alamofireMethod,
-            requestPath!,
-            headers: request.headers,
-            parameters: request.parameters
-            ).response { _, response, data, error in
-                guard let response = response, let data = data else {
-                    source.setError(APIError.ResourceInvalidResponse)
-                    
-                    return
-                }
+            requestPath,
+            method: request.alamofireMethod,
+            parameters: request.parameters,
+            encoding: JSONEncoding(),
+            headers: request.headers
+        ).response { response in
+            guard let httpResponse = response.response, let data = response.data else {
+                source.set(error: NetworkError(code: .resourceInvalidResponse))
                 
-                source.setResult((response, data))
+                return
+            }
+            
+            source.set(result: (httpResponse, data))
         }
         
         return source.task
     }
     
-    public func executeMultipartRequest(request: APIRequest) -> Task<APIClient.HTTPResponse> {
-        guard let multipartFormData = request.multipartFormData else {
+    func execute(multipartRequest: APIRequest) -> Task<APIClient.HTTPResponse> {
+        guard let multipartFormData = multipartRequest.multipartFormData else {
             fatalError("Missing multipart form data")
         }
         
         let source = TaskCompletionSource<APIClient.HTTPResponse>()
         
         let requestPath = baseURL
-            .URLByAppendingPathComponent(request.path)
+            .appendingPathComponent(multipartRequest.path)
             .absoluteString
-            .stringByRemovingPercentEncoding
+            .removingPercentEncoding!
         
         manager.upload(
-            request.alamofireMethod,
-            requestPath!,
-            headers: request.headers,
-            multipartFormData: { formData in
-                multipartFormData(formData)
-            },
+            multipartFormData: multipartFormData,
+            to: requestPath,
             encodingCompletion: { encodingResult in
                 switch encodingResult {
-                case .Success(let request, _, _):
+                case .success(let request, _, _):
                     request.responseJSON(
                         completionHandler: { response in
                             guard let httpResponse = response.response, let data = response.data else {
-                                source.setError(APIError.ResourceInvalidResponse)
+                                source.set(error: NetworkError(code: .resourceInvalidResponse))
                                 
                                 return
                             }
-                           
-                            source.setResult((httpResponse, data))
+                            
+                            source.set(result: (httpResponse, data))
                         }
                     )
-                case .Failure: source.setError(APIError.ResourceInvalidResponse)
+                case .failure: source.set(error: NetworkError(code: .resourceInvalidResponse))
                 }
             }
         )

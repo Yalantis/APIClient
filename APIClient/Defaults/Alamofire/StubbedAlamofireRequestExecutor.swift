@@ -1,31 +1,35 @@
-//
-//  StubbedAlamofireRequestExecutor.swift
-//  RegistrationAndProfileFlow-Demo
-//
-//  Created by Eugene Andreyev on 5/13/16.
-//  Copyright © 2016 Eugene Andreyev. All rights reserved.
-//
-
 import Foundation
-import OHHTTPStubs
-import OHHTTPStubs.Swift
+//import OHHTTPStubs
 import BoltsSwift
 
-public class StubbedAlamofireRequestExecutor: AlamofireRequestExecutor {
+class StubbedAlamofireRequestExecutor: AlamofireRequestExecutor {
     
-    override public func executeRequest(request: APIRequest) -> Task<(NSHTTPURLResponse, NSData)> {
-        stub(isHost("ror-tpl.herokuapp.com")) { _ in
-            let pathString = request.path.stringByReplacingOccurrencesOfString("/", withString: "_").lowercaseString
-            let methodString = "_" + String(request.method).lowercaseString
-            guard let path = OHPathForFile(pathString + methodString + ".json", self.dynamicType) else {
-                preconditionFailure("Could not load file")
-            }
-            
-            return OHHTTPStubsResponse(fileAtPath: path, statusCode: 200, headers: [ "Content-Type": "application/json" ])
-
+    struct Execution {
+        
+        var request: APIRequest
+        
+        init(request: APIRequest) {
+            self.request = request
         }
         
-        return super.executeRequest(request)
+    }
+    
+    private(set) var executionStack: [Execution] = []
+    
+    override func execute(request: APIRequest) -> Task<APIClient.HTTPResponse> {
+//        executionStack.append(Execution(request: request))
+//        let _ = stub(isHost("ror-tpl.herokuapp.com")) { _ in
+//            let pathString = request.path.replacingOccurrences(of: "/", with: "_").lowercased()
+//            let methodString = "_" + "\(request.method)".lowercased()
+//            guard let path = OHPathForFile(pathString + methodString + ".json", self.dynamicType) else {
+//                preconditionFailure("Could not load file")
+//            }
+//            
+//            return OHHTTPStubsResponse(fileAtPath: path, statusCode: 200, headers: [ "Content-Type": "application/json" ])
+//
+//        }
+        
+        return super.execute(request: request)
     }
     
 }

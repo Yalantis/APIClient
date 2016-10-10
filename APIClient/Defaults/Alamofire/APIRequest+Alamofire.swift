@@ -1,30 +1,22 @@
-//
-//  APIRequest+Alamofire.swift
-//  RegistrationAndProfileFlow-Demo
-//
-//  Created by Eugene Andreyev on 4/11/16.
-//  Copyright © 2016 Eugene Andreyev. All rights reserved.
-//
-
 import Foundation
 import Alamofire
 
 extension APIRequest {
     
-    var alamofireMethod: Alamofire.Method {
+    var alamofireMethod: Alamofire.HTTPMethod {
         switch method {
-        case .GET:
-            return .GET
+        case .get:
+            return .get
             
-        case .POST:
-            return .POST
-        
-        case .PUT:
-            return .PUT
+        case .post:
+            return .post
             
-        case .DELETE:
+        case .put:
+            return .put
             
-            return .DELETE
+        case .delete:
+            
+            return .delete
         }
     }
     

@@ -1,28 +1,30 @@
 import Foundation
 import BoltsSwift
+import Alamofire
 
-public class APIClient: NSObject {
+public class APIClient: NSObject, NetworkClient {
     
-    public typealias HTTPResponse = (NSHTTPURLResponse, NSData)
+    public typealias HTTPResponse = (HTTPURLResponse, Data)
     
-    private let responseExecutor: Executor = .Queue(dispatch_queue_create(NSBundle.mainBundle().bundleIdentifier!, DISPATCH_QUEUE_CONCURRENT))
+    private let responseExecutor: Executor = .queue(DispatchQueue(label: Bundle.main.bundleIdentifier!, attributes: .concurrent))
     private let requestExecutor: RequestExecutor
     private let deserializer: Deserializer
-    private let errorProcessor: APIErrorProcessing
+    private let errorProcessor: APIErrorProcessing = APIErrorProcessor()
     private var credentialsProducer: CredentialsProducing?
-
+    private var requestDecorator: RequestDecorator?
+    
     // MARK: - Init
     
-    public init(requestExecutor: RequestExecutor, deserializer: Deserializer, credentialsProducer: CredentialsProducing? = nil, errorProcessor: APIErrorProcessing = APIErrorProcessor()) {
+    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), credentialsProducer: CredentialsProducing? = nil, requestDecorator: RequestDecorator? = nil) {
         self.requestExecutor = requestExecutor
         self.deserializer = deserializer
         self.credentialsProducer = credentialsProducer
-        self.errorProcessor = errorProcessor
+        self.requestDecorator = requestDecorator
     }
     
     // MARK: - Request
     
-    private func validateResponse(response: HTTPResponse) -> Task<HTTPResponse> {
+    private func validate(_ response: HTTPResponse) -> Task<HTTPResponse> {
         switch response.0.statusCode {
         case (200...299):
             return Task<HTTPResponse>(response)
@@ -31,77 +33,88 @@ public class APIClient: NSObject {
         }
     }
     
-    private func canRecoverFromError(error: APIError) -> Bool {
-        return self.credentialsProducer?.carRecoverFromError(error) ?? false
+    private func decoratedRequest(from request: APIRequest) -> APIRequest {
+        let decoratedRequest: APIRequest
+        if let requestDecorator = requestDecorator {
+            decoratedRequest = requestDecorator.decoratedRequest(from: request)
+        } else {
+            decoratedRequest = request
+        }
+        
+        return decoratedRequest
     }
     
-    private func decoratedRequest(request: APIRequest) -> APIRequest {
-        return credentialsProducer?.decoratedRequest(request) ?? request
+    private static var recoverableErrors: Set<NetworkError> {
+        return Set<NetworkError>([NetworkError(code: .unauthorized)])
     }
     
-    private func _executeRequest<T, U: ResponseParser where U.Representation == T>(requestTaskProducer: Void -> Task<HTTPResponse>, parser: U) -> Task<T> {
+    private func canRecover(from error: NetworkError) -> Bool {
+        return type(of: self).recoverableErrors.contains(error)
+    }
+    
+    private func _execute<T, U: ResponseParser>(_ requestTaskProducer: @escaping (Void) -> Task<HTTPResponse>, parser: U) -> Task<T> where U.Representation == T {
         let deserializer = self.deserializer
         
         let requestTask = requestTaskProducer()
-        func validatedTaskFromTask(task: Task<HTTPResponse>) -> Task<HTTPResponse> {
+        func validatedTask(from task: Task<HTTPResponse>) -> Task<HTTPResponse> {
             return task.continueWithTask(continuation: { responseTask in
                 if let response = responseTask.result {
-                    return self.validateResponse(response)
+                    return self.validate(response)
                 }
                 
                 return responseTask
             })
         }
         
-        return validatedTaskFromTask(requestTask).continueWithTask(continuation: { (validatedTask: Task<HTTPResponse>) -> Task<HTTPResponse> in
-            if let error = validatedTask.error as? APIError, let credentialsProducer = self.credentialsProducer where self.canRecoverFromError(error) {
+        return validatedTask(from: requestTask).continueOnErrorWithTask(continuation: { error -> Task<HTTPResponse> in
+            if let error = error as? NetworkError, let credentialsProducer = self.credentialsProducer , self.canRecover(from: error) {
                 
                 return credentialsProducer.restoreCredentials().continueWithTask { task -> Task<HTTPResponse> in
-                    if let result = task.result where result {
-                        return validatedTaskFromTask(requestTaskProducer())
+                    if let result = task.result, result {
+                        return validatedTask(from: requestTaskProducer())
                     } else {
                         return Task(error: error)
                     }
                 }
+            } else {
+                return Task(error: error)
             }
-            
-            return validatedTask
         }).continueOnSuccessWith(responseExecutor, continuation: { response, data -> AnyObject in
             return try deserializer.deserialize(response, data: data)
         }).continueOnSuccessWith(responseExecutor, continuation: { response in
             return try parser.parse(response)
-        }).continueOnSuccessWith(.MainThread, continuation: { response in
+        }).continueOnSuccessWith(.mainThread, continuation: { response in
             return response
         })
     }
     
     // MARK: Request Execution
     
-    public func executeRequest<T, U: ResponseParser where U.Representation == T>(request: APIRequest, parser: U) -> Task<T> {
-        return _executeRequest({
-                return self.requestExecutor.executeRequest(self.decoratedRequest(request))
+    public func execute<T, U: ResponseParser>(request: APIRequest, parser: U) -> Task<T> where U.Representation == T {
+        return _execute({
+                return self.requestExecutor.execute(request: self.decoratedRequest(from: request))
             },
             parser: parser
         )
     }
-    
-    
-    public func executeRequest<T: SerializeableAPIRequest>(request: T) -> Task<T.Parser.Representation> {
-        return executeRequest(request, parser: request.parser)
+        
+    public func execute<T: SerializeableAPIRequest>(request: T) -> Task<T.Parser.Representation> {
+        return execute(request: request, parser: request.parser)
     }
     
     // MARK: Multipart Request Execution
     
-    public func executeMultipartRequest<T, U: ResponseParser where U.Representation == T>(request: APIRequest, parser: U) -> Task<T> {
-        return _executeRequest({
-                self.requestExecutor.executeMultipartRequest(self.decoratedRequest(request))
+    public func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
+        return _execute({
+                self.requestExecutor.execute(multipartRequest: self.decoratedRequest(from: multipartRequest))
             },
             parser: parser
         )
     }
     
-    public func executeMultipartRequest<T: SerializeableAPIRequest>(request: T) -> Task<T.Parser.Representation> {
-        return executeMultipartRequest(request, parser: request.parser)
+    public func execute<T: SerializeableAPIRequest>(multipartRequest: T) -> Task<T.Parser.Representation> {
+        return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser)
     }
     
 }
+

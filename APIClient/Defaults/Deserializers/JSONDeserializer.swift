@@ -6,14 +6,14 @@
 import Foundation
 
 public class JSONDeserializer: Deserializer {
-
-    public func deserialize(response: NSHTTPURLResponse, data: NSData) throws -> AnyObject {
+    
+    public func deserialize(_ response: HTTPURLResponse, data: Data) throws -> AnyObject {
         do {
-            return try NSJSONSerialization
-            .JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+            return try JSONSerialization
+                .jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as AnyObject
         } catch {
-            throw APIError.ResourceDeserialization
+            throw NetworkError.resourceDeserializationError
         }
     }
-
+    
 }
