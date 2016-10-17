@@ -1,17 +1,17 @@
 import Foundation
 import ObjectMapper
 
-class MappableParser<T: Mappable>: ResponseParser {
+open class MappableParser<T: BaseMappable>: ResponseParser {
     
-    typealias Representation = T
+    public typealias Representation = T
     
     private let keyPath: String?
     
-    init(keyPath: String? = nil) {
+    public init(keyPath: String? = nil) {
         self.keyPath = keyPath
     }
     
-    func parse(_ object: AnyObject) throws -> T {
+    public func parse(_ object: AnyObject) throws -> T {
         func getValueForKeypath(_ object: AnyObject) -> AnyObject {
             if let keyPath = keyPath, let dictionary = object as? [String: AnyObject] {
                 return dictionary[keyPath]!
@@ -29,17 +29,17 @@ class MappableParser<T: Mappable>: ResponseParser {
     
 }
 
-class MappableArrayParser<T: Collection>: ResponseParser where T.Iterator.Element: Mappable {
+open class MappableArrayParser<T: Collection>: ResponseParser where T.Iterator.Element: BaseMappable {
     
-    typealias Representation = T
+    public typealias Representation = T
     
     private let keyPath: String?
     
-    init(keyPath: String? = nil) {
+    public init(keyPath: String? = nil) {
         self.keyPath = keyPath
     }
     
-    func parse(_ object: AnyObject) throws -> T {
+    public func parse(_ object: AnyObject) throws -> T {
         func getValueForKeypath(_ object: AnyObject) -> AnyObject {
             if let keyPath = keyPath, let dictionary = object as? [String: AnyObject] {
                 return dictionary[keyPath]!

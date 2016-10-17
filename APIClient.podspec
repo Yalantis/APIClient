@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "APIClient"
-  s.version      = "0.1.0"
+  s.version      = "1.0"
 
   s.summary      = "Lightweight networking framework."
 
@@ -9,40 +9,31 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.authors      = { 'Eugene Andreyev' => 'eugene.andreyev@yalantis.com' }
 
-  s.source       = { :git => "git@git.yalantis.com:eugene.andreyev/APIClient.git", :tag => '0.1.2' }
+  s.source       = { :git => "git@git.yalantis.com:eugene.andreyev/APIClient.git", :tag => s.version }
 
   s.frameworks = 'Foundation'
 
   s.requires_arc = true
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 
-  s.default_subspec = 'Default'
+  s.default_subspec = 'Core'
 
   # Default subspec that includes the most commonly-used components
-  s.subspec 'Default' do |default|
-    default.source_files = "APIClient/Source/**/*.swift"
-    default.dependency 'Bolts-Swift', '1.1.0' 
+  s.subspec 'Core' do |ss|
+    ss.source_files = "APIClient/Default/**/*.swift"
+    ss.dependency 'Bolts-Swift', '~> 1.3' 
   end
 
-  # JSON Deserializer
-  s.subspec 'JSONDeserializer' do |jsonDeserializer|
-    jsonDeserializer.dependency 'APIClient/Default'
-    jsonDeserializer.source_files = "APIClient/Defaults/Deserializers/*"
+  s.subspec 'Alamofire' do |ss|
+    ss.dependency 'APIClient/Core'
+    ss.dependency 'Alamofire', '~> 4.0' 
+    ss.source_files = "APIClient/Alamofire/*"
   end
 
-  # Optional subspecs
-  s.subspec 'Alamofire' do |alamofire|
-    alamofire.dependency 'APIClient/Default'
-    alamofire.dependency 'Alamofire', '3.3' 
-    alamofire.dependency 'OHHTTPStubs'
-    alamofire.dependency 'OHHTTPStubs/Swift'
-    alamofire.source_files = "APIClient/Defaults/Alamofire/*"
-  end
-
-  s.subspec 'ObjectMapper' do |objectMapper|
-    objectMapper.dependency 'APIClient/Default'
-    objectMapper.dependency 'ObjectMapper', '1.3.0' 
-    objectMapper.source_files = "APIClient/Defaults/Parser/*"
+  s.subspec 'ObjectMapper' do |ss|
+    ss.dependency 'APIClient/Core'
+    ss.dependency 'ObjectMapper', '~> 2.0' 
+    ss.source_files = "APIClient/ObjectMapper/*"
   end
 
 end

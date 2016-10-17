@@ -1,9 +1,9 @@
 import Foundation
 import Alamofire
 
-extension APIRequest {
+public extension APIRequest {
     
-    var alamofireMethod: Alamofire.HTTPMethod {
+    public var alamofireMethod: Alamofire.HTTPMethod {
         switch method {
         case .get:
             return .get
