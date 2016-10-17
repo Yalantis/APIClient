@@ -1,5 +1,4 @@
 import Foundation
-import ObjectMapper
 
 public protocol ResponseParser {
     
