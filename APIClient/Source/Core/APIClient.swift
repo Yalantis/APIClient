@@ -1,6 +1,5 @@
 import Foundation
 import BoltsSwift
-import Alamofire
 
 public class APIClient: NSObject, NetworkClient {
     
