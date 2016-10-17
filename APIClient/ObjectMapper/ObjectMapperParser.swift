@@ -1,7 +1,7 @@
 import Foundation
 import ObjectMapper
 
-open class MappableParser<T: Mappable>: ResponseParser {
+open class MappableParser<T: BaseMappable>: ResponseParser {
     
     public typealias Representation = T
     
@@ -29,7 +29,7 @@ open class MappableParser<T: Mappable>: ResponseParser {
     
 }
 
-open class MappableArrayParser<T: Collection>: ResponseParser where T.Iterator.Element: Mappable {
+open class MappableArrayParser<T: Collection>: ResponseParser where T.Iterator.Element: BaseMappable {
     
     public typealias Representation = T
     
