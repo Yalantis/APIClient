@@ -16,33 +16,24 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.ios.deployment_target = '9.0'
 
-  s.default_subspec = 'Default'
+  s.default_subspec = 'Core'
 
   # Default subspec that includes the most commonly-used components
-  s.subspec 'Default' do |default|
-    default.source_files = "APIClient/Source/**/*.swift"
-    default.dependency 'Bolts-Swift', '1.3.0' 
+  s.subspec 'Core' do |ss|
+    ss.source_files = "APIClient/Default/**/*.swift"
+    ss.dependency 'Bolts-Swift', '~> 1.3' 
   end
 
-  # JSON Deserializer
-  s.subspec 'JSONDeserializer' do |jsonDeserializer|
-    jsonDeserializer.dependency 'APIClient/Default'
-    jsonDeserializer.source_files = "APIClient/Defaults/Deserializers/*"
+  s.subspec 'Alamofire' do |ss|
+    ss.dependency 'APIClient/Core'
+    ss.dependency 'Alamofire', '~> 4.0' 
+    ss.source_files = "APIClient/Alamofire/*"
   end
 
-  # Optional subspecs
-  s.subspec 'Alamofire' do |alamofire|
-    alamofire.dependency 'APIClient/Default'
-    alamofire.dependency 'Alamofire', '4.0' 
-    alamofire.dependency 'OHHTTPStubs'
-    alamofire.dependency 'OHHTTPStubs/Swift'
-    alamofire.source_files = "APIClient/Defaults/Alamofire/*"
-  end
-
-  s.subspec 'ObjectMapper' do |objectMapper|
-    objectMapper.dependency 'APIClient/Default'
-    objectMapper.dependency 'ObjectMapper', '2.0' 
-    objectMapper.source_files = "APIClient/Defaults/Parser/*"
+  s.subspec 'ObjectMapper' do |ss|
+    ss.dependency 'APIClient/Core'
+    ss.dependency 'ObjectMapper', '~> 2.0' 
+    ss.source_files = "APIClient/ObjectMapper/*"
   end
 
 end
