@@ -1,4 +1,3 @@
 github "BoltsFramework/Bolts-Swift" ~> 1.3.0
 github "Alamofire/Alamofire" ~> 4.0
-github "AliSoftware/OHHTTPStubs"
 github "Hearst-DD/ObjectMapper" ~> 2.0.0

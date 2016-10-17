@@ -8,17 +8,17 @@ public protocol ResponseParser {
     
 }
 
-struct EmptyParser: ResponseParser {
+public struct EmptyParser: ResponseParser {
     
-    func parse(_ object: AnyObject) throws -> Bool {
+    public func parse(_ object: AnyObject) throws -> Bool {
         return true
     }
     
 }
 
-struct JSONParser: ResponseParser {
+public struct JSONParser: ResponseParser {
     
-    func parse(_ object: AnyObject) throws -> [String: AnyObject] {
+    public func parse(_ object: AnyObject) throws -> [String: AnyObject] {
         return object as! [String: AnyObject]
     }
     

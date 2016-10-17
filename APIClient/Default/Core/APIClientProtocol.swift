@@ -1,11 +1,3 @@
-//
-//  APIClientProtocol.swift
-//  CuratumPlatform
-//
-//  Created by Eugene Andreyev on 7/25/16.
-//  Copyright © 2016 Eugene Andreyev. All rights reserved.
-//
-
 import Foundation
 import BoltsSwift
 
@@ -21,8 +13,7 @@ public protocol NetworkClient {
     
 }
 
-extension NetworkClient {
-    
+public extension NetworkClient {
     
     func execute<T, U: ResponseParser>(request: APIRequest, parser: U) -> Task<T> where U.Representation == T {
         return Task<T>(error: NSError())

@@ -55,11 +55,11 @@ public struct NetworkError: Error, Hashable, CustomStringConvertible {
             return NSLocalizedString("error.undefiend", comment: "")
         }
     }
+ 
+    static public func ==(lhs: NetworkError, rhs: NetworkError) -> Bool {
+        return lhs.code == rhs.code
+    }
     
-}
-
-public func ==(lhs: NetworkError, rhs: NetworkError) -> Bool {
-    return lhs.code == rhs.code
 }
 
 extension NetworkError {

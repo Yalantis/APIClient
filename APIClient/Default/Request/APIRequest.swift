@@ -1,9 +1,9 @@
-
 import Foundation
 
 public enum APIRequestMethod: UInt {
     
     case get, post, put, delete
+    
 }
 
 public protocol APIRequest {
@@ -69,7 +69,7 @@ public protocol SerializeableAPIRequest: APIRequest {
     
 }
 
-extension APIRequest {
+public extension APIRequest {
 
     var method: APIRequestMethod {
         return .get

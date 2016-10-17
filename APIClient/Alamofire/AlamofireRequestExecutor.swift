@@ -2,17 +2,17 @@ import Foundation
 import Alamofire
 import BoltsSwift
 
-class AlamofireRequestExecutor: RequestExecutor {
+open class AlamofireRequestExecutor: RequestExecutor {
     
-    let manager: SessionManager
-    let baseURL: URL
+    open let manager: SessionManager
+    open let baseURL: URL
     
-    init(baseURL: URL, manager: SessionManager = SessionManager.default) {
+    public init(baseURL: URL, manager: SessionManager = SessionManager.default) {
         self.manager = manager
         self.baseURL = baseURL
     }
     
-    func execute(request: APIRequest) -> Task<APIClient.HTTPResponse> {
+    public func execute(request: APIRequest) -> Task<APIClient.HTTPResponse> {
         let source = TaskCompletionSource<APIClient.HTTPResponse>()
         
         let requestPath =  baseURL
@@ -39,7 +39,7 @@ class AlamofireRequestExecutor: RequestExecutor {
         return source.task
     }
     
-    func execute(multipartRequest: APIRequest) -> Task<APIClient.HTTPResponse> {
+    public func execute(multipartRequest: APIRequest) -> Task<APIClient.HTTPResponse> {
         guard let multipartFormData = multipartRequest.multipartFormData else {
             fatalError("Missing multipart form data")
         }
