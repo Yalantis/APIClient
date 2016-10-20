@@ -2,7 +2,7 @@ import Foundation
 
 public enum APIRequestMethod: UInt {
     
-    case get, post, put, delete
+    case options, get, head, post, put, patch, delete, trace, connect
     
 }
 
