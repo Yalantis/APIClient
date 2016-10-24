@@ -1,87 +1,33 @@
 import Foundation
 
-public enum APIErrorCode: String {
+public struct NetworkError: APIError {
     
-    case unauthorized = "authorization_error"
+    let rawResponseDictionary: [String: Any]?
+    let statusCode: Int
     
-    case undefined = "undefined"
-    case resourceDeserialization = "deserialization"
-    case resourceInvalidResponse = "invalid_response"
+    // MARK: Lifecycle
     
-}
-
-public struct NetworkError: Error, Hashable, CustomStringConvertible {
-    
-    public var _domain: String {
-        return String(describing: type(of: self))
+    public init(statusCode: Int, rawResponseDictionary: [String: Any]? = nil) {
+        self.statusCode = statusCode
+        self.rawResponseDictionary = rawResponseDictionary
     }
     
-    public var code: APIErrorCode
+    // MARK: Equatable
     
-    public var metaErrors: [String: NetworkError]?
-    public var serverDescription: String?
+    static public func ==(lhs: NetworkError, rhs: NetworkError) -> Bool {
+        return lhs.statusCode == rhs.statusCode
+    }
     
     // MARK: Hashable
     
     public var hashValue: Int {
-        return code.rawValue.hashValue
-    }
-    
-    // MARK: Lifecycle
-    
-    public init(code: APIErrorCode, description: String? = nil, metaErrors: [String: NetworkError]? = nil) {
-        self.code = code
-        self.serverDescription = description
-        self.metaErrors = metaErrors
+        return statusCode.hashValue
     }
     
     // MARK: Defaults
     
-    public static let undefinedError = NetworkError(code: .undefined, description: nil, metaErrors: nil)
-    public static let resourceDeserializationError = NetworkError(
-        code: .resourceDeserialization,
-        description: nil,
-        metaErrors: nil
-    )
-    
-    // MARK: CustomStringConvertible
-    
-    public var description: String {
-        switch self.code {
-        case .resourceDeserialization:
-            return NSLocalizedString("error.deserialization", comment: "")
-            
-        default:
-            return NSLocalizedString("error.undefiend", comment: "")
-        }
-    }
- 
-    static public func ==(lhs: NetworkError, rhs: NetworkError) -> Bool {
-        return lhs.code == rhs.code
-    }
-    
-}
-
-extension NetworkError {
-    
-    init?(dictionary: [String: AnyObject]) {
-        if let rawCode = dictionary["code"] as? String, let code = APIErrorCode(rawValue: rawCode) {
-            self.code = code
-        } else {
-            return nil
-        }
-        serverDescription = dictionary["description"] as? String
-        if let metaDictionary = dictionary["meta"] as? [String: [String: AnyObject]] {
-            metaErrors = metaDictionary.reduce(
-                [String: NetworkError](),
-                { previousValue, element in
-                    var errors = previousValue
-                    errors[element.0] = NetworkError(dictionary: element.1)
-                    
-                    return errors
-                }
-            )
-        }
+    static var undefined: NetworkError {
+        return NetworkError(statusCode: 4444)
     }
     
 }
