@@ -1,6 +1,6 @@
 import Foundation
 
-public struct NetworkError: APIError {
+public struct NetworkError: Error {
     
     let rawResponseDictionary: [String: Any]?
     let statusCode: Int
