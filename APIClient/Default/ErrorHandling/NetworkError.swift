@@ -27,7 +27,7 @@ public struct NetworkError: Error {
     // MARK: Defaults
     
     static var undefined: NetworkError {
-        return NetworkError(statusCode: 4444)
+        return NetworkError(statusCode: -1)
     }
     
 }
