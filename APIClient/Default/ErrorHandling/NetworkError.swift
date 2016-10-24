@@ -1,6 +1,6 @@
 import Foundation
 
-public struct NetworkError: Error {
+public struct NetworkError: Error, Hashable, Equatable {
     
     let rawResponseDictionary: [String: Any]?
     let statusCode: Int
