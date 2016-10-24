@@ -2,6 +2,8 @@ import Foundation
 import Alamofire
 import BoltsSwift
 
+public struct AlamofireExecutorError: Error {}
+
 open class AlamofireRequestExecutor: RequestExecutor {
     
     open let manager: SessionManager
@@ -28,7 +30,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
             headers: request.headers
         ).response { response in
             guard let httpResponse = response.response, let data = response.data else {
-                source.set(error: NetworkError(code: .resourceInvalidResponse))
+                source.set(error: AlamofireExecutorError())
                 
                 return
             }
@@ -60,7 +62,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
                     request.responseJSON(
                         completionHandler: { response in
                             guard let httpResponse = response.response, let data = response.data else {
-                                source.set(error: NetworkError(code: .resourceInvalidResponse))
+                                source.set(error: AlamofireExecutorError())
                                 
                                 return
                             }
@@ -68,7 +70,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
                             source.set(result: (httpResponse, data))
                         }
                     )
-                case .failure: source.set(error: NetworkError(code: .resourceInvalidResponse))
+                case .failure: source.set(error: AlamofireExecutorError())
                 }
             }
         )
