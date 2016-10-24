@@ -1,6 +1,8 @@
 import Foundation
 import ObjectMapper
 
+public struct MappableParserError: Error {}
+
 open class MappableParser<T: BaseMappable>: ResponseParser {
     
     public typealias Representation = T
@@ -23,7 +25,7 @@ open class MappableParser<T: BaseMappable>: ResponseParser {
         if let representation = Mapper<T>().map(JSONObject: getValueForKeypath(object)) {
             return representation
         } else {
-            throw NetworkError.resourceDeserializationError
+            throw MappableParserError()
         }
     }
     
@@ -50,7 +52,7 @@ open class MappableArrayParser<T: Collection>: ResponseParser where T.Iterator.E
         if let Representation = Mapper<T.Generator.Element>().mapArray(JSONObject: getValueForKeypath(object)) as? T {
             return Representation
         } else {
-            throw NetworkError.resourceDeserializationError
+            throw MappableParserError()
         }
     }
     
