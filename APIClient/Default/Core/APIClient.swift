@@ -54,7 +54,7 @@ private extension APIClient {
         case (200...299):
             return Task<HTTPResponse>(response)
         default:
-            return Task<HTTPResponse>(error: errorProcessor.processErrorWithResponse(response))
+            return Task<HTTPResponse>(error: errorProcessor.processError(using: response))
         }
     }
     
