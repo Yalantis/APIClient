@@ -2,14 +2,14 @@ import Foundation
 
 public struct NetworkError: Error, Hashable, Equatable {
     
-    let rawResponseDictionary: [String: Any]?
+    let responseDictionary: [String: Any]?
     let statusCode: Int
     
     // MARK: Lifecycle
     
-    public init(statusCode: Int, rawResponseDictionary: [String: Any]? = nil) {
+    public init(statusCode: Int, responseDictionary: [String: Any]? = nil) {
         self.statusCode = statusCode
-        self.rawResponseDictionary = rawResponseDictionary
+        self.responseDictionary = responseDictionary
     }
     
     // MARK: Equatable
