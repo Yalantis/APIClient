@@ -18,11 +18,9 @@
 		C538392C1DB4C71800CF5EF2 /* APIClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839131DB4C71800CF5EF2 /* APIClientProtocol.swift */; };
 		C538392D1DB4C71800CF5EF2 /* JSONDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839151DB4C71800CF5EF2 /* JSONDeserializer.swift */; };
 		C538392E1DB4C71800CF5EF2 /* APIErrorProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839171DB4C71800CF5EF2 /* APIErrorProcessor.swift */; };
-		C538392F1DB4C71800CF5EF2 /* CredentialsProducing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839181DB4C71800CF5EF2 /* CredentialsProducing.swift */; };
+		C538392F1DB4C71800CF5EF2 /* ErrorRecovering.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839181DB4C71800CF5EF2 /* ErrorRecovering.swift */; };
 		C53839301DB4C71800CF5EF2 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839191DB4C71800CF5EF2 /* NetworkError.swift */; };
 		C53839311DB4C71800CF5EF2 /* RequestExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538391B1DB4C71800CF5EF2 /* RequestExecutor.swift */; };
-		C53839321DB4C71800CF5EF2 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538391E1DB4C71800CF5EF2 /* Disposable.swift */; };
-		C53839331DB4C71800CF5EF2 /* ObserverSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538391F1DB4C71800CF5EF2 /* ObserverSet.swift */; };
 		C53839341DB4C71800CF5EF2 /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839211DB4C71800CF5EF2 /* APIRequest.swift */; };
 		C53839351DB4C71800CF5EF2 /* RequestDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839221DB4C71800CF5EF2 /* RequestDecorator.swift */; };
 		C53839361DB4C71800CF5EF2 /* ResponseDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839241DB4C71800CF5EF2 /* ResponseDeserializer.swift */; };
@@ -55,11 +53,9 @@
 		C53839131DB4C71800CF5EF2 /* APIClientProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClientProtocol.swift; sourceTree = "<group>"; };
 		C53839151DB4C71800CF5EF2 /* JSONDeserializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONDeserializer.swift; sourceTree = "<group>"; };
 		C53839171DB4C71800CF5EF2 /* APIErrorProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIErrorProcessor.swift; sourceTree = "<group>"; };
-		C53839181DB4C71800CF5EF2 /* CredentialsProducing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialsProducing.swift; sourceTree = "<group>"; };
+		C53839181DB4C71800CF5EF2 /* ErrorRecovering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorRecovering.swift; sourceTree = "<group>"; };
 		C53839191DB4C71800CF5EF2 /* NetworkError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		C538391B1DB4C71800CF5EF2 /* RequestExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestExecutor.swift; sourceTree = "<group>"; };
-		C538391E1DB4C71800CF5EF2 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
-		C538391F1DB4C71800CF5EF2 /* ObserverSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverSet.swift; sourceTree = "<group>"; };
 		C53839211DB4C71800CF5EF2 /* APIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
 		C53839221DB4C71800CF5EF2 /* RequestDecorator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestDecorator.swift; sourceTree = "<group>"; };
 		C53839241DB4C71800CF5EF2 /* ResponseDeserializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDeserializer.swift; sourceTree = "<group>"; };
@@ -145,7 +141,6 @@
 				C53839141DB4C71800CF5EF2 /* Deserializers */,
 				C53839161DB4C71800CF5EF2 /* ErrorHandling */,
 				C538391A1DB4C71800CF5EF2 /* Executor */,
-				C538391C1DB4C71800CF5EF2 /* External */,
 				C53839201DB4C71800CF5EF2 /* Request */,
 				C53839231DB4C71800CF5EF2 /* Response */,
 			);
@@ -173,7 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				C53839171DB4C71800CF5EF2 /* APIErrorProcessor.swift */,
-				C53839181DB4C71800CF5EF2 /* CredentialsProducing.swift */,
+				C53839181DB4C71800CF5EF2 /* ErrorRecovering.swift */,
 				C53839191DB4C71800CF5EF2 /* NetworkError.swift */,
 			);
 			path = ErrorHandling;
@@ -185,23 +180,6 @@
 				C538391B1DB4C71800CF5EF2 /* RequestExecutor.swift */,
 			);
 			path = Executor;
-			sourceTree = "<group>";
-		};
-		C538391C1DB4C71800CF5EF2 /* External */ = {
-			isa = PBXGroup;
-			children = (
-				C538391D1DB4C71800CF5EF2 /* Observer */,
-			);
-			path = External;
-			sourceTree = "<group>";
-		};
-		C538391D1DB4C71800CF5EF2 /* Observer */ = {
-			isa = PBXGroup;
-			children = (
-				C538391E1DB4C71800CF5EF2 /* Disposable.swift */,
-				C538391F1DB4C71800CF5EF2 /* ObserverSet.swift */,
-			);
-			path = Observer;
 			sourceTree = "<group>";
 		};
 		C53839201DB4C71800CF5EF2 /* Request */ = {
@@ -340,7 +318,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C53839331DB4C71800CF5EF2 /* ObserverSet.swift in Sources */,
 				C53839351DB4C71800CF5EF2 /* RequestDecorator.swift in Sources */,
 				C53839361DB4C71800CF5EF2 /* ResponseDeserializer.swift in Sources */,
 				C53839281DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift in Sources */,
@@ -352,8 +329,7 @@
 				C53839301DB4C71800CF5EF2 /* NetworkError.swift in Sources */,
 				C53839371DB4C71800CF5EF2 /* ResponseParser.swift in Sources */,
 				C53839381DB4C71800CF5EF2 /* ObjectMapperParser.swift in Sources */,
-				C538392F1DB4C71800CF5EF2 /* CredentialsProducing.swift in Sources */,
-				C53839321DB4C71800CF5EF2 /* Disposable.swift in Sources */,
+				C538392F1DB4C71800CF5EF2 /* ErrorRecovering.swift in Sources */,
 				C53839311DB4C71800CF5EF2 /* RequestExecutor.swift in Sources */,
 				C538392E1DB4C71800CF5EF2 /* APIErrorProcessor.swift in Sources */,
 			);
