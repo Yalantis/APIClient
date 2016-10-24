@@ -9,15 +9,15 @@ open class APIClient: NSObject, NetworkClient {
     fileprivate let requestExecutor: RequestExecutor
     fileprivate let deserializer: Deserializer
     fileprivate let errorProcessor: APIErrorProcessing = APIErrorProcessor()
-    fileprivate var credentialsProducer: CredentialsProducing?
+    fileprivate var errorRecoverer: ErrorRecovering?
     fileprivate var requestDecorator: RequestDecorator?
     
     // MARK: - Init
     
-    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), credentialsProducer: CredentialsProducing? = nil, requestDecorator: RequestDecorator? = nil) {
+    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), errorRecoverer: ErrorRecovering? = nil, requestDecorator: RequestDecorator? = nil) {
         self.requestExecutor = requestExecutor
         self.deserializer = deserializer
-        self.credentialsProducer = credentialsProducer
+        self.errorRecoverer = errorRecoverer
         self.requestDecorator = requestDecorator
     }
 
@@ -69,14 +69,6 @@ private extension APIClient {
         return decoratedRequest
     }
     
-    static var recoverableErrors: Set<NetworkError> {
-        return Set<NetworkError>([NetworkError(code: .unauthorized)])
-    }
-    
-    func canRecover(from error: NetworkError) -> Bool {
-        return type(of: self).recoverableErrors.contains(error)
-    }
-    
     func _execute<T, U: ResponseParser>(_ requestTaskProducer: @escaping (Void) -> Task<HTTPResponse>, parser: U) -> Task<T> where U.Representation == T {
         let deserializer = self.deserializer
         
@@ -93,8 +85,8 @@ private extension APIClient {
         
         return validatedTask(from: requestTask)
             .continueOnErrorWithTask(continuation: { error -> Task<HTTPResponse> in
-                if let error = error as? NetworkError, let credentialsProducer = self.credentialsProducer , self.canRecover(from: error) {
-                    return credentialsProducer.restoreCredentials().continueWithTask { task -> Task<HTTPResponse> in
+                if let errorRecoverer = self.errorRecoverer, errorRecoverer.canRecover(from: error) {
+                    return errorRecoverer.recover(from: error).continueWithTask { task -> Task<HTTPResponse> in
                         if let result = task.result, result {
                             return validatedTask(from: requestTaskProducer())
                         } else {
