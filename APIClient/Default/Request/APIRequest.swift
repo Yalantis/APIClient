@@ -14,6 +14,7 @@ public protocol APIRequest {
     var scopes: [String]? { get }
     var headers: [String: String]? { get }
     var multipartFormData: ((MultipartFormDataType) -> Void)? { get }
+    var authRequired: Bool { get }
     
 }
 
@@ -41,6 +42,7 @@ struct RequestAdapter: APIRequest {
     var scopes: [String]?
     var headers: [String: String]?
     var multipartFormData: ((MultipartFormDataType) -> Void)?
+    var authRequired: Bool
     
     init(headers: [String: String], request: APIRequest) {
         self.path = request.path
@@ -48,6 +50,7 @@ struct RequestAdapter: APIRequest {
         self.method = request.method
         self.scopes = request.scopes
         self.multipartFormData = request.multipartFormData
+        self.authRequired = request.authRequired
         if let requestHeaders = request.headers {
             var decoratedHeader = requestHeaders
             headers.forEach { key, value in
@@ -89,6 +92,10 @@ public extension APIRequest {
     
     var multipartFormData: ((MultipartFormDataType) -> Void)? {
         return nil
+    }
+    
+    var authRequired: Bool {
+        return false
     }
 
 }
