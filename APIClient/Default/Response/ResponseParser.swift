@@ -10,6 +10,8 @@ public protocol ResponseParser {
 
 public struct EmptyParser: ResponseParser {
     
+    public init() {}
+    
     public func parse(_ object: AnyObject) throws -> Bool {
         return true
     }
@@ -17,6 +19,8 @@ public struct EmptyParser: ResponseParser {
 }
 
 public struct JSONParser: ResponseParser {
+
+    public init() {}
     
     public func parse(_ object: AnyObject) throws -> [String: AnyObject] {
         return object as! [String: AnyObject]
