@@ -95,7 +95,7 @@ public extension APIRequest {
     }
     
     var authRequired: Bool {
-        return false
+        return true
     }
 
 }
