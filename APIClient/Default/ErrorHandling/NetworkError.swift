@@ -2,8 +2,8 @@ import Foundation
 
 public struct NetworkError: Error, Hashable, Equatable {
     
-    let responseDictionary: [String: Any]?
-    let statusCode: Int
+    public let responseDictionary: [String: Any]?
+    public let statusCode: Int
     
     // MARK: Lifecycle
     
