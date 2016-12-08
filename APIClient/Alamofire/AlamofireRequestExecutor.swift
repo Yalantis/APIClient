@@ -26,6 +26,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
             requestPath,
             method: request.alamofireMethod,
             parameters: request.parameters,
+            encoding: request.alamofireEncoding,
             headers: request.headers
         ).response { response in
             guard let httpResponse = response.response, let data = response.data else {

@@ -6,10 +6,13 @@ public enum APIRequestMethod: UInt {
     
 }
 
+public protocol APIRequestEncoding {}
+
 public protocol APIRequest {
     
     var path: String { get }
     var parameters: [String: Any]? { get }
+    var encoding: APIRequestEncoding? { get }
     var method: APIRequestMethod { get }
     var scopes: [String]? { get }
     var headers: [String: String]? { get }
@@ -34,36 +37,6 @@ public protocol MultipartFormDataType {
     
 }
 
-struct RequestAdapter: APIRequest {
-    
-    var path: String
-    var parameters: [String: Any]?
-    var method: APIRequestMethod
-    var scopes: [String]?
-    var headers: [String: String]?
-    var multipartFormData: ((MultipartFormDataType) -> Void)?
-    var authRequired: Bool
-    
-    init(headers: [String: String], request: APIRequest) {
-        self.path = request.path
-        self.parameters = request.parameters
-        self.method = request.method
-        self.scopes = request.scopes
-        self.multipartFormData = request.multipartFormData
-        self.authRequired = request.authRequired
-        if let requestHeaders = request.headers {
-            var decoratedHeader = requestHeaders
-            headers.forEach { key, value in
-                decoratedHeader[key] = value
-            }
-            self.headers = decoratedHeader
-        } else {
-            self.headers = headers
-        }
-    }
-    
-}
-
 public protocol SerializeableAPIRequest: APIRequest {
     
     associatedtype Parser: ResponseParser
@@ -79,6 +52,10 @@ public extension APIRequest {
     }
     
     var parameters: [String: Any]? {
+        return nil
+    }
+
+    var encoding: APIRequestEncoding? {
         return nil
     }
 
