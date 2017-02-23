@@ -17,6 +17,7 @@
 		B806462D1E5F083300706510 /* PluginType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B806462C1E5F083300706510 /* PluginType.swift */; };
 		B806462F1E5F218400706510 /* ErrorRecovererPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B806462E1E5F218400706510 /* ErrorRecovererPlugin.swift */; };
 		B80646331E5F21E800706510 /* ErrorRecovering.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646321E5F21E800706510 /* ErrorRecovering.swift */; };
+		B80646351E5F33D800706510 /* ErrorPreprocessorPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */; };
 		C53839281DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538390D1DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift */; };
 		C53839291DB4C71800CF5EF2 /* APIRequest+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538390E1DB4C71800CF5EF2 /* APIRequest+Alamofire.swift */; };
 		C538392B1DB4C71800CF5EF2 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839121DB4C71800CF5EF2 /* APIClient.swift */; };
@@ -56,6 +57,7 @@
 		B806462C1E5F083300706510 /* PluginType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginType.swift; sourceTree = "<group>"; };
 		B806462E1E5F218400706510 /* ErrorRecovererPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorRecovererPlugin.swift; sourceTree = "<group>"; };
 		B80646321E5F21E800706510 /* ErrorRecovering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorRecovering.swift; sourceTree = "<group>"; };
+		B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorPreprocessorPlugin.swift; sourceTree = "<group>"; };
 		C538390D1DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireRequestExecutor.swift; sourceTree = "<group>"; };
 		C538390E1DB4C71800CF5EF2 /* APIRequest+Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "APIRequest+Alamofire.swift"; sourceTree = "<group>"; };
 		C53839121DB4C71800CF5EF2 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 		B806462B1E5F082600706510 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */,
 				B806462E1E5F218400706510 /* ErrorRecovererPlugin.swift */,
 				B806462C1E5F083300706510 /* PluginType.swift */,
 			);
@@ -343,6 +346,7 @@
 				B806462D1E5F083300706510 /* PluginType.swift in Sources */,
 				B806462F1E5F218400706510 /* ErrorRecovererPlugin.swift in Sources */,
 				C53839361DB4C71800CF5EF2 /* ResponseDeserializer.swift in Sources */,
+				B80646351E5F33D800706510 /* ErrorPreprocessorPlugin.swift in Sources */,
 				C53839281DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift in Sources */,
 				B80646331E5F21E800706510 /* ErrorRecovering.swift in Sources */,
 				C53839341DB4C71800CF5EF2 /* APIRequest.swift in Sources */,

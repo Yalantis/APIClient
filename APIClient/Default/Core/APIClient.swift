@@ -5,22 +5,16 @@ open class APIClient: NSObject, NetworkClient {
     
     public typealias HTTPResponse = (HTTPURLResponse, Data)
     
-    fileprivate let responseExecutor: Executor = .queue(DispatchQueue(label: Bundle.main.bundleIdentifier!, attributes: .concurrent))
+    fileprivate let responseExecutor: Executor = .queue(DispatchQueue(label: "APIClientQueue", attributes: .concurrent))
     fileprivate let requestExecutor: RequestExecutor
     fileprivate let deserializer: Deserializer
     fileprivate let plugins: [PluginType]
-    // todo: replace with plugin
-    fileprivate let errorProcessor: APIErrorProcessing
-    // todo: replace with plugin
-    fileprivate let requestDecorator: RequestDecorator?
     
     // MARK: - Init
     
-    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), errorProcessor: APIErrorProcessing = APIErrorProcessor(), requestDecorator: RequestDecorator? = nil, plugins: [PluginType] = []) {
+    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), plugins: [PluginType] = []) {
         self.requestExecutor = requestExecutor
         self.deserializer = deserializer
-        self.errorProcessor = errorProcessor
-        self.requestDecorator = requestDecorator
         self.plugins = plugins
     }
 
@@ -30,10 +24,10 @@ open class APIClient: NSObject, NetworkClient {
             
             return self
                 .requestExecutor
-                .execute(request: self.decoratedRequest(from: self.prepare(request: request)))
+                .execute(request: self.prepare(request: request))
         }
         
-        return _execute(taskProducer,parser: parser)
+        return _execute(taskProducer, parser: parser)
     }
 
     public func execute<T: SerializeableAPIRequest>(request: T) -> Task<T.Parser.Representation> {
@@ -48,7 +42,7 @@ open class APIClient: NSObject, NetworkClient {
             
             return self
                 .requestExecutor
-                .execute(multipartRequest: self.decoratedRequest(from: self.prepare(request: multipartRequest)))
+                .execute(multipartRequest: self.prepare(request: multipartRequest))
         }
         
         return _execute(taskProducer, parser: parser)
@@ -67,21 +61,11 @@ private extension APIClient {
     func validate(_ response: HTTPResponse) -> Task<HTTPResponse> {
         switch response.0.statusCode {
         case (200...299):
-            return Task<HTTPResponse>(response)
-        default:
-            return Task<HTTPResponse>(error: errorProcessor.processError(using: response))
-        }
-    }
-    
-    func decoratedRequest(from request: APIRequest) -> APIRequest {
-        let decoratedRequest: APIRequest
-        if let requestDecorator = requestDecorator {
-            decoratedRequest = requestDecorator.decoratedRequest(from: request)
-        } else {
-            decoratedRequest = request
-        }
+            return Task(response)
         
-        return decoratedRequest
+        default:
+            return Task(error: self.process(response) ?? NetworkError.undefined)
+        }
     }
     
     func _execute<T, U: ResponseParser>(_ requestTaskProducer: @escaping RequestTaskProducer, parser: U) -> Task<T> where U.Representation == T {
@@ -89,6 +73,8 @@ private extension APIClient {
         func validatedTask(from task: Task<HTTPResponse>) -> Task<HTTPResponse> {
             return task.continueWithTask { responseTask in
                 if let response = responseTask.result {
+                    self.didReceive(response)
+                    
                     return self.validate(response)
                 }
                 
@@ -115,9 +101,6 @@ private extension APIClient {
             .continueOnSuccessWith { response in
                 return self.process(result: response)
             }
-            .continueOnErrorWithTask { error in
-                return Task(error: self.wrap(error))
-            }
     }
     
 
@@ -132,10 +115,7 @@ private extension APIClient {
     }
     
     func resolve(_ error: Error) -> Task<Bool> {
-        var tasks: [Task<Bool>] = []
-        for plugin in plugins {
-            tasks.append(plugin.resolve(error))
-        }
+        let tasks: [Task<Bool>] = plugins.map { $0.resolve(error) }
         
         return Task.whenAllResult(tasks).continueWithTask { task -> Task<Bool> in
             if let array = task.result {
@@ -146,8 +126,18 @@ private extension APIClient {
         }
     }
     
-    func wrap(_ error: Error) -> Error {
-        return plugins.reduce(error) { $0.1.wrap($0.0) }
+    func didReceive(_ response: HTTPResponse) {
+        plugins.forEach { $0.didReceive(response: response) }
+    }
+    
+    func process(_ response: HTTPResponse) -> Error? {
+        for plugin in plugins {
+            if let error = plugin.processError(response) {
+                return error
+            }
+        }
+        
+        return nil
     }
     
     func willSend(request: APIRequest) {
