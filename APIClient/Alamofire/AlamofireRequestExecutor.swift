@@ -56,6 +56,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
         manager.upload(
             multipartFormData: multipartFormData,
             to: requestPath,
+            headers: multipartRequest.headers,
             encodingCompletion: { encodingResult in
                 switch encodingResult {
                 case .success(let request, _, _):
