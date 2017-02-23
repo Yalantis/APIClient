@@ -12,16 +12,13 @@ open class APIClient: NSObject, NetworkClient {
     // todo: replace with plugin
     fileprivate let errorProcessor: APIErrorProcessing
     // todo: replace with plugin
-    fileprivate let errorRecoverer: ErrorRecovering?
-    // todo: replace with plugin
     fileprivate let requestDecorator: RequestDecorator?
     
     // MARK: - Init
     
-    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), errorRecoverer: ErrorRecovering? = nil, errorProcessor: APIErrorProcessing = APIErrorProcessor(), requestDecorator: RequestDecorator? = nil, plugins: [PluginType] = []) {
+    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), errorProcessor: APIErrorProcessing = APIErrorProcessor(), requestDecorator: RequestDecorator? = nil, plugins: [PluginType] = []) {
         self.requestExecutor = requestExecutor
         self.deserializer = deserializer
-        self.errorRecoverer = errorRecoverer
         self.errorProcessor = errorProcessor
         self.requestDecorator = requestDecorator
         self.plugins = plugins
@@ -101,15 +98,9 @@ private extension APIClient {
         
         return validatedTask(from: requestTask)
             .continueOnErrorWithTask { error -> Task<HTTPResponse> in
-                self.resolve(error).continueWithTask { result -> Task<HTTPResponse> in
-                    if let errorRecoverer = self.errorRecoverer, errorRecoverer.canRecover(from: error) {
-                        return errorRecoverer.recover(from: error).continueWithTask { task -> Task<HTTPResponse> in
-                            if let result = task.result, result {
-                                return validatedTask(from: requestTaskProducer())
-                            } else {
-                                return Task(error: error)
-                            }
-                        }
+                self.resolve(error).continueWithTask { task -> Task<HTTPResponse> in
+                    if let result = task.result, result {
+                        return validatedTask(from: requestTaskProducer())
                     } else {
                         return Task(error: error)
                     }
