@@ -10,9 +10,9 @@ import BoltsSwift
 
 public final class ErrorPreprocessorPlugin: PluginType {
     
-    private let errorPreprocessor: APIErrorProcessing
+    private let errorPreprocessor: ErrorProcessing
     
-    public init(errorPreprocessor: APIErrorProcessor) {
+    public init(errorPreprocessor: ErrorProcessing) {
         self.errorPreprocessor = errorPreprocessor
     }
     

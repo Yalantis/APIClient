@@ -1,12 +1,12 @@
 import Foundation
 
-public protocol APIErrorProcessing {
+public protocol ErrorProcessing {
     
     func processError(using response: APIClient.HTTPResponse) -> Error?
     
 }
 
-public struct APIErrorProcessor: APIErrorProcessing {
+public struct NetworkErrorProcessor: ErrorProcessing {
     
     private let deserializer = JSONDeserializer()
     

@@ -12,7 +12,7 @@ open class APIClient: NSObject, NetworkClient {
     
     // MARK: - Init
     
-    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), plugins: [PluginType] = []) {
+    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), plugins: [PluginType] = [ErrorPreprocessorPlugin(errorPreprocessor: NetworkErrorProcessor())]) {
         self.requestExecutor = requestExecutor
         self.deserializer = deserializer
         self.plugins = plugins
