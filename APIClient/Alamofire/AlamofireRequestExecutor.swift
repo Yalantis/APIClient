@@ -31,7 +31,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
                 requestPath,
                 method: request.alamofireMethod,
                 parameters: request.parameters,
-                encoding: JSONEncoding(),
+                encoding: request.alamofireEncoding,
                 headers: request.headers
             )
             .response { response in
@@ -59,7 +59,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
             requestPath,
             method: downloadRequest.alamofireMethod,
             parameters: downloadRequest.parameters,
-            encoding: JSONEncoding(),
+            encoding: downloadRequest.alamofireEncoding,
             headers: downloadRequest.headers)
         if let progressHandler = downloadRequest.progressHandler {
             request = request.downloadProgress { progress in
