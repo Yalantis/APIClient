@@ -8,32 +8,82 @@
 
 import BoltsSwift
 
-open class StubbedAPIClient: NetworkClient {
+public class StubbedAPIClient: NetworkClient {
     
-    let responseDelay: TimeInterval = 0.7
+    var responseDelay: TimeInterval
     
-    public func execute<T, U: ResponseParser>(request: APIRequest, parser: U) -> Task<T> where U.Representation == T {
-        return Task<T>(error: NSError())
+    public init(responseDelay: TimeInterval = 0.7) {
+        self.responseDelay = responseDelay
     }
     
-    public func execute<T : SerializeableAPIRequest>(request: T) -> Task<T.Parser.Representation> {
-        return Task<T.Parser.Representation>(error: NSError())
+    private func delay(_ completion: @escaping () -> ()) {
+        let deadlineTime = DispatchTime.now() + responseDelay
+        DispatchQueue.global().asyncAfter(deadline: deadlineTime) {
+            completion()
+        }
+    }
+    
+    public func execute<T, U: ResponseParser>(request: APIRequest, parser: U) -> Task<T> where U.Representation == T {
+        let taskSource = TaskCompletionSource<T>()
+        delay {
+            let stub: T? = request.sampleStub()
+            if let stub = stub {
+                taskSource.set(result: stub)
+                
+                return
+            }
+            if let error = request.sampleStubError() {
+                taskSource.set(error: error)
+                
+                return
+            }
+            
+            taskSource.cancel()
+        }
+        
+        return taskSource.task
     }
     
     public func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
-        return Task<T>(error: NSError())
-    }
-    
-    public func execute<T : SerializeableAPIRequest>(multipartRequest: T) -> Task<T.Parser.Representation> {
-        return Task<T.Parser.Representation>(error: NSError())
+        let taskSource = TaskCompletionSource<T>()
+        delay {
+            let stub: T? = multipartRequest.sampleStub()
+            if let stub = stub {
+                taskSource.set(result: stub)
+                
+                return
+            }
+            if let error = multipartRequest.sampleStubError() {
+                taskSource.set(error: error)
+                
+                return
+            }
+            
+            taskSource.cancel()
+        }
+        
+        return taskSource.task
     }
     
     public func execute<T, U: ResponseParser>(downloadRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
-        return Task<T>(error: NSError())
-    }
-    
-    public func execute<T : SerializeableAPIRequest>(downloadRequest: T) -> Task<T.Parser.Representation> {
-        return Task<T.Parser.Representation>(error: NSError())
+        let taskSource = TaskCompletionSource<T>()
+        delay {
+            let stub: T? = downloadRequest.sampleStub()
+            if let stub = stub {
+                taskSource.set(result: stub)
+                
+                return
+            }
+            if let error = downloadRequest.sampleStubError() {
+                taskSource.set(error: error)
+                
+                return
+            }
+            
+            taskSource.cancel()
+        }
+        
+        return taskSource.task
     }
     
 }

@@ -18,6 +18,8 @@
 		B806462F1E5F218400706510 /* ErrorRecovererPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B806462E1E5F218400706510 /* ErrorRecovererPlugin.swift */; };
 		B80646331E5F21E800706510 /* ErrorRecovering.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646321E5F21E800706510 /* ErrorRecovering.swift */; };
 		B80646351E5F33D800706510 /* ErrorPreprocessorPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */; };
+		B8185F061E65BEF1001E1D9A /* StubbedAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8185F051E65BEF1001E1D9A /* StubbedAPIClient.swift */; };
+		B8185F081E65C27E001E1D9A /* APIRequest+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8185F071E65C27E001E1D9A /* APIRequest+Stub.swift */; };
 		C53839281DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538390D1DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift */; };
 		C53839291DB4C71800CF5EF2 /* APIRequest+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538390E1DB4C71800CF5EF2 /* APIRequest+Alamofire.swift */; };
 		C538392B1DB4C71800CF5EF2 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839121DB4C71800CF5EF2 /* APIClient.swift */; };
@@ -58,6 +60,8 @@
 		B806462E1E5F218400706510 /* ErrorRecovererPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorRecovererPlugin.swift; sourceTree = "<group>"; };
 		B80646321E5F21E800706510 /* ErrorRecovering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorRecovering.swift; sourceTree = "<group>"; };
 		B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorPreprocessorPlugin.swift; sourceTree = "<group>"; };
+		B8185F051E65BEF1001E1D9A /* StubbedAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubbedAPIClient.swift; sourceTree = "<group>"; };
+		B8185F071E65C27E001E1D9A /* APIRequest+Stub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "APIRequest+Stub.swift"; sourceTree = "<group>"; };
 		C538390D1DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireRequestExecutor.swift; sourceTree = "<group>"; };
 		C538390E1DB4C71800CF5EF2 /* APIRequest+Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "APIRequest+Alamofire.swift"; sourceTree = "<group>"; };
 		C53839121DB4C71800CF5EF2 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
@@ -118,10 +122,11 @@
 			isa = PBXGroup;
 			children = (
 				C538390C1DB4C71800CF5EF2 /* Alamofire */,
-				C53839101DB4C71800CF5EF2 /* Default */,
-				C53839261DB4C71800CF5EF2 /* ObjectMapper */,
 				44DEDCF61D2FF44C0093EE21 /* APIClient.h */,
+				C53839101DB4C71800CF5EF2 /* Default */,
 				44DEDCF81D2FF44C0093EE21 /* Info.plist */,
+				C53839261DB4C71800CF5EF2 /* ObjectMapper */,
+				B8185F041E65BEF1001E1D9A /* StubbedClient */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -143,6 +148,15 @@
 				B806462C1E5F083300706510 /* PluginType.swift */,
 			);
 			path = Plugins;
+			sourceTree = "<group>";
+		};
+		B8185F041E65BEF1001E1D9A /* StubbedClient */ = {
+			isa = PBXGroup;
+			children = (
+				B8185F051E65BEF1001E1D9A /* StubbedAPIClient.swift */,
+				B8185F071E65C27E001E1D9A /* APIRequest+Stub.swift */,
+			);
+			path = StubbedClient;
 			sourceTree = "<group>";
 		};
 		C538390C1DB4C71800CF5EF2 /* Alamofire */ = {
@@ -344,6 +358,8 @@
 				C53839351DB4C71800CF5EF2 /* RequestDecorator.swift in Sources */,
 				B80646291E5EFD6F00706510 /* KeyPathParser.swift in Sources */,
 				B806462D1E5F083300706510 /* PluginType.swift in Sources */,
+				B8185F061E65BEF1001E1D9A /* StubbedAPIClient.swift in Sources */,
+				B8185F081E65C27E001E1D9A /* APIRequest+Stub.swift in Sources */,
 				B806462F1E5F218400706510 /* ErrorRecovererPlugin.swift in Sources */,
 				C53839361DB4C71800CF5EF2 /* ResponseDeserializer.swift in Sources */,
 				B80646351E5F33D800706510 /* ErrorPreprocessorPlugin.swift in Sources */,

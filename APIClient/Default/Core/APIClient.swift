@@ -18,6 +18,8 @@ open class APIClient: NSObject, NetworkClient {
         self.plugins = plugins
     }
 
+    // MARK: - NetworkClient
+    
     public func execute<T, U: ResponseParser>(request: APIRequest, parser: U) -> Task<T> where U.Representation == T {
         let taskProducer: RequestTaskProducer = {
             self.willSend(request: request)
@@ -30,12 +32,6 @@ open class APIClient: NSObject, NetworkClient {
         return _execute(taskProducer, parser: parser)
     }
 
-    public func execute<T: SerializeableAPIRequest>(request: T) -> Task<T.Parser.Representation> {
-        return execute(request: request, parser: request.parser)
-    }
-
-    // MARK: Multipart Request Execution
-
     public func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
         let taskProducer: RequestTaskProducer = {
             self.willSend(request: multipartRequest)
@@ -47,13 +43,7 @@ open class APIClient: NSObject, NetworkClient {
         
         return _execute(taskProducer, parser: parser)
     }
-    
-    public func execute<T: SerializeableAPIRequest>(multipartRequest: T) -> Task<T.Parser.Representation> {
-        return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser)
-    }
-    
-    // MARK: File Requests Execution
-    
+
     public func execute<T, U : ResponseParser>(downloadRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
         let taskProducer: RequestTaskProducer = {
             self.willSend(request: downloadRequest)
@@ -64,10 +54,6 @@ open class APIClient: NSObject, NetworkClient {
         }
         
         return _execute(taskProducer, parser: parser)
-    }
-    
-    public func execute<T : SerializeableAPIRequest>(downloadRequest: T) -> Task<T.Parser.Representation> {
-        return execute(downloadRequest: downloadRequest, parser: downloadRequest.parser)
     }
     
 }

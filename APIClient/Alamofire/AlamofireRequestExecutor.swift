@@ -69,7 +69,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
         
         request.responseData { response in
             guard let httpResponse = response.response, let data = response.result.value else {
-                source.set(error: AlamofireExecutorError(error: response.error ?? response.result.error))
+                source.set(error: AlamofireExecutorError(error: response.result.error))
                 
                 return
             }
@@ -108,7 +108,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
                         }
                         request.responseJSON(completionHandler: { response in
                             guard let httpResponse = response.response, let data = response.data else {
-                                source.set(error: AlamofireExecutorError(error: response.error))
+                                source.set(error: AlamofireExecutorError(error: response.result.error))
                                 
                                 return
                             }

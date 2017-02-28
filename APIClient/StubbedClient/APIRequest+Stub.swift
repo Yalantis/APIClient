@@ -6,4 +6,14 @@
 //  Copyright © 2017 Eugene Andreyev. All rights reserved.
 //
 
-import Foundation
+extension APIRequest {
+    
+    func sampleStub<T>() -> T? {
+        return nil
+    }
+    
+    func sampleStubError() -> Error? {
+        return nil
+    }
+    
+}
