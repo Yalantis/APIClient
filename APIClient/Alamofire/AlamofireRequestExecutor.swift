@@ -3,9 +3,9 @@ import Alamofire
 import BoltsSwift
 
 public struct AlamofireExecutorError: Error {
-
+    
     var error: Error?
-
+    
 }
 
 open class AlamofireRequestExecutor: RequestExecutor {
@@ -55,25 +55,26 @@ open class AlamofireRequestExecutor: RequestExecutor {
             .absoluteString
             .removingPercentEncoding!
         
-        manager
-            .download(
-                requestPath,
-                method: request.alamofireMethod,
-                parameters: request.parameters,
-                encoding: JSONEncoding(),
-                headers: request.headers
-            )
-            .downloadProgress { progress in
-                request.progressBlock?(progress)
+        var downloadRequest = manager.download(
+            requestPath,
+            method: request.alamofireMethod,
+            parameters: request.parameters,
+            encoding: JSONEncoding(),
+            headers: request.headers)
+        if let progressHandler = request.progressHandler {
+            downloadRequest = downloadRequest.downloadProgress { progress in
+                progressHandler(progress)
             }
-            .responseData { response in
-                guard let httpResponse = response.response, let data = response.result.value else {
-                    source.set(error: AlamofireExecutorError(error: response.error ?? response.result.error))
-                    
-                    return
-                }
+        }
+        
+        downloadRequest.responseData { response in
+            guard let httpResponse = response.response, let data = response.result.value else {
+                source.set(error: AlamofireExecutorError(error: response.error ?? response.result.error))
                 
-                source.set(result: (httpResponse, data))
+                return
+            }
+            
+            source.set(result: (httpResponse, data))
         }
         
         return source.task
@@ -99,20 +100,21 @@ open class AlamofireRequestExecutor: RequestExecutor {
                 headers: multipartRequest.headers,
                 encodingCompletion: { encodingResult in
                     switch encodingResult {
-                    case .success(let request, _, _):
-                        request
-                            .uploadProgress { progress in
-                                multipartRequest.progressBlock?(progress)
+                    case .success(var request, _, _):
+                        if let progressHandler = multipartRequest.progressHandler {
+                            request = request.uploadProgress { progress in
+                                progressHandler(progress)
                             }
-                            .responseJSON(completionHandler: { response in
-                                guard let httpResponse = response.response, let data = response.data else {
-                                    source.set(error: AlamofireExecutorError(error: response.error))
-                                    
-                                    return
-                                }
+                        }
+                        request.responseJSON(completionHandler: { response in
+                            guard let httpResponse = response.response, let data = response.data else {
+                                source.set(error: AlamofireExecutorError(error: response.error))
                                 
-                                source.set(result: (httpResponse, data))
-                            })
+                                return
+                            }
+                            
+                            source.set(result: (httpResponse, data))
+                        })
                         
                     case .failure(let error):
                         source.set(error: AlamofireExecutorError(error: error))

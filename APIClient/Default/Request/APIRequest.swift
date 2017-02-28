@@ -17,7 +17,7 @@ public protocol APIRequest {
     var scopes: [String]? { get }
     var headers: [String: String]? { get }
     var multipartFormData: ((MultipartFormDataType) -> Void)? { get }
-    var progressBlock: ProgressHandler? { get }
+    var progressHandler: ProgressHandler? { get }
     
 }
 
@@ -95,7 +95,7 @@ public extension APIRequest {
         return nil
     }
     
-    var progressBlock: ProgressHandler? {
+    var progressHandler: ProgressHandler? {
         return nil
     }
 
