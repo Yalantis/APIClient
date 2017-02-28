@@ -8,7 +8,7 @@
 
 import BoltsSwift
 
-final class ErrorRecovererPlugin: PluginType {
+public final class ErrorRecovererPlugin: PluginType {
     
     private let errorRecoverer: ErrorRecovering
     
@@ -16,7 +16,7 @@ final class ErrorRecovererPlugin: PluginType {
         self.errorRecoverer = errorRecoverer
     }
     
-    func resolve(_ error: Error) -> Task<Bool> {
+    public func resolve(_ error: Error) -> Task<Bool> {
         if errorRecoverer.canRecover(from: error) {
             return errorRecoverer.recover(from: error)
         }
