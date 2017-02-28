@@ -141,7 +141,7 @@ private extension APIClient {
     }
     
     func willSend(request: APIRequest) {
-        plugins.forEach { $0.willSend(request)}
+        plugins.forEach { $0.willSend(request) }
     }
     
     func prepare(request: APIRequest) -> APIRequest {

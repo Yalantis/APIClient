@@ -26,20 +26,54 @@ open class AlamofireRequestExecutor: RequestExecutor {
             .absoluteString
             .removingPercentEncoding!
         
-        manager.request(
-            requestPath,
-            method: request.alamofireMethod,
-            parameters: request.parameters,
-            encoding: JSONEncoding(),
-            headers: request.headers
-        ).response { response in
-            guard let httpResponse = response.response, let data = response.data else {
-                source.set(error: AlamofireExecutorError(error: response.error))
+        manager
+            .request(
+                requestPath,
+                method: request.alamofireMethod,
+                parameters: request.parameters,
+                encoding: JSONEncoding(),
+                headers: request.headers
+            )
+            .response { response in
+                guard let httpResponse = response.response, let data = response.data else {
+                    source.set(error: AlamofireExecutorError(error: response.error))
+                    
+                    return
+                }
                 
-                return
+                source.set(result: (httpResponse, data))
+        }
+        
+        return source.task
+    }
+    
+    public func execute(download request: APIRequest) -> Task<APIClient.HTTPResponse> {
+        let source = TaskCompletionSource<APIClient.HTTPResponse>()
+        
+        let requestPath =  baseURL
+            .appendingPathComponent(request.path)
+            .absoluteString
+            .removingPercentEncoding!
+        
+        manager
+            .download(
+                requestPath,
+                method: request.alamofireMethod,
+                parameters: request.parameters,
+                encoding: JSONEncoding(),
+                headers: request.headers
+            )
+            .downloadProgress { progress in
+                request.progressBlock?(progress)
             }
-            
-            source.set(result: (httpResponse, data))
+            .responseData { response in
+                guard let httpResponse = response.response, let data = response.result.value else {
+                    source.set(error: AlamofireExecutorError(error: response.error ?? response.result.error))
+                    
+                    return
+                }
+                
+                source.set(result: (httpResponse, data))
         }
         
         return source.task
@@ -57,30 +91,33 @@ open class AlamofireRequestExecutor: RequestExecutor {
             .absoluteString
             .removingPercentEncoding!
         
-        manager.upload(
-            multipartFormData: multipartFormData,
-            to: requestPath,
-            method: multipartRequest.alamofireMethod,
-            headers: multipartRequest.headers,
-            encodingCompletion: { encodingResult in
-                switch encodingResult {
-                case .success(let request, _, _):
-                    request.responseJSON(
-                        completionHandler: { response in
-                            guard let httpResponse = response.response, let data = response.data else {
-                                source.set(error: AlamofireExecutorError(error: response.error))
-                                
-                                return
+        manager
+            .upload(
+                multipartFormData: multipartFormData,
+                to: requestPath,
+                method: multipartRequest.alamofireMethod,
+                headers: multipartRequest.headers,
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                    case .success(let request, _, _):
+                        request
+                            .uploadProgress { progress in
+                                multipartRequest.progressBlock?(progress)
                             }
-                            
-                            source.set(result: (httpResponse, data))
-                        }
-                    )
-                    
-                case .failure(let error):
-                    source.set(error: AlamofireExecutorError(error: error))
-                    
-                }
+                            .responseJSON(completionHandler: { response in
+                                guard let httpResponse = response.response, let data = response.data else {
+                                    source.set(error: AlamofireExecutorError(error: response.error))
+                                    
+                                    return
+                                }
+                                
+                                source.set(result: (httpResponse, data))
+                            })
+                        
+                    case .failure(let error):
+                        source.set(error: AlamofireExecutorError(error: error))
+                        
+                    }
             }
         )
         
