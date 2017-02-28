@@ -47,27 +47,27 @@ open class AlamofireRequestExecutor: RequestExecutor {
         return source.task
     }
     
-    public func execute(download request: APIRequest) -> Task<APIClient.HTTPResponse> {
+    public func execute(downloadRequest: APIRequest) -> Task<APIClient.HTTPResponse> {
         let source = TaskCompletionSource<APIClient.HTTPResponse>()
         
         let requestPath =  baseURL
-            .appendingPathComponent(request.path)
+            .appendingPathComponent(downloadRequest.path)
             .absoluteString
             .removingPercentEncoding!
         
-        var downloadRequest = manager.download(
+        var request = manager.download(
             requestPath,
-            method: request.alamofireMethod,
-            parameters: request.parameters,
+            method: downloadRequest.alamofireMethod,
+            parameters: downloadRequest.parameters,
             encoding: JSONEncoding(),
-            headers: request.headers)
-        if let progressHandler = request.progressHandler {
-            downloadRequest = downloadRequest.downloadProgress { progress in
+            headers: downloadRequest.headers)
+        if let progressHandler = downloadRequest.progressHandler {
+            request = request.downloadProgress { progress in
                 progressHandler(progress)
             }
         }
         
-        downloadRequest.responseData { response in
+        request.responseData { response in
             guard let httpResponse = response.response, let data = response.result.value else {
                 source.set(error: AlamofireExecutorError(error: response.error ?? response.result.error))
                 

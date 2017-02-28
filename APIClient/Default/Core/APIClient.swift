@@ -52,6 +52,24 @@ open class APIClient: NSObject, NetworkClient {
         return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser)
     }
     
+    // MARK: File Requests Execution
+    
+    public func execute<T, U : ResponseParser>(downloadRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
+        let taskProducer: RequestTaskProducer = {
+            self.willSend(request: downloadRequest)
+            
+            return self
+                .requestExecutor
+                .execute(downloadRequest: self.prepare(request: downloadRequest))
+        }
+        
+        return _execute(taskProducer, parser: parser)
+    }
+    
+    public func execute<T : SerializeableAPIRequest>(downloadRequest: T) -> Task<T.Parser.Representation> {
+        return execute(downloadRequest: downloadRequest, parser: downloadRequest.parser)
+    }
+    
 }
 
 private extension APIClient {
