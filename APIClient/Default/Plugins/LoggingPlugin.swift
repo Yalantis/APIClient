@@ -50,6 +50,12 @@ public final class LoggingPlugin: PluginType {
         return nil
     }
     
+    public func decorate(_ error: Error) -> Error {
+        outputClosure("Trying to decorate error - \(error)")
+        
+        return error
+    }
+    
     public func process<T>(_ result: T) -> T {
         outputClosure("Successfully received - \(result)")
         

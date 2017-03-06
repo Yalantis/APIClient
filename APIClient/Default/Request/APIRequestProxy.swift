@@ -7,16 +7,16 @@
 
 public struct APIRequestProxy: APIRequest {
     
-    var path: String
-    var method: APIRequestMethod
-    var encoding: APIRequestEncoding?
-    var parameters: [String: Any]?
-    var scopes: [String]?
-    var headers: [String: String]?
-    var multipartFormData: ((MultipartFormDataType) -> Void)?
-    var progressHandler: ProgressHandler?
+    public var path: String
+    public var method: APIRequestMethod
+    public var encoding: APIRequestEncoding?
+    public var parameters: [String: Any]?
+    public var scopes: [String]?
+    public var headers: [String: String]?
+    public var multipartFormData: ((MultipartFormDataType) -> Void)?
+    public var progressHandler: ProgressHandler?
     
-    init(request: APIRequest) {
+    public init(request: APIRequest) {
         path = request.path
         method = request.method
         encoding = request.encoding

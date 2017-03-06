@@ -105,6 +105,9 @@ private extension APIClient {
             .continueOnSuccessWith { response in
                 return self.process(result: response)
             }
+            .continueOnErrorWithTask { error -> Task<T> in
+                return Task<T>(error: self.decorate(error: error))
+            }
     }
     
 
@@ -150,6 +153,10 @@ private extension APIClient {
     
     func prepare(request: APIRequest) -> APIRequest {
         return plugins.reduce(request) { $0.1.prepare($0.0) }
+    }
+    
+    func decorate(error: Error) -> Error {
+        return plugins.reduce(error) { $0.1.decorate($0.0) }
     }
     
 }
