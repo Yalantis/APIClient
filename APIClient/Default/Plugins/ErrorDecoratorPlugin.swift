@@ -12,7 +12,7 @@ public protocol ErrorDecoratable {
     
 }
 
-public struct ErrorDecorator: PluginType {
+public struct ErrorDecoratorPlugin: PluginType {
     
     private let decorator: ErrorDecoratable
     
