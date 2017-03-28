@@ -4,7 +4,15 @@ import BoltsSwift
 
 public struct AlamofireExecutorError: Error {
     
-    var error: Error?
+    public var error: Error?
+    
+    var localizedDescription: String {
+        if let error = error {
+            return error.localizedDescription
+        }
+        
+        return "\(AlamofireExecutorError.self)"
+    }
     
 }
 
