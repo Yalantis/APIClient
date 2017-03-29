@@ -11,7 +11,7 @@ public protocol NetworkClient {
     
     func execute<T : SerializeableAPIRequest>(multipartRequest: T) -> Task<T.Parser.Representation>
     
-    func execute<T, U: ResponseParser>(downloadRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T
+    func execute<T, U: ResponseParser>(downloadRequest: APIRequest, destinationPath: URL?,  parser: U) -> Task<T> where U.Representation == T
     
 }
 
@@ -37,8 +37,8 @@ public extension NetworkClient {
         return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser)
     }
     
-    func execute<T : SerializeableAPIRequest>(downloadRequest: T) -> Task<T.Parser.Representation> {
-        return execute(downloadRequest: downloadRequest, parser: downloadRequest.parser)
+    func execute<T : SerializeableAPIRequest>(downloadRequest: T, destinationPath: URL?) -> Task<T.Parser.Representation> {
+        return execute(downloadRequest: downloadRequest, destinationPath: destinationPath, parser: downloadRequest.parser)
     }
     
 }

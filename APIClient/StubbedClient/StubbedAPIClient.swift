@@ -65,7 +65,7 @@ public class StubbedAPIClient: NetworkClient {
         return taskSource.task
     }
     
-    public func execute<T, U: ResponseParser>(downloadRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
+    public func execute<T, U: ResponseParser>(downloadRequest: APIRequest, destinationPath destiantionPath: URL?, parser: U) -> Task<T> where U.Representation == T {
         let taskSource = TaskCompletionSource<T>()
         delay {
             let stub: T? = downloadRequest.sampleStub()

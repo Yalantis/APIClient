@@ -55,7 +55,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
         return source.task
     }
     
-    public func execute(downloadRequest: APIRequest) -> Task<APIClient.HTTPResponse> {
+    public func execute(downloadRequest: APIRequest, destinationPath: URL?) -> Task<APIClient.HTTPResponse> {
         let source = TaskCompletionSource<APIClient.HTTPResponse>()
         
         let requestPath =  baseURL
@@ -68,7 +68,8 @@ open class AlamofireRequestExecutor: RequestExecutor {
             method: downloadRequest.alamofireMethod,
             parameters: downloadRequest.parameters,
             encoding: downloadRequest.alamofireEncoding,
-            headers: downloadRequest.headers)
+            headers: downloadRequest.headers,
+            to: destination(for: destinationPath))
         if let progressHandler = downloadRequest.progressHandler {
             request = request.downloadProgress { progress in
                 progressHandler(progress)
@@ -86,6 +87,17 @@ open class AlamofireRequestExecutor: RequestExecutor {
         }
         
         return source.task
+    }
+    
+    private func destination(for url: URL?) -> DownloadRequest.DownloadFileDestination? {
+        guard let url = url else {
+            return nil
+        }
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            return (url, [.removePreviousFile, .createIntermediateDirectories])
+        }
+        
+        return destination
     }
     
     public func execute(multipartRequest: APIRequest) -> Task<APIClient.HTTPResponse> {
