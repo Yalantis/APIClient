@@ -44,7 +44,7 @@ open class APIClient: NSObject, NetworkClient {
         return _execute(taskProducer, parser: parser)
     }
 
-    public func execute<T, U : ResponseParser>(downloadRequest: APIRequest, destinationPath: URL?, parser: U) -> Task<T> where U.Representation == T {
+    public func execute<T, U : ResponseParser>(downloadRequest: APIRequest, destinationFilePath destinationPath: URL?, parser: U) -> Task<T> where U.Representation == T {
         let taskProducer: RequestTaskProducer = {
             self.willSend(request: downloadRequest)
             
