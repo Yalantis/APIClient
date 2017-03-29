@@ -29,7 +29,7 @@ open class APIClient: NSObject, NetworkClient {
                 .execute(request: self.prepare(request: request))
         }
         
-        return _execute(taskProducer, parser: parser)
+        return _execute(taskProducer, deserializer: deserializer, parser: parser)
     }
 
     public func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
@@ -41,10 +41,10 @@ open class APIClient: NSObject, NetworkClient {
                 .execute(multipartRequest: self.prepare(request: multipartRequest))
         }
         
-        return _execute(taskProducer, parser: parser)
+        return _execute(taskProducer, deserializer: deserializer, parser: parser)
     }
 
-    public func execute<T, U : ResponseParser>(downloadRequest: APIRequest, destinationFilePath destinationPath: URL?, parser: U) -> Task<T> where U.Representation == T {
+    public func execute<T, U : ResponseParser>(downloadRequest: APIRequest, destinationFilePath destinationPath: URL?, deserializer: Deserializer?, parser: U) -> Task<T> where U.Representation == T {
         let taskProducer: RequestTaskProducer = {
             self.willSend(request: downloadRequest)
             
@@ -53,7 +53,7 @@ open class APIClient: NSObject, NetworkClient {
                 .execute(downloadRequest: self.prepare(request: downloadRequest), destinationPath: destinationPath)
         }
         
-        return _execute(taskProducer, parser: parser)
+        return _execute(taskProducer, deserializer: deserializer ?? self.deserializer, parser: parser)
     }
     
 }
@@ -72,7 +72,7 @@ private extension APIClient {
         }
     }
     
-    func _execute<T, U: ResponseParser>(_ requestTaskProducer: @escaping RequestTaskProducer, parser: U) -> Task<T> where U.Representation == T {
+    func _execute<T, U: ResponseParser>(_ requestTaskProducer: @escaping RequestTaskProducer, deserializer: Deserializer, parser: U) -> Task<T> where U.Representation == T {
         let requestTask = requestTaskProducer()
         func validatedTask(from task: Task<HTTPResponse>) -> Task<HTTPResponse> {
             return task.continueWithTask { responseTask in
@@ -97,7 +97,7 @@ private extension APIClient {
                 }
             }
             .continueOnSuccessWith(responseExecutor, continuation: { response, data -> AnyObject in
-                return try self.deserializer.deserialize(response, data: data)
+                return try deserializer.deserialize(response, data: data)
             })
             .continueOnSuccessWith(responseExecutor, continuation: { response in
                 return try parser.parse(response)
