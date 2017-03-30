@@ -11,7 +11,15 @@ public protocol NetworkClient {
     
     func execute<T : SerializeableAPIRequest>(multipartRequest: T) -> Task<T.Parser.Representation>
     
-    func execute<T, U: ResponseParser>(downloadRequest: APIRequest, destinationFilePath: URL?,  parser: U) -> Task<T> where U.Representation == T
+    /// Executes download request with progress handled by `downloadRequest.progressHandler`
+    ///
+    /// - Parameters:
+    ///   - downloadRequest: the request itself
+    ///   - destinationFilePath: path to the where data will be saved; default is `nil`
+    ///   - deserializer: deserializer for given request's response
+    ///   - parser: parser for response; by default parser from request used
+    /// - Returns: task with response object on success or appropriate error on failure
+    func execute<T, U: ResponseParser>(downloadRequest: APIRequest, destinationFilePath: URL?, deserializer: Deserializer?,  parser: U) -> Task<T> where U.Representation == T
     
 }
 
@@ -37,8 +45,13 @@ public extension NetworkClient {
         return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser)
     }
     
-    func execute<T : SerializeableAPIRequest>(downloadRequest: T, destinationPath: URL?) -> Task<T.Parser.Representation> {
-        return execute(downloadRequest: downloadRequest, destinationFilePath: destinationPath, parser: downloadRequest.parser)
+    func execute<T : SerializeableAPIRequest>(downloadRequest: T, destinationFilePath: URL? = nil, deserializer: Deserializer?) -> Task<T.Parser.Representation> {
+        return execute(
+            downloadRequest: downloadRequest,
+            destinationFilePath: destinationFilePath,
+            deserializer: deserializer,
+            parser: downloadRequest.parser
+        )
     }
     
 }
