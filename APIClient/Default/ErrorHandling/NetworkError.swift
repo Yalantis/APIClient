@@ -14,7 +14,7 @@ public struct NetworkError: Error, Hashable, Equatable {
     
     // MARK: Equatable
     
-    static public func ==(lhs: NetworkError, rhs: NetworkError) -> Bool {
+    public static func ==(lhs: NetworkError, rhs: NetworkError) -> Bool {
         return lhs.statusCode == rhs.statusCode
     }
     
@@ -26,7 +26,7 @@ public struct NetworkError: Error, Hashable, Equatable {
     
     // MARK: Defaults
     
-    static var undefined: NetworkError {
+    public static var undefined: NetworkError {
         return NetworkError(statusCode: -1)
     }
     
