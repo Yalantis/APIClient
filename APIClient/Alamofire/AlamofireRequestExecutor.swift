@@ -4,7 +4,7 @@ import BoltsSwift
 
 public struct AlamofireExecutorError: Error {
 
-    var error: Error?
+   public var error: Error?
 
 }
 
