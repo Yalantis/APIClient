@@ -2,7 +2,11 @@ import Foundation
 import Alamofire
 import BoltsSwift
 
-public struct AlamofireExecutorError: Error {}
+public struct AlamofireExecutorError: Error {
+
+   public var error: Error?
+
+}
 
 open class AlamofireRequestExecutor: RequestExecutor {
     
@@ -30,7 +34,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
             headers: request.headers
         ).response { response in
             guard let httpResponse = response.response, let data = response.data else {
-                source.set(error: AlamofireExecutorError())
+                source.set(error: AlamofireExecutorError(error: response.error))
                 
                 return
             }
@@ -56,13 +60,15 @@ open class AlamofireRequestExecutor: RequestExecutor {
         manager.upload(
             multipartFormData: multipartFormData,
             to: requestPath,
+            method: multipartRequest.alamofireMethod,
+            headers: multipartRequest.headers,
             encodingCompletion: { encodingResult in
                 switch encodingResult {
                 case .success(let request, _, _):
                     request.responseJSON(
                         completionHandler: { response in
                             guard let httpResponse = response.response, let data = response.data else {
-                                source.set(error: AlamofireExecutorError())
+                                source.set(error: AlamofireExecutorError(error: response.error))
                                 
                                 return
                             }
@@ -70,7 +76,10 @@ open class AlamofireRequestExecutor: RequestExecutor {
                             source.set(result: (httpResponse, data))
                         }
                     )
-                case .failure: source.set(error: AlamofireExecutorError())
+                    
+                case .failure(let error):
+                    source.set(error: AlamofireExecutorError(error: error))
+                    
                 }
             }
         )

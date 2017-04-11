@@ -1,58 +1,43 @@
 import Foundation
 import ObjectMapper
 
-public struct MappableParserError: Error {}
+public enum ParserError: Error {
+    
+    case parsingInstance, parsingArray, parsingJson
+    
+}
 
-open class MappableParser<T: BaseMappable>: ResponseParser {
+open class MappableParser<T: BaseMappable>: KeyPathParser, ResponseParser {
     
     public typealias Representation = T
     
-    private let keyPath: String?
-    
-    public init(keyPath: String? = nil) {
-        self.keyPath = keyPath
-    }
-    
     public func parse(_ object: AnyObject) throws -> T {
-        func getValueForKeypath(_ object: AnyObject) -> AnyObject {
-            if let keyPath = keyPath, let dictionary = object as? [String: AnyObject] {
-                return dictionary[keyPath]!
-            } else {
-                return object
-            }
+        guard let json = valueForKeypath(in: object) as? JSON else {
+            throw ParserError.parsingJson
         }
         
-        if let representation = Mapper<T>().map(JSONObject: getValueForKeypath(object)) {
+        if let representation = Mapper<T>().map(JSONObject: json) {
             return representation
         } else {
-            throw MappableParserError()
+            throw ParserError.parsingInstance
         }
     }
     
 }
 
-open class MappableArrayParser<T: Collection>: ResponseParser where T.Iterator.Element: BaseMappable {
+open class MappableArrayParser<T: Collection>: KeyPathParser, ResponseParser where T.Iterator.Element: BaseMappable {
     
     public typealias Representation = T
     
-    private let keyPath: String?
-    
-    public init(keyPath: String? = nil) {
-        self.keyPath = keyPath
-    }
-    
     public func parse(_ object: AnyObject) throws -> T {
-        func getValueForKeypath(_ object: AnyObject) -> AnyObject {
-            if let keyPath = keyPath, let dictionary = object as? [String: AnyObject] {
-                return dictionary[keyPath]!
-            } else {
-                return object
-            }
+        guard let jsonArray = valueForKeypath(in: object) as? JSON else {
+            throw ParserError.parsingJson
         }
-        if let Representation = Mapper<T.Generator.Element>().mapArray(JSONObject: getValueForKeypath(object)) as? T {
-            return Representation
+        
+        if let representation = Mapper<T.Generator.Element>().mapArray(JSONObject: jsonArray) as? T {
+            return representation
         } else {
-            throw MappableParserError()
+            throw ParserError.parsingArray
         }
     }
     
