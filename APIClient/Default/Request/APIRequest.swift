@@ -6,18 +6,19 @@ public enum APIRequestMethod: UInt {
     
 }
 
+public typealias ProgressHandler = (Progress) -> ()
 public protocol APIRequestEncoding {}
 
 public protocol APIRequest {
     
     var path: String { get }
-    var parameters: [String: Any]? { get }
-    var encoding: APIRequestEncoding? { get }
     var method: APIRequestMethod { get }
+    var encoding: APIRequestEncoding? { get }
+    var parameters: [String: Any]? { get }
     var scopes: [String]? { get }
     var headers: [String: String]? { get }
     var multipartFormData: ((MultipartFormDataType) -> Void)? { get }
-    var authRequired: Bool { get }
+    var progressHandler: ProgressHandler? { get }
     
 }
 
@@ -71,8 +72,8 @@ public extension APIRequest {
         return nil
     }
     
-    var authRequired: Bool {
-        return true
+    var progressHandler: ProgressHandler? {
+        return nil
     }
 
 }
