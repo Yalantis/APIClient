@@ -3,9 +3,9 @@ import Alamofire
 import BoltsSwift
 
 public struct AlamofireExecutorError: Error {
-    
-    var error: Error?
-    
+
+   public var error: Error?
+
 }
 
 open class AlamofireRequestExecutor: RequestExecutor {
