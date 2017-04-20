@@ -30,7 +30,7 @@ open class MappableArrayParser<T: Collection>: KeyPathParser, ResponseParser whe
     public typealias Representation = T
     
     public func parse(_ object: AnyObject) throws -> T {
-        guard let jsonArray = valueForKeypath(in: object) as? JSON else {
+        guard let jsonArray = valueForKeypath(in: object) as? [JSON] else {
             throw ParserError.parsingJson
         }
         
