@@ -8,7 +8,7 @@
 
 import BoltsSwift
 
-final class ErrorRecovererPlugin: PluginType {
+public final class ErrorRecovererPlugin: PluginType {
     
     private let errorRecoverer: ErrorRecovering
     
