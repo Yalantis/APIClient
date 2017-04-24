@@ -38,6 +38,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'StubbedClient' do |ss|
     ss.dependency 'APIClient/Core'
+    ss.dependency 'OHHTTPStubs/Swift'
   	ss.source_files = "APIClient/StubbedClient/*"
   end
 
