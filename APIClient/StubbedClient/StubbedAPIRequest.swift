@@ -6,14 +6,8 @@
 //  Copyright © 2017 Eugene Andreyev. All rights reserved.
 //
 
-extension APIRequest {
-    
-    func sampleStub<T>() -> T? {
-        return nil
-    }
-    
-    func sampleStubError() -> Error? {
-        return nil
-    }
+public protocol StubbedAPIRequest: APIRequest {
+
+    var stubPath: String? { get }
     
 }
