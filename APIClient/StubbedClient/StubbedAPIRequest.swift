@@ -6,8 +6,10 @@
 //  Copyright © 2017 Eugene Andreyev. All rights reserved.
 //
 
-public protocol StubbedAPIRequest: APIRequest {
+import Foundation
 
-    var stubPath: String? { get }
+public protocol StubbedAPIRequest: APIRequest {
+    
+    var stub: Stub? { get }
     
 }
