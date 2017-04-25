@@ -3,7 +3,7 @@ import BoltsSwift
 
 open class APIClient: NSObject, NetworkClient {
     
-    public typealias HTTPResponse = (HTTPURLResponse, Data)
+    public typealias HTTPResponse = (httpResponse: HTTPURLResponse, data: Data)
     
     fileprivate let responseExecutor: Executor = .queue(DispatchQueue(label: "APIClientQueue", attributes: .concurrent))
     fileprivate let requestExecutor: RequestExecutor
@@ -63,7 +63,7 @@ private extension APIClient {
     typealias RequestTaskProducer = () -> Task<HTTPResponse>
     
     func validate(_ response: HTTPResponse) -> Task<HTTPResponse> {
-        switch response.0.statusCode {
+        switch response.httpResponse.statusCode {
         case (200...299):
             return Task(response)
         

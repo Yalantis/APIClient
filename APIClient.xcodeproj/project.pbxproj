@@ -30,7 +30,6 @@
 		C53839301DB4C71800CF5EF2 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839191DB4C71800CF5EF2 /* NetworkError.swift */; };
 		C53839311DB4C71800CF5EF2 /* RequestExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538391B1DB4C71800CF5EF2 /* RequestExecutor.swift */; };
 		C53839341DB4C71800CF5EF2 /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839211DB4C71800CF5EF2 /* APIRequest.swift */; };
-		C53839351DB4C71800CF5EF2 /* RequestDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839221DB4C71800CF5EF2 /* RequestDecorator.swift */; };
 		C53839361DB4C71800CF5EF2 /* ResponseDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839241DB4C71800CF5EF2 /* ResponseDeserializer.swift */; };
 		C53839371DB4C71800CF5EF2 /* ResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839251DB4C71800CF5EF2 /* ResponseParser.swift */; };
 		C53839381DB4C71800CF5EF2 /* ObjectMapperParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839271DB4C71800CF5EF2 /* ObjectMapperParser.swift */; };
@@ -73,7 +72,6 @@
 		C53839191DB4C71800CF5EF2 /* NetworkError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		C538391B1DB4C71800CF5EF2 /* RequestExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestExecutor.swift; sourceTree = "<group>"; };
 		C53839211DB4C71800CF5EF2 /* APIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
-		C53839221DB4C71800CF5EF2 /* RequestDecorator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestDecorator.swift; sourceTree = "<group>"; };
 		C53839241DB4C71800CF5EF2 /* ResponseDeserializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDeserializer.swift; sourceTree = "<group>"; };
 		C53839251DB4C71800CF5EF2 /* ResponseParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseParser.swift; sourceTree = "<group>"; };
 		C53839271DB4C71800CF5EF2 /* ObjectMapperParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectMapperParser.swift; sourceTree = "<group>"; };
@@ -225,7 +223,6 @@
 			isa = PBXGroup;
 			children = (
 				C53839211DB4C71800CF5EF2 /* APIRequest.swift */,
-				C53839221DB4C71800CF5EF2 /* RequestDecorator.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -359,7 +356,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C53839351DB4C71800CF5EF2 /* RequestDecorator.swift in Sources */,
 				B80646291E5EFD6F00706510 /* KeyPathParser.swift in Sources */,
 				B806462D1E5F083300706510 /* PluginType.swift in Sources */,
 				B806462F1E5F218400706510 /* ErrorRecovererPlugin.swift in Sources */,
