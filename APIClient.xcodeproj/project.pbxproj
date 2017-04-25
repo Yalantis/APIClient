@@ -12,12 +12,15 @@
 		44DEDD031D2FF44C0093EE21 /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DEDD021D2FF44C0093EE21 /* APIClientTests.swift */; };
 		44DEDD2B1D2FFE7B0093EE21 /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */; };
 		44DEDD2C1D2FFE7B0093EE21 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD291D2FFE7B0093EE21 /* Alamofire.framework */; };
+		6070EF571EAF3CEF00AA74EF /* StubbedAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6070EF551EAF3CEF00AA74EF /* StubbedAPIRequest.swift */; };
+		6070EF581EAF3CEF00AA74EF /* StubbedRequestExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6070EF561EAF3CEF00AA74EF /* StubbedRequestExecutor.swift */; };
 		B80646271E5EFC8C00706510 /* ImmutableObjectMapperParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646261E5EFC8C00706510 /* ImmutableObjectMapperParser.swift */; };
 		B80646291E5EFD6F00706510 /* KeyPathParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646281E5EFD6F00706510 /* KeyPathParser.swift */; };
 		B806462D1E5F083300706510 /* PluginType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B806462C1E5F083300706510 /* PluginType.swift */; };
 		B806462F1E5F218400706510 /* ErrorRecovererPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B806462E1E5F218400706510 /* ErrorRecovererPlugin.swift */; };
 		B80646331E5F21E800706510 /* ErrorRecovering.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646321E5F21E800706510 /* ErrorRecovering.swift */; };
 		B80646351E5F33D800706510 /* ErrorPreprocessorPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */; };
+		B8185F401E65D2EE001E1D9A /* LoggingPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8185F3F1E65D2EE001E1D9A /* LoggingPlugin.swift */; };
 		C53839281DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538390D1DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift */; };
 		C53839291DB4C71800CF5EF2 /* APIRequest+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538390E1DB4C71800CF5EF2 /* APIRequest+Alamofire.swift */; };
 		C538392B1DB4C71800CF5EF2 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839121DB4C71800CF5EF2 /* APIClient.swift */; };
@@ -51,12 +54,15 @@
 		44DEDD041D2FF44C0093EE21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BoltsSwift.framework; path = Carthage/Build/iOS/BoltsSwift.framework; sourceTree = "<group>"; };
 		44DEDD291D2FFE7B0093EE21 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		6070EF551EAF3CEF00AA74EF /* StubbedAPIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubbedAPIRequest.swift; sourceTree = "<group>"; };
+		6070EF561EAF3CEF00AA74EF /* StubbedRequestExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubbedRequestExecutor.swift; sourceTree = "<group>"; };
 		B80646261E5EFC8C00706510 /* ImmutableObjectMapperParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImmutableObjectMapperParser.swift; sourceTree = "<group>"; };
 		B80646281E5EFD6F00706510 /* KeyPathParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyPathParser.swift; sourceTree = "<group>"; };
 		B806462C1E5F083300706510 /* PluginType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginType.swift; sourceTree = "<group>"; };
 		B806462E1E5F218400706510 /* ErrorRecovererPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorRecovererPlugin.swift; sourceTree = "<group>"; };
 		B80646321E5F21E800706510 /* ErrorRecovering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorRecovering.swift; sourceTree = "<group>"; };
 		B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorPreprocessorPlugin.swift; sourceTree = "<group>"; };
+		B8185F3F1E65D2EE001E1D9A /* LoggingPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggingPlugin.swift; sourceTree = "<group>"; };
 		C538390D1DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireRequestExecutor.swift; sourceTree = "<group>"; };
 		C538390E1DB4C71800CF5EF2 /* APIRequest+Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "APIRequest+Alamofire.swift"; sourceTree = "<group>"; };
 		C53839121DB4C71800CF5EF2 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
@@ -116,10 +122,11 @@
 			isa = PBXGroup;
 			children = (
 				C538390C1DB4C71800CF5EF2 /* Alamofire */,
-				C53839101DB4C71800CF5EF2 /* Default */,
-				C53839261DB4C71800CF5EF2 /* ObjectMapper */,
 				44DEDCF61D2FF44C0093EE21 /* APIClient.h */,
+				C53839101DB4C71800CF5EF2 /* Default */,
 				44DEDCF81D2FF44C0093EE21 /* Info.plist */,
+				C53839261DB4C71800CF5EF2 /* ObjectMapper */,
+				B8185F041E65BEF1001E1D9A /* Stubbed */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -138,9 +145,20 @@
 			children = (
 				B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */,
 				B806462E1E5F218400706510 /* ErrorRecovererPlugin.swift */,
+				B8185F3F1E65D2EE001E1D9A /* LoggingPlugin.swift */,
 				B806462C1E5F083300706510 /* PluginType.swift */,
 			);
 			path = Plugins;
+			sourceTree = "<group>";
+		};
+		B8185F041E65BEF1001E1D9A /* Stubbed */ = {
+			isa = PBXGroup;
+			children = (
+				6070EF551EAF3CEF00AA74EF /* StubbedAPIRequest.swift */,
+				6070EF561EAF3CEF00AA74EF /* StubbedRequestExecutor.swift */,
+			);
+			name = Stubbed;
+			path = StubbedClient;
 			sourceTree = "<group>";
 		};
 		C538390C1DB4C71800CF5EF2 /* Alamofire */ = {
@@ -341,6 +359,7 @@
 				B80646291E5EFD6F00706510 /* KeyPathParser.swift in Sources */,
 				B806462D1E5F083300706510 /* PluginType.swift in Sources */,
 				B806462F1E5F218400706510 /* ErrorRecovererPlugin.swift in Sources */,
+				B8185F401E65D2EE001E1D9A /* LoggingPlugin.swift in Sources */,
 				C53839361DB4C71800CF5EF2 /* ResponseDeserializer.swift in Sources */,
 				B80646351E5F33D800706510 /* ErrorPreprocessorPlugin.swift in Sources */,
 				C53839281DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift in Sources */,
@@ -348,11 +367,13 @@
 				C53839341DB4C71800CF5EF2 /* APIRequest.swift in Sources */,
 				C53839291DB4C71800CF5EF2 /* APIRequest+Alamofire.swift in Sources */,
 				C538392C1DB4C71800CF5EF2 /* APIClientProtocol.swift in Sources */,
+				6070EF571EAF3CEF00AA74EF /* StubbedAPIRequest.swift in Sources */,
 				C538392D1DB4C71800CF5EF2 /* JSONDeserializer.swift in Sources */,
 				C538392B1DB4C71800CF5EF2 /* APIClient.swift in Sources */,
 				C53839301DB4C71800CF5EF2 /* NetworkError.swift in Sources */,
 				C53839371DB4C71800CF5EF2 /* ResponseParser.swift in Sources */,
 				C53839381DB4C71800CF5EF2 /* ObjectMapperParser.swift in Sources */,
+				6070EF581EAF3CEF00AA74EF /* StubbedRequestExecutor.swift in Sources */,
 				C53839311DB4C71800CF5EF2 /* RequestExecutor.swift in Sources */,
 				C538392E1DB4C71800CF5EF2 /* ErrorProcessor.swift in Sources */,
 				B80646271E5EFC8C00706510 /* ImmutableObjectMapperParser.swift in Sources */,

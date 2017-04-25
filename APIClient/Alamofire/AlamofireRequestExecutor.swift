@@ -3,9 +3,9 @@ import Alamofire
 import BoltsSwift
 
 public struct AlamofireExecutorError: Error {
-
-   public var error: Error?
-
+    
+    public var error: Error?
+    
 }
 
 open class AlamofireRequestExecutor: RequestExecutor {
@@ -47,7 +47,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
         return source.task
     }
     
-    public func execute(downloadRequest: APIRequest) -> Task<APIClient.HTTPResponse> {
+    public func execute(downloadRequest: APIRequest, destinationPath: URL?) -> Task<APIClient.HTTPResponse> {
         let source = TaskCompletionSource<APIClient.HTTPResponse>()
         
         let requestPath =  baseURL
@@ -60,7 +60,8 @@ open class AlamofireRequestExecutor: RequestExecutor {
             method: downloadRequest.alamofireMethod,
             parameters: downloadRequest.parameters,
             encoding: downloadRequest.alamofireEncoding,
-            headers: downloadRequest.headers)
+            headers: downloadRequest.headers,
+            to: destination(for: destinationPath))
         if let progressHandler = downloadRequest.progressHandler {
             request = request.downloadProgress { progress in
                 progressHandler(progress)
@@ -69,7 +70,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
         
         request.responseData { response in
             guard let httpResponse = response.response, let data = response.result.value else {
-                source.set(error: AlamofireExecutorError(error: response.error ?? response.result.error))
+                source.set(error: AlamofireExecutorError(error: response.result.error))
                 
                 return
             }
@@ -78,6 +79,17 @@ open class AlamofireRequestExecutor: RequestExecutor {
         }
         
         return source.task
+    }
+    
+    private func destination(for url: URL?) -> DownloadRequest.DownloadFileDestination? {
+        guard let url = url else {
+            return nil
+        }
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            return (url, [.removePreviousFile, .createIntermediateDirectories])
+        }
+        
+        return destination
     }
     
     public func execute(multipartRequest: APIRequest) -> Task<APIClient.HTTPResponse> {
@@ -108,7 +120,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
                         }
                         request.responseJSON(completionHandler: { response in
                             guard let httpResponse = response.response, let data = response.data else {
-                                source.set(error: AlamofireExecutorError(error: response.error))
+                                source.set(error: AlamofireExecutorError(error: response.result.error))
                                 
                                 return
                             }

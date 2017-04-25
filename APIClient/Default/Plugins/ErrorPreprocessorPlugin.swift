@@ -6,8 +6,6 @@
 //  Copyright © 2017 Eugene Andreyev. All rights reserved.
 //
 
-import BoltsSwift
-
 public final class ErrorPreprocessorPlugin: PluginType {
     
     private let errorPreprocessor: ErrorProcessing

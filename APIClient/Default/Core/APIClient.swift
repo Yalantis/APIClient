@@ -18,6 +18,8 @@ open class APIClient: NSObject, NetworkClient {
         self.plugins = plugins
     }
 
+    // MARK: - NetworkClient
+    
     public func execute<T, U: ResponseParser>(request: APIRequest, parser: U) -> Task<T> where U.Representation == T {
         let taskProducer: RequestTaskProducer = {
             self.willSend(request: request)
@@ -27,14 +29,8 @@ open class APIClient: NSObject, NetworkClient {
                 .execute(request: self.prepare(request: request))
         }
         
-        return _execute(taskProducer, parser: parser)
+        return _execute(taskProducer, deserializer: deserializer, parser: parser)
     }
-
-    public func execute<T: SerializeableAPIRequest>(request: T) -> Task<T.Parser.Representation> {
-        return execute(request: request, parser: request.parser)
-    }
-
-    // MARK: Multipart Request Execution
 
     public func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
         let taskProducer: RequestTaskProducer = {
@@ -45,29 +41,19 @@ open class APIClient: NSObject, NetworkClient {
                 .execute(multipartRequest: self.prepare(request: multipartRequest))
         }
         
-        return _execute(taskProducer, parser: parser)
+        return _execute(taskProducer, deserializer: deserializer, parser: parser)
     }
-    
-    public func execute<T: SerializeableAPIRequest>(multipartRequest: T) -> Task<T.Parser.Representation> {
-        return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser)
-    }
-    
-    // MARK: File Requests Execution
-    
-    public func execute<T, U : ResponseParser>(downloadRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
+
+    public func execute<T, U : ResponseParser>(downloadRequest: APIRequest, destinationFilePath destinationPath: URL?, deserializer: Deserializer?, parser: U) -> Task<T> where U.Representation == T {
         let taskProducer: RequestTaskProducer = {
             self.willSend(request: downloadRequest)
             
             return self
                 .requestExecutor
-                .execute(downloadRequest: self.prepare(request: downloadRequest))
+                .execute(downloadRequest: self.prepare(request: downloadRequest), destinationPath: destinationPath)
         }
         
-        return _execute(taskProducer, parser: parser)
-    }
-    
-    public func execute<T : SerializeableAPIRequest>(downloadRequest: T) -> Task<T.Parser.Representation> {
-        return execute(downloadRequest: downloadRequest, parser: downloadRequest.parser)
+        return _execute(taskProducer, deserializer: deserializer ?? self.deserializer, parser: parser)
     }
     
 }
@@ -86,7 +72,7 @@ private extension APIClient {
         }
     }
     
-    func _execute<T, U: ResponseParser>(_ requestTaskProducer: @escaping RequestTaskProducer, parser: U) -> Task<T> where U.Representation == T {
+    func _execute<T, U: ResponseParser>(_ requestTaskProducer: @escaping RequestTaskProducer, deserializer: Deserializer, parser: U) -> Task<T> where U.Representation == T {
         let requestTask = requestTaskProducer()
         func validatedTask(from task: Task<HTTPResponse>) -> Task<HTTPResponse> {
             return task.continueWithTask { responseTask in
@@ -111,13 +97,16 @@ private extension APIClient {
                 }
             }
             .continueOnSuccessWith(responseExecutor, continuation: { response, data -> AnyObject in
-                return try self.deserializer.deserialize(response, data: data)
+                return try deserializer.deserialize(response, data: data)
             })
             .continueOnSuccessWith(responseExecutor, continuation: { response in
                 return try parser.parse(response)
             })
             .continueOnSuccessWith { response in
                 return self.process(result: response)
+            }
+            .continueOnErrorWithTask { error -> Task<T> in
+                return Task<T>(error: self.decorate(error: error))
             }
     }
     
@@ -164,6 +153,10 @@ private extension APIClient {
     
     func prepare(request: APIRequest) -> APIRequest {
         return plugins.reduce(request) { $0.1.prepare($0.0) }
+    }
+    
+    func decorate(error: Error) -> Error {
+        return plugins.reduce(error) { $0.1.decorate($0.0) }
     }
     
 }

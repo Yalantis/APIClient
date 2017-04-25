@@ -28,6 +28,9 @@ public protocol PluginType {
     
     /// Called to modify a result in case of success right before completion.
     func process<T>(_ result: T) -> T
+    
+    /// Called to provide custom error type in case response isn't successful.
+    func decorate(_ error: Error) -> Error
 }
 
 public extension PluginType {
@@ -52,6 +55,10 @@ public extension PluginType {
     
     func process<T>(_ result: T) -> T {
         return result
+    }
+    
+    func decorate(_ error: Error) -> Error {
+        return error
     }
     
 }

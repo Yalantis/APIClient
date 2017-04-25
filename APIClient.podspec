@@ -36,4 +36,16 @@ Pod::Spec.new do |s|
     ss.source_files = "APIClient/ObjectMapper/*"
   end
 
+  s.subspec 'StubbedClient' do |ss|
+    ss.dependency 'APIClient/Core'
+    ss.source_files = "APIClient/StubbedClient/*"
+  end
+
+  s.subspec 'OHHTTPStubs' do |ss|
+    ss.dependency 'APIClient/StubbedClient'
+    ss.dependency 'OHHTTPStubs/Swift'
+    ss.source_files = "APIClient/OHHTTPStubs/*"
+  end
+
+
 end
