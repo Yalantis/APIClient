@@ -15,7 +15,6 @@ public protocol APIRequest {
     var method: APIRequestMethod { get }
     var encoding: APIRequestEncoding? { get }
     var parameters: [String: Any]? { get }
-    var scopes: [String]? { get }
     var headers: [String: String]? { get }
     var multipartFormData: ((MultipartFormDataType) -> Void)? { get }
     var progressHandler: ProgressHandler? { get }
@@ -57,10 +56,6 @@ public extension APIRequest {
     }
 
     var encoding: APIRequestEncoding? {
-        return nil
-    }
-
-    var scopes: [String]? {
         return nil
     }
     
