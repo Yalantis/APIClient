@@ -21,7 +21,6 @@ public struct APIRequestProxy: APIRequest {
         method = request.method
         encoding = request.encoding
         parameters = request.parameters
-        scopes = request.scopes
         headers = request.headers
         multipartFormData = request.multipartFormData
         progressHandler = request.progressHandler

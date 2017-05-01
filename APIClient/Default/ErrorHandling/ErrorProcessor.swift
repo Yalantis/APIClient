@@ -10,8 +10,7 @@ public struct NetworkErrorProcessor: ErrorProcessing {
     
     private let deserializer = JSONDeserializer()
     
-    public init() {
-    }
+    public init() { }
     
     public func processError(using response: APIClient.HTTPResponse) -> Error? {
         if let dictionary = (try? deserializer.deserialize(response.httpResponse, data: response.data)) as? [String: AnyObject] {
