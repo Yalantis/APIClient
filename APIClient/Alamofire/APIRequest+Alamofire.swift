@@ -41,3 +41,5 @@ public extension APIRequest {
 }
 
 extension URLEncoding: APIRequestEncoding {}
+extension PropertyListEncoding: APIRequestEncoding {}
+extension JSONEncoding: APIRequestEncoding {}
