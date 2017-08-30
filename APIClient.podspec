@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "APIClient"
-  s.version      = '1.0.6'
+  s.version      = '1.0.7'
 
   s.summary      = "Lightweight networking framework."
 
