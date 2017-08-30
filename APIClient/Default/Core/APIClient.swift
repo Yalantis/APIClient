@@ -126,7 +126,7 @@ private extension APIClient {
         
         return Task.whenAllResult(tasks).continueWithTask { task -> Task<Bool> in
             if let array = task.result {
-                return Task(!array.contains(false))
+                return Task(array.contains(true))
             }
             
             return Task(false)

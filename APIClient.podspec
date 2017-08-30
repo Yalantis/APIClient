@@ -1,15 +1,15 @@
 Pod::Spec.new do |s|
 
   s.name         = "APIClient"
-  s.version      = '1.0.5'
+  s.version      = '1.0.6'
 
   s.summary      = "Lightweight networking framework."
 
-  s.homepage     = "https://git.yalantis.com/eugene.andreyev/APIClient"
+  s.homepage     = "https://github.com/Yalantis/APIClient.git"
   s.license      = "MIT"
   s.authors      = { 'Eugene Andreyev' => 'eugene.andreyev@yalantis.com' }
 
-  s.source       = { :git => "git@git.yalantis.com:eugene.andreyev/APIClient.git", :tag => s.version }
+  s.source       = { :git => "git@github.com:Yalantis/APIClient.git", :tag => s.version }
 
   s.frameworks = 'Foundation'
 
@@ -18,7 +18,6 @@ Pod::Spec.new do |s|
 
   s.default_subspec = 'Core'
 
-  # Default subspec that includes the most commonly-used components
   s.subspec 'Core' do |ss|
     ss.source_files = "APIClient/Default/**/*.swift"
     ss.dependency 'Bolts-Swift', '~> 1.3' 
@@ -46,6 +45,5 @@ Pod::Spec.new do |s|
     ss.dependency 'OHHTTPStubs/Swift'
     ss.source_files = "APIClient/OHHTTPStubs/*"
   end
-
 
 end
