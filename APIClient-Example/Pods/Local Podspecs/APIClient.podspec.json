@@ -34,7 +34,7 @@
 
         ],
         "Alamofire": [
-          "~> 4.0"
+          "~> 4.6"
         ]
       },
       "source_files": "APIClient/Alamofire/*"
@@ -46,7 +46,7 @@
 
         ],
         "ObjectMapper": [
-          "~> 2.0"
+          "~> 3.1"
         ]
       },
       "source_files": "APIClient/ObjectMapper/*"

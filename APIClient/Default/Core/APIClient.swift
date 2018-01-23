@@ -118,7 +118,7 @@ private extension APIClient {
 private extension APIClient {
     
     func process<T>(result: T) -> T {
-        return plugins.reduce(result) { $0.1.process($0.0) }
+        return plugins.reduce(result) { $1.process($0) }
     }
     
     func resolve(_ error: Error) -> Task<Bool> {
@@ -152,11 +152,11 @@ private extension APIClient {
     }
     
     func prepare(request: APIRequest) -> APIRequest {
-        return plugins.reduce(request) { $0.1.prepare($0.0) }
+        return plugins.reduce(request) { $1.prepare($0) }
     }
     
     func decorate(error: Error) -> Error {
-        return plugins.reduce(error) { $0.1.decorate($0.0) }
+        return plugins.reduce(error) { $1.decorate($0) }
     }
     
 }

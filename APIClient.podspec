@@ -25,13 +25,13 @@ Pod::Spec.new do |s|
 
   s.subspec 'Alamofire' do |ss|
     ss.dependency 'APIClient/Core'
-    ss.dependency 'Alamofire', '~> 4.0' 
+    ss.dependency 'Alamofire', '~> 4.6' 
     ss.source_files = "APIClient/Alamofire/*"
   end
 
   s.subspec 'ObjectMapper' do |ss|
     ss.dependency 'APIClient/Core'
-    ss.dependency 'ObjectMapper', '~> 2.0' 
+    ss.dependency 'ObjectMapper', '~> 3.1' 
     ss.source_files = "APIClient/ObjectMapper/*"
   end
 

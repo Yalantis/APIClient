@@ -34,7 +34,7 @@ open class MappableArrayParser<T: Collection>: KeyPathParser, ResponseParser whe
             throw ParserError.parsingJson
         }
         
-        if let representation = Mapper<T.Generator.Element>().mapArray(JSONObject: jsonArray) as? T {
+        if let representation = Mapper<T.Iterator.Element>().mapArray(JSONObject: jsonArray) as? T {
             return representation
         } else {
             throw ParserError.parsingArray
