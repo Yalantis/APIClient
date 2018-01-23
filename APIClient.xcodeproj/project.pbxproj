@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		44DEDCF71D2FF44C0093EE21 /* APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DEDCF61D2FF44C0093EE21 /* APIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		44DEDCFE1D2FF44C0093EE21 /* APIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDCF31D2FF44C0093EE21 /* APIClient.framework */; };
-		44DEDD031D2FF44C0093EE21 /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DEDD021D2FF44C0093EE21 /* APIClientTests.swift */; };
 		44DEDD2B1D2FFE7B0093EE21 /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */; };
 		44DEDD2C1D2FFE7B0093EE21 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD291D2FFE7B0093EE21 /* Alamofire.framework */; };
 		6070EF571EAF3CEF00AA74EF /* StubbedAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6070EF551EAF3CEF00AA74EF /* StubbedAPIRequest.swift */; };
@@ -38,23 +36,10 @@
 		C53839381DB4C71800CF5EF2 /* ObjectMapperParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839271DB4C71800CF5EF2 /* ObjectMapperParser.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		44DEDCFF1D2FF44C0093EE21 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 44DEDCEA1D2FF44C0093EE21 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 44DEDCF21D2FF44C0093EE21;
-			remoteInfo = APIClient;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		44DEDCF31D2FF44C0093EE21 /* APIClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APIClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44DEDCF61D2FF44C0093EE21 /* APIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIClient.h; sourceTree = "<group>"; };
 		44DEDCF81D2FF44C0093EE21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		44DEDCFD1D2FF44C0093EE21 /* APIClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		44DEDD021D2FF44C0093EE21 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
-		44DEDD041D2FF44C0093EE21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BoltsSwift.framework; path = Carthage/Build/iOS/BoltsSwift.framework; sourceTree = "<group>"; };
 		44DEDD291D2FFE7B0093EE21 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		6070EF551EAF3CEF00AA74EF /* StubbedAPIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubbedAPIRequest.swift; sourceTree = "<group>"; };
@@ -94,14 +79,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		44DEDCFA1D2FF44C0093EE21 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				44DEDCFE1D2FF44C0093EE21 /* APIClient.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -112,7 +89,6 @@
 				44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */,
 				44DEDD291D2FFE7B0093EE21 /* Alamofire.framework */,
 				44DEDCF51D2FF44C0093EE21 /* APIClient */,
-				44DEDD011D2FF44C0093EE21 /* APIClientTests */,
 				44DEDCF41D2FF44C0093EE21 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -121,7 +97,6 @@
 			isa = PBXGroup;
 			children = (
 				44DEDCF31D2FF44C0093EE21 /* APIClient.framework */,
-				44DEDCFD1D2FF44C0093EE21 /* APIClientTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -137,15 +112,6 @@
 				B8185F041E65BEF1001E1D9A /* Stubbed */,
 			);
 			path = APIClient;
-			sourceTree = "<group>";
-		};
-		44DEDD011D2FF44C0093EE21 /* APIClientTests */ = {
-			isa = PBXGroup;
-			children = (
-				44DEDD021D2FF44C0093EE21 /* APIClientTests.swift */,
-				44DEDD041D2FF44C0093EE21 /* Info.plist */,
-			);
-			path = APIClientTests;
 			sourceTree = "<group>";
 		};
 		B806462B1E5F082600706510 /* Plugins */ = {
@@ -288,24 +254,6 @@
 			productReference = 44DEDCF31D2FF44C0093EE21 /* APIClient.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		44DEDCFC1D2FF44C0093EE21 /* APIClientTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 44DEDD0A1D2FF44C0093EE21 /* Build configuration list for PBXNativeTarget "APIClientTests" */;
-			buildPhases = (
-				44DEDCF91D2FF44C0093EE21 /* Sources */,
-				44DEDCFA1D2FF44C0093EE21 /* Frameworks */,
-				44DEDCFB1D2FF44C0093EE21 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				44DEDD001D2FF44C0093EE21 /* PBXTargetDependency */,
-			);
-			name = APIClientTests;
-			productName = APIClientTests;
-			productReference = 44DEDCFD1D2FF44C0093EE21 /* APIClientTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -317,10 +265,6 @@
 				ORGANIZATIONNAME = "Eugene Andreyev";
 				TargetAttributes = {
 					44DEDCF21D2FF44C0093EE21 = {
-						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0920;
-					};
-					44DEDCFC1D2FF44C0093EE21 = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 0920;
 					};
@@ -339,20 +283,12 @@
 			projectRoot = "";
 			targets = (
 				44DEDCF21D2FF44C0093EE21 /* APIClient */,
-				44DEDCFC1D2FF44C0093EE21 /* APIClientTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		44DEDCF11D2FF44C0093EE21 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		44DEDCFB1D2FF44C0093EE21 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -392,23 +328,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		44DEDCF91D2FF44C0093EE21 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				44DEDD031D2FF44C0093EE21 /* APIClientTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		44DEDD001D2FF44C0093EE21 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 44DEDCF21D2FF44C0093EE21 /* APIClient */;
-			targetProxy = 44DEDCFF1D2FF44C0093EE21 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		44DEDD051D2FF44C0093EE21 /* Debug */ = {
@@ -567,32 +487,6 @@
 			};
 			name = Release;
 		};
-		44DEDD0B1D2FF44C0093EE21 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				INFOPLIST_FILE = APIClientTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.yalantis.APIClientTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
-			};
-			name = Debug;
-		};
-		44DEDD0C1D2FF44C0093EE21 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				INFOPLIST_FILE = APIClientTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.yalantis.APIClientTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -610,15 +504,6 @@
 			buildConfigurations = (
 				44DEDD081D2FF44C0093EE21 /* Debug */,
 				44DEDD091D2FF44C0093EE21 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		44DEDD0A1D2FF44C0093EE21 /* Build configuration list for PBXNativeTarget "APIClientTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				44DEDD0B1D2FF44C0093EE21 /* Debug */,
-				44DEDD0C1D2FF44C0093EE21 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
