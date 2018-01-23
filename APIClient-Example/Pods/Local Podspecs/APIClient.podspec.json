@@ -1,0 +1,76 @@
+{
+  "name": "APIClient",
+  "version": "1.0.7",
+  "summary": "Lightweight networking framework.",
+  "homepage": "https://github.com/Yalantis/APIClient.git",
+  "license": "MIT",
+  "authors": {
+    "Eugene Andreyev": "eugene.andreyev@yalantis.com"
+  },
+  "source": {
+    "git": "git@github.com:Yalantis/APIClient.git",
+    "tag": "1.0.7"
+  },
+  "frameworks": "Foundation",
+  "requires_arc": true,
+  "platforms": {
+    "ios": "9.0"
+  },
+  "default_subspecs": "Core",
+  "subspecs": [
+    {
+      "name": "Core",
+      "source_files": "APIClient/Default/**/*.swift",
+      "dependencies": {
+        "Bolts-Swift": [
+          "~> 1.3"
+        ]
+      }
+    },
+    {
+      "name": "Alamofire",
+      "dependencies": {
+        "APIClient/Core": [
+
+        ],
+        "Alamofire": [
+          "~> 4.0"
+        ]
+      },
+      "source_files": "APIClient/Alamofire/*"
+    },
+    {
+      "name": "ObjectMapper",
+      "dependencies": {
+        "APIClient/Core": [
+
+        ],
+        "ObjectMapper": [
+          "~> 2.0"
+        ]
+      },
+      "source_files": "APIClient/ObjectMapper/*"
+    },
+    {
+      "name": "StubbedClient",
+      "dependencies": {
+        "APIClient/Core": [
+
+        ]
+      },
+      "source_files": "APIClient/StubbedClient/*"
+    },
+    {
+      "name": "OHHTTPStubs",
+      "dependencies": {
+        "APIClient/StubbedClient": [
+
+        ],
+        "OHHTTPStubs/Swift": [
+
+        ]
+      },
+      "source_files": "APIClient/OHHTTPStubs/*"
+    }
+  ]
+}

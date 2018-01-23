@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="APIClient_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="8.8.8.8" borderStyle="roundedRect" placeholder="IP address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ofl-qA-w4j">
+                                <rect key="frame" x="16" y="76" width="250" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UqM-Cw-WSM">
+                                <rect key="frame" x="172" y="128" width="30" height="30"/>
+                                <state key="normal" title="Find"/>
+                                <connections>
+                                    <action selector="findData" destination="BYZ-38-t0r" eventType="touchUpInside" id="QYT-tf-fGK"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="zcS-SE-RcM">
+                                <rect key="frame" x="16" y="197" width="343" height="431"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O3c-5q-64a">
+                                <rect key="frame" x="274" y="74" width="86" height="30"/>
+                                <state key="normal" title="User current"/>
+                                <connections>
+                                    <action selector="findCurrentIP" destination="BYZ-38-t0r" eventType="touchUpInside" id="twO-1n-CWT"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="O3c-5q-64a" secondAttribute="trailing" constant="15" id="5FS-C4-nyC"/>
+                            <constraint firstItem="zcS-SE-RcM" firstAttribute="top" secondItem="UqM-Cw-WSM" secondAttribute="bottom" constant="39" id="9wl-a6-m7R"/>
+                            <constraint firstItem="UqM-Cw-WSM" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="I3P-PM-GVG"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="zcS-SE-RcM" secondAttribute="bottom" constant="39" id="ICf-eZ-Xon"/>
+                            <constraint firstItem="O3c-5q-64a" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="54" id="KIg-og-hlt"/>
+                            <constraint firstItem="zcS-SE-RcM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="ePj-yL-gzS"/>
+                            <constraint firstItem="ofl-qA-w4j" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="56" id="t4H-N6-PWR"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="zcS-SE-RcM" secondAttribute="trailing" constant="16" id="ue2-gk-Alm"/>
+                            <constraint firstItem="UqM-Cw-WSM" firstAttribute="top" secondItem="ofl-qA-w4j" secondAttribute="bottom" constant="22" id="vcq-T2-vZh"/>
+                            <constraint firstItem="O3c-5q-64a" firstAttribute="leading" secondItem="ofl-qA-w4j" secondAttribute="trailing" constant="8" id="wV0-kN-pf7"/>
+                            <constraint firstItem="ofl-qA-w4j" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="xBj-4Q-q2d"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="dataTextView" destination="zcS-SE-RcM" id="yJk-jc-Q3C"/>
+                        <outlet property="ipAddressTextField" destination="ofl-qA-w4j" id="DtK-lc-Lrf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="32.799999999999997" y="33.733133433283363"/>
+        </scene>
+    </scenes>
+</document>

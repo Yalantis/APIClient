@@ -1,0 +1,6 @@
+framework module APIClient {
+  umbrella header "APIClient-umbrella.h"
+
+  export *
+  module * { export * }
+}

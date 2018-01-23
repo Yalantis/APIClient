@@ -1,0 +1,7 @@
+target 'APIClient-Example' do
+  use_frameworks!
+
+  pod 'APIClient/ObjectMapper', :path => "../"
+  pod 'APIClient/Alamofire', :path => "../"
+
+end
