@@ -29,3 +29,8 @@ xcuserdata/
 
 # Carthage
 Carthage/Checkouts
+
+# CocoaPods
+
+APIClient-Example/Pods/
+APIClient-Example/Podfile.lock
