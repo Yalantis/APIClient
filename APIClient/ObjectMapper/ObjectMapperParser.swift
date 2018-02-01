@@ -1,5 +1,6 @@
 import Foundation
 import ObjectMapper
+import APIClient
 
 public enum ParserError: Error {
     

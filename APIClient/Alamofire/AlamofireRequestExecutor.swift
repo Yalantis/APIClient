@@ -1,6 +1,7 @@
 import Foundation
 import Alamofire
 import BoltsSwift
+import APIClient
 
 public struct AlamofireExecutorError: Error {
     

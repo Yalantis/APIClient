@@ -1,5 +1,6 @@
 import Foundation
 import Alamofire
+import APIClient
 
 public extension APIRequest {
 

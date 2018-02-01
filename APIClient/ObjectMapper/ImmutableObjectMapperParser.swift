@@ -1,5 +1,6 @@
 import Foundation
 import ObjectMapper
+import APIClient
 
 public class ImmutableMappableParser<T: ImmutableMappable>: KeyPathParser, ResponseParser {
     
