@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		44DEDCF71D2FF44C0093EE21 /* APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DEDCF61D2FF44C0093EE21 /* APIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		44DEDD2B1D2FFE7B0093EE21 /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */; };
 		B806462D1E5F083300706510 /* PluginType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B806462C1E5F083300706510 /* PluginType.swift */; };
 		B806462F1E5F218400706510 /* ErrorRecovererPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B806462E1E5F218400706510 /* ErrorRecovererPlugin.swift */; };
 		B80646331E5F21E800706510 /* ErrorRecovering.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646321E5F21E800706510 /* ErrorRecovering.swift */; };
@@ -22,15 +21,9 @@
 		B89C3904202327420055312F /* APIClientAlamofire.h in Headers */ = {isa = PBXBuildFile; fileRef = B89C3902202327420055312F /* APIClientAlamofire.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B89C3908202327450055312F /* AlamofireRequestExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538390D1DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift */; };
 		B89C3909202327450055312F /* APIRequest+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538390E1DB4C71800CF5EF2 /* APIRequest+Alamofire.swift */; };
-		B89C390B202327AB0055312F /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B876A18720178E0E00FE730D /* OHHTTPStubs.framework */; };
-		B89C390C202327B20055312F /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD291D2FFE7B0093EE21 /* Alamofire.framework */; };
 		B89C390D202327BF0055312F /* APIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDCF31D2FF44C0093EE21 /* APIClient.framework */; };
 		B89C390E202327C30055312F /* APIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDCF31D2FF44C0093EE21 /* APIClient.framework */; };
 		B89C390F202327C70055312F /* APIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDCF31D2FF44C0093EE21 /* APIClient.framework */; };
-		B89C3911202328040055312F /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B89C3910202328030055312F /* ObjectMapper.framework */; };
-		B89C3912202328810055312F /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */; };
-		B89C3913202328850055312F /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */; };
-		B89C39142023288A0055312F /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */; };
 		C538392B1DB4C71800CF5EF2 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839121DB4C71800CF5EF2 /* APIClient.swift */; };
 		C538392C1DB4C71800CF5EF2 /* APIClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839131DB4C71800CF5EF2 /* APIClientProtocol.swift */; };
 		C538392D1DB4C71800CF5EF2 /* JSONDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839151DB4C71800CF5EF2 /* JSONDeserializer.swift */; };
@@ -46,8 +39,6 @@
 		44DEDCF31D2FF44C0093EE21 /* APIClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APIClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44DEDCF61D2FF44C0093EE21 /* APIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIClient.h; sourceTree = "<group>"; };
 		44DEDCF81D2FF44C0093EE21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BoltsSwift.framework; path = Carthage/Build/iOS/BoltsSwift.framework; sourceTree = "<group>"; };
-		44DEDD291D2FFE7B0093EE21 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		6070EF551EAF3CEF00AA74EF /* StubbedAPIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubbedAPIRequest.swift; sourceTree = "<group>"; };
 		6070EF561EAF3CEF00AA74EF /* StubbedRequestExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubbedRequestExecutor.swift; sourceTree = "<group>"; };
 		B80646261E5EFC8C00706510 /* ImmutableObjectMapperParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImmutableObjectMapperParser.swift; sourceTree = "<group>"; };
@@ -57,7 +48,6 @@
 		B80646321E5F21E800706510 /* ErrorRecovering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorRecovering.swift; sourceTree = "<group>"; };
 		B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorPreprocessorPlugin.swift; sourceTree = "<group>"; };
 		B8185F3F1E65D2EE001E1D9A /* LoggingPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggingPlugin.swift; sourceTree = "<group>"; };
-		B876A18720178E0E00FE730D /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
 		B876A18920178E8500FE730D /* Stub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
 		B876A18A20178E8500FE730D /* StubContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubContent.swift; sourceTree = "<group>"; };
 		B89C38DF2023270D0055312F /* APIClientSubs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APIClientSubs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,7 +59,6 @@
 		B89C3900202327420055312F /* APIClientAlamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APIClientAlamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B89C3902202327420055312F /* APIClientAlamofire.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIClientAlamofire.h; sourceTree = "<group>"; };
 		B89C3903202327420055312F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B89C3910202328030055312F /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = Carthage/Build/iOS/ObjectMapper.framework; sourceTree = "<group>"; };
 		C538390D1DB4C71800CF5EF2 /* AlamofireRequestExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireRequestExecutor.swift; sourceTree = "<group>"; };
 		C538390E1DB4C71800CF5EF2 /* APIRequest+Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "APIRequest+Alamofire.swift"; sourceTree = "<group>"; };
 		C53839121DB4C71800CF5EF2 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
@@ -89,7 +78,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				44DEDD2B1D2FFE7B0093EE21 /* BoltsSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,8 +86,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B89C390F202327C70055312F /* APIClient.framework in Frameworks */,
-				B89C39142023288A0055312F /* BoltsSwift.framework in Frameworks */,
-				B89C390B202327AB0055312F /* OHHTTPStubs.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,8 +93,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B89C3911202328040055312F /* ObjectMapper.framework in Frameworks */,
-				B89C3913202328850055312F /* BoltsSwift.framework in Frameworks */,
 				B89C390E202327C30055312F /* APIClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,8 +102,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B89C390D202327BF0055312F /* APIClient.framework in Frameworks */,
-				B89C3912202328810055312F /* BoltsSwift.framework in Frameworks */,
-				B89C390C202327B20055312F /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,10 +111,6 @@
 		44DEDCE91D2FF44C0093EE21 = {
 			isa = PBXGroup;
 			children = (
-				B89C3910202328030055312F /* ObjectMapper.framework */,
-				B876A18720178E0E00FE730D /* OHHTTPStubs.framework */,
-				44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */,
-				44DEDD291D2FFE7B0093EE21 /* Alamofire.framework */,
 				44DEDCF51D2FF44C0093EE21 /* APIClient */,
 				B89C38E02023270D0055312F /* APIClientSubs */,
 				B89C38F1202327260055312F /* APIClientObjectMapper */,
