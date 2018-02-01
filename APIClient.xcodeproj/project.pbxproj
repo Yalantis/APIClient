@@ -28,6 +28,9 @@
 		B89C390E202327C30055312F /* APIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDCF31D2FF44C0093EE21 /* APIClient.framework */; };
 		B89C390F202327C70055312F /* APIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDCF31D2FF44C0093EE21 /* APIClient.framework */; };
 		B89C3911202328040055312F /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B89C3910202328030055312F /* ObjectMapper.framework */; };
+		B89C3912202328810055312F /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */; };
+		B89C3913202328850055312F /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */; };
+		B89C39142023288A0055312F /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DEDD281D2FFE7B0093EE21 /* BoltsSwift.framework */; };
 		C538392B1DB4C71800CF5EF2 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839121DB4C71800CF5EF2 /* APIClient.swift */; };
 		C538392C1DB4C71800CF5EF2 /* APIClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839131DB4C71800CF5EF2 /* APIClientProtocol.swift */; };
 		C538392D1DB4C71800CF5EF2 /* JSONDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53839151DB4C71800CF5EF2 /* JSONDeserializer.swift */; };
@@ -95,6 +98,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B89C390F202327C70055312F /* APIClient.framework in Frameworks */,
+				B89C39142023288A0055312F /* BoltsSwift.framework in Frameworks */,
 				B89C390B202327AB0055312F /* OHHTTPStubs.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -104,6 +108,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B89C3911202328040055312F /* ObjectMapper.framework in Frameworks */,
+				B89C3913202328850055312F /* BoltsSwift.framework in Frameworks */,
 				B89C390E202327C30055312F /* APIClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -113,6 +118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B89C390D202327BF0055312F /* APIClient.framework in Frameworks */,
+				B89C3912202328810055312F /* BoltsSwift.framework in Frameworks */,
 				B89C390C202327B20055312F /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
