@@ -13,6 +13,7 @@
 		B80646331E5F21E800706510 /* ErrorRecovering.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646321E5F21E800706510 /* ErrorRecovering.swift */; };
 		B80646351E5F33D800706510 /* ErrorPreprocessorPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646341E5F33D800706510 /* ErrorPreprocessorPlugin.swift */; };
 		B8185F401E65D2EE001E1D9A /* LoggingPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8185F3F1E65D2EE001E1D9A /* LoggingPlugin.swift */; };
+		B882A106202C80DD00C98F40 /* APIRequestProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B882A105202C80DD00C98F40 /* APIRequestProxy.swift */; };
 		B89C38E32023270D0055312F /* APIClientSubs.h in Headers */ = {isa = PBXBuildFile; fileRef = B89C38E12023270D0055312F /* APIClientSubs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B89C38F4202327260055312F /* APIClientObjectMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = B89C38F2202327260055312F /* APIClientObjectMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B89C38F82023272D0055312F /* ImmutableObjectMapperParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80646261E5EFC8C00706510 /* ImmutableObjectMapperParser.swift */; };
@@ -50,6 +51,7 @@
 		B8185F3F1E65D2EE001E1D9A /* LoggingPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggingPlugin.swift; sourceTree = "<group>"; };
 		B876A18920178E8500FE730D /* Stub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
 		B876A18A20178E8500FE730D /* StubContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubContent.swift; sourceTree = "<group>"; };
+		B882A105202C80DD00C98F40 /* APIRequestProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestProxy.swift; sourceTree = "<group>"; };
 		B89C38DF2023270D0055312F /* APIClientSubs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APIClientSubs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B89C38E12023270D0055312F /* APIClientSubs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIClientSubs.h; sourceTree = "<group>"; };
 		B89C38E22023270D0055312F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 			isa = PBXGroup;
 			children = (
 				C53839211DB4C71800CF5EF2 /* APIRequest.swift */,
+				B882A105202C80DD00C98F40 /* APIRequestProxy.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 				C53839341DB4C71800CF5EF2 /* APIRequest.swift in Sources */,
 				C538392C1DB4C71800CF5EF2 /* APIClientProtocol.swift in Sources */,
 				C538392D1DB4C71800CF5EF2 /* JSONDeserializer.swift in Sources */,
+				B882A106202C80DD00C98F40 /* APIRequestProxy.swift in Sources */,
 				C538392B1DB4C71800CF5EF2 /* APIClient.swift in Sources */,
 				C53839301DB4C71800CF5EF2 /* NetworkError.swift in Sources */,
 				C53839371DB4C71800CF5EF2 /* ResponseParser.swift in Sources */,
