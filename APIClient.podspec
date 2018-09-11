@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "APIClient"
-  s.version      = '1.1'
+  s.version      = '1.1.2'
 
   s.summary      = "Lightweight networking framework."
 
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |ss|
     ss.source_files = "APIClient/Default/**/*.swift"
-    ss.dependency 'Bolts-Swift', '~> 1.3' 
+    ss.dependency 'Bolts-Swift', '~> 1.4'
   end
 
   s.subspec 'Alamofire' do |ss|
