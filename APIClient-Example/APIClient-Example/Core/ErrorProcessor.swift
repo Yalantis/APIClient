@@ -24,7 +24,7 @@ final class ErrorProcessor: PluginType {
             return CustomError.unhandled(error: error)
         }
         
-        return CustomError.undefined
+        return error
     }
     
     func processError(_ response: APIClient.HTTPResponse) -> Error? {

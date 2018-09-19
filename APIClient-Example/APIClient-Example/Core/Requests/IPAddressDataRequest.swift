@@ -13,7 +13,7 @@ struct IPAddressDataRequest: SerializeableAPIRequest {
     
     let method: APIRequestMethod = .get
     let path: String
-    let parser = MappableParser<LocationMetaData>()
+    let parser = DecodableParser<LocationMetaData>()
     
     init(ipAddress: String) {
         path = ipAddress

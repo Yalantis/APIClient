@@ -6,16 +6,11 @@
 //  Copyright © 2018 Yalantis. All rights reserved.
 //
 
-import ObjectMapper
+import Foundation
 
-struct CountryMetaData: ImmutableMappable {
+struct CountryMetaData: Codable {
     
     let name: String
     let code: String
-    
-    init(map: Map) throws {
-        name = try map.value("name")
-        code = try map.value("code")
-    }
     
 }

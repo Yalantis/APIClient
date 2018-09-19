@@ -45,7 +45,7 @@ class ViewController: UIViewController {
     }
     
     private func display(ipAddress: IPAddress) {
-        ipAddressTextField.text = ipAddress.address
+        ipAddressTextField.text = ipAddress.ip
     }
     
     private func display(data: LocationMetaData) {
