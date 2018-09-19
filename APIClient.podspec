@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'ObjectMapper' do |ss|
     ss.dependency 'APIClient/Core'
-    ss.dependency 'ObjectMapper', '~> 3.1' 
+    ss.dependency 'ObjectMapper', '~> 3.2'
     ss.source_files = "APIClient/ObjectMapper/*"
   end
 
