@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "APIClient"
-  s.version      = '1.1.2'
+  s.version      = '1.1.3'
 
   s.summary      = "Lightweight networking framework."
 
@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'ObjectMapper' do |ss|
     ss.dependency 'APIClient/Core'
-    ss.dependency 'ObjectMapper', '~> 3.2'
+    ss.dependency 'ObjectMapper', '~> 3.3'
     ss.source_files = "APIClient/ObjectMapper/*"
   end
 
