@@ -1,6 +1,9 @@
 import Foundation
 import Alamofire
-import BoltsSwift
+
+public protocol CancelableRequest {
+    func cancel()
+}
 
 public struct AlamofireExecutorError: Error {
     
@@ -18,15 +21,13 @@ open class AlamofireRequestExecutor: RequestExecutor {
         self.baseURL = baseURL
     }
     
-    public func execute(request: APIRequest) -> Task<APIClient.HTTPResponse> {
-        let source = TaskCompletionSource<APIClient.HTTPResponse>()
-        
-        let requestPath =  baseURL
+    public func execute(request: APIRequest, completion: @escaping APIResultResponse) -> CancelableRequest? {
+        let requestPath = baseURL
             .appendingPathComponent(request.path)
             .absoluteString
             .removingPercentEncoding!
         
-        manager
+        return manager
             .request(
                 requestPath,
                 method: request.alamofireMethod,
@@ -36,20 +37,14 @@ open class AlamofireRequestExecutor: RequestExecutor {
             )
             .response { response in
                 guard let httpResponse = response.response, let data = response.data else {
-                    source.set(error: AlamofireExecutorError(error: response.error))
-                    
+                    completion(.failure(AlamofireExecutorError(error: response.error)))
                     return
                 }
-                
-                source.set(result: (httpResponse, data))
+                completion(.success((httpResponse, data)))
         }
-        
-        return source.task
     }
     
-    public func execute(downloadRequest: APIRequest, destinationPath: URL?) -> Task<APIClient.HTTPResponse> {
-        let source = TaskCompletionSource<APIClient.HTTPResponse>()
-        
+    public func execute(downloadRequest: APIRequest, destinationPath: URL?, completion: @escaping APIResultResponse) -> CancelableRequest? {
         let requestPath =  baseURL
             .appendingPathComponent(downloadRequest.path)
             .absoluteString
@@ -61,7 +56,9 @@ open class AlamofireRequestExecutor: RequestExecutor {
             parameters: downloadRequest.parameters,
             encoding: downloadRequest.alamofireEncoding,
             headers: downloadRequest.headers,
-            to: destination(for: destinationPath))
+            to: destination(for: destinationPath)
+        )
+        
         if let progressHandler = downloadRequest.progressHandler {
             request = request.downloadProgress { progress in
                 progressHandler(progress)
@@ -70,15 +67,14 @@ open class AlamofireRequestExecutor: RequestExecutor {
         
         request.responseData { response in
             guard let httpResponse = response.response, let data = response.result.value else {
-                source.set(error: AlamofireExecutorError(error: response.result.error))
-                
+                completion(.failure(AlamofireExecutorError(error: response.result.error)))
                 return
             }
             
-            source.set(result: (httpResponse, data))
+            completion(.success((httpResponse, data)))
         }
         
-        return source.task
+        return request
     }
     
     private func destination(for url: URL?) -> DownloadRequest.DownloadFileDestination? {
@@ -92,12 +88,10 @@ open class AlamofireRequestExecutor: RequestExecutor {
         return destination
     }
     
-    public func execute(multipartRequest: APIRequest) -> Task<APIClient.HTTPResponse> {
+    public func execute(multipartRequest: APIRequest, completion: @escaping APIResultResponse) -> CancelableRequest? {
         guard let multipartFormData = multipartRequest.multipartFormData else {
             fatalError("Missing multipart form data")
         }
-        
-        let source = TaskCompletionSource<APIClient.HTTPResponse>()
         
         let requestPath = baseURL
             .appendingPathComponent(multipartRequest.path)
@@ -120,24 +114,23 @@ open class AlamofireRequestExecutor: RequestExecutor {
                         }
                         request.responseJSON(completionHandler: { response in
                             guard let httpResponse = response.response, let data = response.data else {
-                                source.set(error: AlamofireExecutorError(error: response.result.error))
-                                
+                                completion(.failure(AlamofireExecutorError(error: response.result.error)))
                                 return
                             }
                             
-                            source.set(result: (httpResponse, data))
+                            completion(.success((httpResponse, data)))
                         })
                         
                     case .failure(let error):
-                        source.set(error: AlamofireExecutorError(error: error))
-                        
+                        completion(.failure(AlamofireExecutorError(error: error)))
                     }
-            }
-        )
+            })
         
-        return source.task
+        return nil
     }
     
 }
 
 extension Alamofire.MultipartFormData: MultipartFormDataType {}
+
+extension Request: CancelableRequest { }

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Eugene Andreyev. All rights reserved.
 //
 
-import BoltsSwift
+import Foundation
 
 public final class ErrorRecovererPlugin: PluginType {
     
@@ -16,12 +16,12 @@ public final class ErrorRecovererPlugin: PluginType {
         self.errorRecoverer = errorRecoverer
     }
     
-    public func resolve(_ error: Error) -> Task<Bool> {
+    public func resolve(_ error: Error) -> Bool {
         if errorRecoverer.canRecover(from: error) {
             return errorRecoverer.recover(from: error)
         }
         
-        return Task(false)
+        return false
     }
     
 }

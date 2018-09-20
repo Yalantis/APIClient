@@ -4,7 +4,7 @@ public protocol ResponseParser {
     
     associatedtype Representation
     
-    func parse(_ object: AnyObject) throws -> Representation
+    func parse(_ object: AnyObject) -> Result<Representation>
     
 }
 
@@ -12,8 +12,8 @@ public struct EmptyParser: ResponseParser {
     
     public init() {}
     
-    public func parse(_ object: AnyObject) throws -> Bool {
-        return true
+    public func parse(_ object: AnyObject) -> Result<Bool> {
+        return .success(true)
     }
     
 }
@@ -22,8 +22,8 @@ public struct JSONParser: ResponseParser {
 
     public init() {}
     
-    public func parse(_ object: AnyObject) throws -> [String: AnyObject] {
-        return object as! [String: AnyObject]
+    public func parse(_ object: AnyObject) -> Result<[String: AnyObject]> {
+        return .success(object as! [String: AnyObject])
     }
     
 }

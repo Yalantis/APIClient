@@ -1,15 +1,20 @@
 import Foundation
-import BoltsSwift
 
 public protocol NetworkClient {
     
-    func execute<T, U: ResponseParser>(request: APIRequest, parser: U) -> Task<T> where U.Representation == T
+    @discardableResult
+    func execute<T>(request: T, completion: @escaping (Result<T.Parser.Representation>) -> Void) -> CancelableRequest? where T : SerializeableAPIRequest
     
-    func execute<T : SerializeableAPIRequest>(request: T) -> Task<T.Parser.Representation>
+    @discardableResult
+    func execute<T, U: ResponseParser>(request: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> CancelableRequest? where U.Representation == T
     
-    func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T
+    @discardableResult
+    func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> CancelableRequest? where U.Representation == T
     
-    func execute<T : SerializeableAPIRequest>(multipartRequest: T) -> Task<T.Parser.Representation>
+    @discardableResult
+    func execute<T: SerializeableAPIRequest>(
+        multipartRequest: T,
+        completion: @escaping (Result<T.Parser.Representation>) -> Void) -> CancelableRequest?
     
     /// Executes download request with progress handled by `downloadRequest.progressHandler`
     ///
@@ -19,38 +24,40 @@ public protocol NetworkClient {
     ///   - deserializer: deserializer for given request's response
     ///   - parser: parser for response; by default parser from request used
     /// - Returns: task with response object on success or appropriate error on failure
-    func execute<T, U: ResponseParser>(downloadRequest: APIRequest, destinationFilePath: URL?, deserializer: Deserializer?,  parser: U) -> Task<T> where U.Representation == T
+    @discardableResult
+    func execute<T, U: ResponseParser>(
+        downloadRequest: APIRequest,
+        destinationFilePath: URL?,
+        deserializer: Deserializer?,
+        parser: U,
+        completion: @escaping (Result<T>) -> Void) -> CancelableRequest? where U.Representation == T
     
 }
 
 public extension NetworkClient {
     
-    func execute<T, U: ResponseParser>(request: APIRequest, parser: U) -> Task<T> where U.Representation == T {
-        return Task<T>(error: NSError())
+    public func execute<T>(request: T, completion: @escaping (Result<T.Parser.Representation>) -> Void) -> CancelableRequest? where T : SerializeableAPIRequest {
+        return execute(request: request, parser: request.parser, completion: completion)
     }
     
-    func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
-        return Task<T>(error: NSError())
+    func execute<T: SerializeableAPIRequest>(
+        multipartRequest: T,
+        completion: @escaping (Result<T.Parser.Representation>) -> Void) -> CancelableRequest? {
+        return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser, completion: completion)
     }
     
-    func execute<T, U: ResponseParser>(downloadRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
-        return Task<T>(error: NSError())
-    }
-    
-    func execute<T : SerializeableAPIRequest>(request: T) -> Task<T.Parser.Representation> {
-        return execute(request: request, parser: request.parser)
-    }
-    
-    func execute<T : SerializeableAPIRequest>(multipartRequest: T) -> Task<T.Parser.Representation> {
-        return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser)
-    }
-    
-    func execute<T : SerializeableAPIRequest>(downloadRequest: T, destinationFilePath: URL? = nil, deserializer: Deserializer?) -> Task<T.Parser.Representation> {
+    func execute<T, U: ResponseParser>(
+        downloadRequest: APIRequest,
+        destinationFilePath: URL?,
+        deserializer: Deserializer?,
+        parser: U,
+        completion: @escaping (Result<T>) -> Void) -> CancelableRequest? where U.Representation == T {
         return execute(
             downloadRequest: downloadRequest,
             destinationFilePath: destinationFilePath,
             deserializer: deserializer,
-            parser: downloadRequest.parser
+            parser: parser,
+            completion: completion
         )
     }
     

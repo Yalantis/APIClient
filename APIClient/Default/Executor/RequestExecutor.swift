@@ -1,10 +1,11 @@
 import Foundation
-import BoltsSwift
+
+public typealias APIResultResponse = (Result<APIClient.HTTPResponse>) -> Void
 
 public protocol RequestExecutor {
     
-    func execute(request: APIRequest) -> Task<APIClient.HTTPResponse>
-    func execute(downloadRequest: APIRequest, destinationPath: URL?) -> Task<APIClient.HTTPResponse>
-    func execute(multipartRequest: APIRequest) -> Task<APIClient.HTTPResponse>
+    func execute(request: APIRequest, completion: @escaping APIResultResponse) -> CancelableRequest?
+    func execute(downloadRequest: APIRequest, destinationPath: URL?, completion: @escaping APIResultResponse) -> CancelableRequest?
+    func execute(multipartRequest: APIRequest, completion: @escaping APIResultResponse) -> CancelableRequest?
     
 }

@@ -1,15 +1,14 @@
 import Foundation
 
-public struct JSONDeserializationError: Error {}
-
 public class JSONDeserializer: Deserializer {
     
-    public func deserialize(_ response: HTTPURLResponse, data: Data) throws -> AnyObject {
+    public func deserialize(_ response: HTTPURLResponse, data: Data) -> Result<AnyObject> {
         do {
-            return try JSONSerialization
+            let jsonObject = try JSONSerialization
                 .jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as AnyObject
-        } catch {
-            throw JSONDeserializationError()
+            return .success(jsonObject)
+        } catch let error {
+            return .failure(error)
         }
     }
     

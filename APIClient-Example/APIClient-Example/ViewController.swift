@@ -15,28 +15,29 @@ class ViewController: UIViewController {
     
     @IBAction private func findCurrentIP() {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        ipServiceNetworkClient
-            .execute(request: IPAddressRequest())
-            .continueWith(.mainThread) { [weak self] task in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                if let result = task.result {
-                    self?.display(ipAddress: result)
-                } else if let error = task.error {
-                    self?.display(error: error)
-                }
+        
+        ipServiceNetworkClient.execute(request: IPAddressRequest()) { [weak self] response in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+
+            switch response {
+            case .success(let result):
+                self?.display(ipAddress: result)
+            case .failure(let error):
+                self?.display(error: error)
+            }
         }
     }
     
     @IBAction private func findData() {
-        geoServiceNetworkClient
-            .execute(request: IPAddressDataRequest(ipAddress: ipAddressTextField.text ?? ""))
-            .continueWith(.mainThread) { [weak self] task in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                if let result = task.result {
-                    self?.display(data: result)
-                } else if let error = task.error {
-                    self?.display(error: error)
-                }
+        geoServiceNetworkClient.execute(request: IPAddressDataRequest(ipAddress: ipAddressTextField.text ?? "")) { [weak self] response in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+
+            switch response {
+            case .success(let result):
+                self?.display(data: result)
+            case .failure(let error):
+                self?.display(error: error)
+            }
         }
     }
     
