@@ -19,8 +19,8 @@ open class APIClient: NSObject, NetworkClient {
     
     // MARK: - NetworkClient
     
-    public func execute<T, U>(request: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> CancelableRequest? where T == U.Representation, U : ResponseParser {
-        let resultProducer: (@escaping APIResultResponse) -> CancelableRequest? = { completion in
+    public func execute<T, U>(request: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U : ResponseParser {
+        let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
             self.willSend(request: request)
             let request = self.prepare(request: request)
             return self.requestExecutor.execute(request: request, completion: completion)
@@ -29,8 +29,8 @@ open class APIClient: NSObject, NetworkClient {
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
-    public func execute<T, U>(multipartRequest: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> CancelableRequest? where T == U.Representation, U: ResponseParser {
-        let resultProducer: (@escaping APIResultResponse) -> CancelableRequest? = { completion in
+    public func execute<T, U>(multipartRequest: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U: ResponseParser {
+        let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
             self.willSend(request: multipartRequest)
             let request = self.prepare(request: multipartRequest)
             return self.requestExecutor.execute(multipartRequest: request, completion: completion)
@@ -38,8 +38,8 @@ open class APIClient: NSObject, NetworkClient {
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
-    public func execute<T, U>(downloadRequest: APIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: U, completion: @escaping (Result<T>) -> Void) -> CancelableRequest? where T == U.Representation, U : ResponseParser {
-        let resultProducer: (@escaping APIResultResponse) -> CancelableRequest? = { completion in
+    public func execute<T, U>(downloadRequest: APIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U : ResponseParser {
+        let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
             self.willSend(request: downloadRequest)
             let request = self.prepare(request: downloadRequest)
             return self.requestExecutor.execute(downloadRequest: request, destinationPath: destinationFilePath, completion: completion)
@@ -47,7 +47,7 @@ open class APIClient: NSObject, NetworkClient {
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
-    private func _execute<T, U: ResponseParser>(_ resultProducer: @escaping (@escaping APIResultResponse) -> CancelableRequest?, deserializer: Deserializer, parser: U, completion: @escaping (Result<T>) -> Void) -> CancelableRequest? where U.Representation == T {
+    private func _execute<T, U: ResponseParser>(_ resultProducer: @escaping (@escaping APIResultResponse) -> Cancelable, deserializer: Deserializer, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where U.Representation == T {
         return resultProducer { response in
             let validatedResult = self.validateResult(response)
             
@@ -76,13 +76,21 @@ open class APIClient: NSObject, NetworkClient {
     }
     
     private func proccessResponse<T, U>(response: (Result<APIClient.HTTPResponse>), parser: U, completion: @escaping (Result<T>) -> Void) where U: ResponseParser, U.Representation == T {
-        let result = self.validateResult(response)
-            .next(self.deserializer.deserialize)
-            .next(parser.parse)
-            .map(self.process)
-            .onError(self.decorate)
         
-        completion(result)
+        let result = validateResult(response)
+        
+        if case let .failure(error) = result {
+            let decoratedError = decorate(error: error)
+            completion(.failure(decoratedError))
+            return
+        }
+        
+        completion(
+            result
+                .next(self.deserializer.deserialize)
+                .next(parser.parse)
+                .map(self.process)
+        )
     }
     
 }

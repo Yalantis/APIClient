@@ -1,14 +1,14 @@
 import Foundation
 import Alamofire
 
-public protocol CancelableRequest {
+public protocol Cancelable {
     func cancel()
 }
 
-public struct AlamofireExecutorError: Error {
-    
-    public var error: Error?
-    
+public enum AlamofireExecutorError: Error {
+    case canceled
+    case connection
+    case undefined
 }
 
 open class AlamofireRequestExecutor: RequestExecutor {
@@ -21,34 +21,35 @@ open class AlamofireRequestExecutor: RequestExecutor {
         self.baseURL = baseURL
     }
     
-    public func execute(request: APIRequest, completion: @escaping APIResultResponse) -> CancelableRequest? {
-        let requestPath = baseURL
-            .appendingPathComponent(request.path)
-            .absoluteString
-            .removingPercentEncoding!
-        
-        return manager
+    public func execute(request: APIRequest, completion: @escaping APIResultResponse) -> Cancelable {
+        let cancellationSource = CancellationTokenSource()
+        let requestPath = path(for: request)
+        let request = manager
             .request(
                 requestPath,
                 method: request.alamofireMethod,
                 parameters: request.parameters,
                 encoding: request.alamofireEncoding,
-                headers: request.headers
+                headers: request.headers    
             )
             .response { response in
                 guard let httpResponse = response.response, let data = response.data else {
-                    completion(.failure(AlamofireExecutorError(error: response.error)))
+                    AlamofireRequestExecutor.defineError(response.error, completion: completion)
                     return
                 }
                 completion(.success((httpResponse, data)))
         }
+        
+        cancellationSource.token.register {
+            request.cancel()
+        }
+        
+        return cancellationSource
     }
     
-    public func execute(downloadRequest: APIRequest, destinationPath: URL?, completion: @escaping APIResultResponse) -> CancelableRequest? {
-        let requestPath =  baseURL
-            .appendingPathComponent(downloadRequest.path)
-            .absoluteString
-            .removingPercentEncoding!
+    public func execute(downloadRequest: APIRequest, destinationPath: URL?, completion: @escaping APIResultResponse) -> Cancelable {
+        let cancellationSource = CancellationTokenSource()
+        let requestPath = path(for: downloadRequest)
         
         var request = manager.download(
             requestPath,
@@ -67,14 +68,68 @@ open class AlamofireRequestExecutor: RequestExecutor {
         
         request.responseData { response in
             guard let httpResponse = response.response, let data = response.result.value else {
-                completion(.failure(AlamofireExecutorError(error: response.result.error)))
+                AlamofireRequestExecutor.defineError(response.error, completion: completion)
                 return
             }
             
             completion(.success((httpResponse, data)))
         }
         
-        return request
+        cancellationSource.token.register {
+            request.cancel()
+        }
+        
+        return cancellationSource
+    }
+    
+    public func execute(multipartRequest: APIRequest, completion: @escaping APIResultResponse) -> Cancelable {
+        guard let multipartFormData = multipartRequest.multipartFormData else {
+            fatalError("Missing multipart form data")
+        }
+        
+        let cancellationSource = CancellationTokenSource()
+        let requestPath = path(for: multipartRequest)
+        
+        manager
+            .upload(
+                multipartFormData: multipartFormData,
+                to: requestPath,
+                method: multipartRequest.alamofireMethod,
+                headers: multipartRequest.headers,
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                    case .success(var request, _, _):
+                        cancellationSource.token.register {
+                            request.cancel()
+                        }
+                        
+                        if let progressHandler = multipartRequest.progressHandler {
+                            request = request.uploadProgress { progress in
+                                progressHandler(progress)
+                            }
+                        }
+                        request.responseJSON(completionHandler: { response in
+                            guard let httpResponse = response.response, let data = response.data else {
+                                AlamofireRequestExecutor.defineError(response.error, completion: completion)
+                                return
+                            }
+                            
+                            completion(.success((httpResponse, data)))
+                        })
+                        
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+            })
+        
+        return cancellationSource
+    }
+    
+    private func path(for request: APIRequest) -> String {
+        return baseURL
+            .appendingPathComponent(request.path)
+            .absoluteString
+            .removingPercentEncoding!
     }
     
     private func destination(for url: URL?) -> DownloadRequest.DownloadFileDestination? {
@@ -88,49 +143,22 @@ open class AlamofireRequestExecutor: RequestExecutor {
         return destination
     }
     
-    public func execute(multipartRequest: APIRequest, completion: @escaping APIResultResponse) -> CancelableRequest? {
-        guard let multipartFormData = multipartRequest.multipartFormData else {
-            fatalError("Missing multipart form data")
+    private class func defineError(_ error: Error?, completion: @escaping APIResultResponse) {
+        guard let error = error else {
+            completion(.failure(AlamofireExecutorError.undefined))
+            return
         }
         
-        let requestPath = baseURL
-            .appendingPathComponent(multipartRequest.path)
-            .absoluteString
-            .removingPercentEncoding!
-        
-        manager
-            .upload(
-                multipartFormData: multipartFormData,
-                to: requestPath,
-                method: multipartRequest.alamofireMethod,
-                headers: multipartRequest.headers,
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                    case .success(var request, _, _):
-                        if let progressHandler = multipartRequest.progressHandler {
-                            request = request.uploadProgress { progress in
-                                progressHandler(progress)
-                            }
-                        }
-                        request.responseJSON(completionHandler: { response in
-                            guard let httpResponse = response.response, let data = response.data else {
-                                completion(.failure(AlamofireExecutorError(error: response.result.error)))
-                                return
-                            }
-                            
-                            completion(.success((httpResponse, data)))
-                        })
-                        
-                    case .failure(let error):
-                        completion(.failure(AlamofireExecutorError(error: error)))
-                    }
-            })
-        
-        return nil
+        switch (error as NSError).code {
+        case NSURLErrorCancelled:
+            completion(.failure(AlamofireExecutorError.canceled))
+        case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut:
+            completion(.failure(AlamofireExecutorError.connection))
+        default:
+            completion(.failure(error))
+        }
     }
     
 }
 
 extension Alamofire.MultipartFormData: MultipartFormDataType {}
-
-extension Request: CancelableRequest { }

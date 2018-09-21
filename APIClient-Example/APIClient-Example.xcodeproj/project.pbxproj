@@ -13,7 +13,6 @@
 		B83395F42017585700689B94 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B83395F22017585700689B94 /* Main.storyboard */; };
 		B83395F62017585700689B94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B83395F52017585700689B94 /* Assets.xcassets */; };
 		B83395F92017585700689B94 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B83395F72017585700689B94 /* LaunchScreen.storyboard */; };
-		B83396022017684B00689B94 /* NetworkClientInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396012017684B00689B94 /* NetworkClientInjector.swift */; };
 		B833960420176C2400689B94 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B833960320176C2400689B94 /* Constants.swift */; };
 		B833960820177BAC00689B94 /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = B833960720177BAC00689B94 /* IPAddress.swift */; };
 		B833960A20177C1600689B94 /* LocationMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B833960920177C1600689B94 /* LocationMetaData.swift */; };
@@ -35,7 +34,6 @@
 		B83395F52017585700689B94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B83395F82017585700689B94 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B83395FA2017585700689B94 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B83396012017684B00689B94 /* NetworkClientInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClientInjector.swift; sourceTree = "<group>"; };
 		B833960320176C2400689B94 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B833960720177BAC00689B94 /* IPAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddress.swift; sourceTree = "<group>"; };
 		B833960920177C1600689B94 /* LocationMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMetaData.swift; sourceTree = "<group>"; };
@@ -109,7 +107,6 @@
 				B83396112017804900689B94 /* CustomError.swift */,
 				B833960F2017801700689B94 /* ErrorProcessor.swift */,
 				B833960620177B7F00689B94 /* Models */,
-				B83396012017684B00689B94 /* NetworkClientInjector.swift */,
 				B833960520177B7500689B94 /* Requests */,
 			);
 			path = Core;
@@ -261,7 +258,6 @@
 				B83396162017830800689B94 /* CountryMetaData.swift in Sources */,
 				B83395EF2017585700689B94 /* AppDelegate.swift in Sources */,
 				B833960C20177C5A00689B94 /* IPAddressRequest.swift in Sources */,
-				B83396022017684B00689B94 /* NetworkClientInjector.swift in Sources */,
 				B833960A20177C1600689B94 /* LocationMetaData.swift in Sources */,
 				B83396122017804900689B94 /* CustomError.swift in Sources */,
 				B83396142017820E00689B94 /* CustomError+Localization.swift in Sources */,
