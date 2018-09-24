@@ -29,14 +29,17 @@ public protocol NetworkClient {
 
 public extension NetworkClient {
     
+    @discardableResult
     public func execute<T>(request: T, completion: @escaping (Result<T.Parser.Representation>) -> Void) -> Cancelable where T : SerializeableAPIRequest {
         return execute(request: request, parser: request.parser, completion: completion)
     }
     
+    @discardableResult
     public func execute<T: SerializeableAPIRequest>(multipartRequest: T, completion: @escaping (Result<T.Parser.Representation>) -> Void) -> Cancelable {
         return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser, completion: completion)
     }
     
+    @discardableResult
     public func execute<T, U: ResponseParser>(downloadRequest: APIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where U.Representation == T {
         return execute(
             downloadRequest: downloadRequest,

@@ -1,21 +1,14 @@
+use_frameworks!
+
 target 'APIClient-Example' do
-  use_frameworks!
-
-  pod 'APIClient/ObjectMapper', :path => "../"
-  pod 'APIClient/Alamofire', :path => "../"
-
+    
+    pod 'APIClient/Alamofire', :path => '../'
+    
 end
 
-# configure pod's Swift version
-# because Bolts-Swift didn't update it's pod version when migrated to Swift 4
-post_install do |installer|
-    myTargets = ['Bolts-Swift']
+target 'APIClient-ExampleTests' do
     
-    installer.pods_project.targets.each do |target|
-        if myTargets.include? target.name
-            target.build_configurations.each do |config|
-                config.build_settings['SWIFT_VERSION'] = '3.2'
-            end
-        end
-    end
+    pod 'APIClient/Alamofire', :path => '../'
+    pod 'Mockingjay'
+    
 end

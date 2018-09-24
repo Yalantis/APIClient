@@ -23,7 +23,7 @@ public protocol PluginType {
     func canResolve(_ error: Error) -> Bool
     
     /// Called to resolve error in case it happend.
-    func resolve(_ error: Error, onResolved: (Bool) -> Void)
+    func resolve(_ error: Error, onResolved: @escaping (Bool) -> Void)
     
     /// Called to provide error in case response isn't successful.
     func processError(_ response: APIClient.HTTPResponse) -> Error?
@@ -51,7 +51,8 @@ public extension PluginType {
         return false
     }
     
-    func resolve(_ error: Error, onResolved: (Bool) -> Void) {
+    func resolve(_ error: Error, onResolved: @escaping (Bool) -> Void) {
+        onResolved(false)
     }
     
     func processError(_ response: APIClient.HTTPResponse) -> Error? {

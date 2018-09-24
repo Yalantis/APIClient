@@ -19,29 +19,32 @@ open class APIClient: NSObject, NetworkClient {
     
     // MARK: - NetworkClient
     
+    @discardableResult
     public func execute<T, U>(request: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U : ResponseParser {
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
-            self.willSend(request: request)
             let request = self.prepare(request: request)
+            self.willSend(request: request)
             return self.requestExecutor.execute(request: request, completion: completion)
         }
         
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
+    @discardableResult
     public func execute<T, U>(multipartRequest: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U: ResponseParser {
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
-            self.willSend(request: multipartRequest)
             let request = self.prepare(request: multipartRequest)
+            self.willSend(request: multipartRequest)
             return self.requestExecutor.execute(multipartRequest: request, completion: completion)
         }
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
+    @discardableResult
     public func execute<T, U>(downloadRequest: APIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U : ResponseParser {
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
-            self.willSend(request: downloadRequest)
             let request = self.prepare(request: downloadRequest)
+            self.willSend(request: downloadRequest)
             return self.requestExecutor.execute(downloadRequest: request, destinationPath: destinationFilePath, completion: completion)
         }
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)

@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1B17E35A4FDC665FDB3194FD /* Pods_APIClient_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E185A96A2F83509A92176F8 /* Pods_APIClient_Example.framework */; };
+		7FDCDD2CE58FBE388A52DCC7 /* Pods_APIClient_ExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D0CD4167FE99E3F4383D378 /* Pods_APIClient_ExampleTests.framework */; };
+		8859650F2158FA7E00761709 /* APIClientTokenRestorationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8859650E2158FA7E00761709 /* APIClientTokenRestorationPluginTests.swift */; };
+		88FB95D2215526C80007ABE0 /* APIClient_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB95D1215526C80007ABE0 /* APIClient_ExampleTests.swift */; };
+		88FB95DA2155425A0007ABE0 /* APIClientPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB95D92155425A0007ABE0 /* APIClientPluginTests.swift */; };
 		B83395EF2017585700689B94 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83395EE2017585700689B94 /* AppDelegate.swift */; };
 		B83395F12017585700689B94 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83395F02017585700689B94 /* ViewController.swift */; };
 		B83395F42017585700689B94 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B83395F22017585700689B94 /* Main.storyboard */; };
@@ -24,7 +28,24 @@
 		B83396162017830800689B94 /* CountryMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396152017830800689B94 /* CountryMetaData.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		88FB95D4215526C80007ABE0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B83395E32017585700689B94 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B83395EA2017585700689B94;
+			remoteInfo = "APIClient-Example";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		6D0CD4167FE99E3F4383D378 /* Pods_APIClient_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_APIClient_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8016589A3A3A6F4E06BBE63E /* Pods-APIClient-ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APIClient-ExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		8859650E2158FA7E00761709 /* APIClientTokenRestorationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTokenRestorationPluginTests.swift; sourceTree = "<group>"; };
+		88FB95CF215526C70007ABE0 /* APIClient-ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "APIClient-ExampleTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		88FB95D1215526C80007ABE0 /* APIClient_ExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient_ExampleTests.swift; sourceTree = "<group>"; };
+		88FB95D3215526C80007ABE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		88FB95D92155425A0007ABE0 /* APIClientPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientPluginTests.swift; sourceTree = "<group>"; };
 		8C7AFDD85CF85AFF6B0DFD1D /* Pods-APIClient-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APIClient-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		9E185A96A2F83509A92176F8 /* Pods_APIClient_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_APIClient_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83395EB2017585700689B94 /* APIClient-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "APIClient-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -43,10 +64,19 @@
 		B83396112017804900689B94 /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
 		B83396132017820E00689B94 /* CustomError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomError+Localization.swift"; sourceTree = "<group>"; };
 		B83396152017830800689B94 /* CountryMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMetaData.swift; sourceTree = "<group>"; };
+		BB518267738F9D1C3898D291 /* Pods-APIClient-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APIClient-ExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C1B5F9A5FC1F8DCAC03A2D52 /* Pods-APIClient-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APIClient-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		88FB95CC215526C70007ABE0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7FDCDD2CE58FBE388A52DCC7 /* Pods_APIClient_ExampleTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B83395E82017585700689B94 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -63,14 +93,28 @@
 			children = (
 				8C7AFDD85CF85AFF6B0DFD1D /* Pods-APIClient-Example.debug.xcconfig */,
 				C1B5F9A5FC1F8DCAC03A2D52 /* Pods-APIClient-Example.release.xcconfig */,
+				BB518267738F9D1C3898D291 /* Pods-APIClient-ExampleTests.debug.xcconfig */,
+				8016589A3A3A6F4E06BBE63E /* Pods-APIClient-ExampleTests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		88FB95D0215526C80007ABE0 /* APIClient-ExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				88FB95D1215526C80007ABE0 /* APIClient_ExampleTests.swift */,
+				88FB95D92155425A0007ABE0 /* APIClientPluginTests.swift */,
+				8859650E2158FA7E00761709 /* APIClientTokenRestorationPluginTests.swift */,
+				88FB95D3215526C80007ABE0 /* Info.plist */,
+			);
+			path = "APIClient-ExampleTests";
 			sourceTree = "<group>";
 		};
 		B83395E22017585700689B94 = {
 			isa = PBXGroup;
 			children = (
 				B83395ED2017585700689B94 /* APIClient-Example */,
+				88FB95D0215526C80007ABE0 /* APIClient-ExampleTests */,
 				B83395EC2017585700689B94 /* Products */,
 				28A30854528A8A3A7D17F9DD /* Pods */,
 				FBC56CCDB3CEF14581953FAD /* Frameworks */,
@@ -81,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				B83395EB2017585700689B94 /* APIClient-Example.app */,
+				88FB95CF215526C70007ABE0 /* APIClient-ExampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -135,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				9E185A96A2F83509A92176F8 /* Pods_APIClient_Example.framework */,
+				6D0CD4167FE99E3F4383D378 /* Pods_APIClient_ExampleTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -142,6 +188,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		88FB95CE215526C70007ABE0 /* APIClient-ExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88FB95D8215526C80007ABE0 /* Build configuration list for PBXNativeTarget "APIClient-ExampleTests" */;
+			buildPhases = (
+				A2A30DA7C1C89C838F10D8A5 /* [CP] Check Pods Manifest.lock */,
+				88FB95CB215526C70007ABE0 /* Sources */,
+				88FB95CC215526C70007ABE0 /* Frameworks */,
+				88FB95CD215526C70007ABE0 /* Resources */,
+				B8390CDA09E8CE0FC9B3FAA5 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				88FB95D5215526C80007ABE0 /* PBXTargetDependency */,
+			);
+			name = "APIClient-ExampleTests";
+			productName = "APIClient-ExampleTests";
+			productReference = 88FB95CF215526C70007ABE0 /* APIClient-ExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B83395EA2017585700689B94 /* APIClient-Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B83395FD2017585700689B94 /* Build configuration list for PBXNativeTarget "APIClient-Example" */;
@@ -167,10 +233,15 @@
 		B83395E32017585700689B94 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0920;
+				LastSwiftUpdateCheck = 0940;
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = Yalantis;
 				TargetAttributes = {
+					88FB95CE215526C70007ABE0 = {
+						CreatedOnToolsVersion = 9.4.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = B83395EA2017585700689B94;
+					};
 					B83395EA2017585700689B94 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Manual;
@@ -191,11 +262,19 @@
 			projectRoot = "";
 			targets = (
 				B83395EA2017585700689B94 /* APIClient-Example */,
+				88FB95CE215526C70007ABE0 /* APIClient-ExampleTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		88FB95CD215526C70007ABE0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B83395E92017585700689B94 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -216,8 +295,8 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/APIClient/APIClient.framework",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/APIClient-iOS11.2/APIClient.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS11.2/Alamofire.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -227,6 +306,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A2A30DA7C1C89C838F10D8A5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-APIClient-ExampleTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		ADE5FE45F9B02CBA7E08703A /* [CP] Check Pods Manifest.lock */ = {
@@ -247,9 +344,43 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B8390CDA09E8CE0FC9B3FAA5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/APIClient-iOS11.4/APIClient.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS11.4/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Mockingjay/Mockingjay.framework",
+				"${BUILT_PRODUCTS_DIR}/URITemplate/URITemplate.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/APIClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mockingjay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/URITemplate.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		88FB95CB215526C70007ABE0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88FB95DA2155425A0007ABE0 /* APIClientPluginTests.swift in Sources */,
+				8859650F2158FA7E00761709 /* APIClientTokenRestorationPluginTests.swift in Sources */,
+				88FB95D2215526C80007ABE0 /* APIClient_ExampleTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B83395E72017585700689B94 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -269,6 +400,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		88FB95D5215526C80007ABE0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B83395EA2017585700689B94 /* APIClient-Example */;
+			targetProxy = 88FB95D4215526C80007ABE0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		B83395F22017585700689B94 /* Main.storyboard */ = {
@@ -290,6 +429,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		88FB95D6215526C80007ABE0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BB518267738F9D1C3898D291 /* Pods-APIClient-ExampleTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = "APIClient-ExampleTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.APIClient-ExampleTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/APIClient-Example.app/APIClient-Example";
+			};
+			name = Debug;
+		};
+		88FB95D7215526C80007ABE0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8016589A3A3A6F4E06BBE63E /* Pods-APIClient-ExampleTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = "APIClient-ExampleTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.APIClient-ExampleTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/APIClient-Example.app/APIClient-Example";
+			};
+			name = Release;
+		};
 		B83395FB2017585700689B94 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -434,6 +615,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		88FB95D8215526C80007ABE0 /* Build configuration list for PBXNativeTarget "APIClient-ExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88FB95D6215526C80007ABE0 /* Debug */,
+				88FB95D7215526C80007ABE0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B83395E62017585700689B94 /* Build configuration list for PBXProject "APIClient-Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

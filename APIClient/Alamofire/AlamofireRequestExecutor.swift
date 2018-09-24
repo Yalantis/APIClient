@@ -8,6 +8,8 @@ public protocol Cancelable {
 public enum AlamofireExecutorError: Error {
     case canceled
     case connection
+    case unauthorized
+    case internalServer
     case undefined
 }
 
@@ -154,6 +156,10 @@ open class AlamofireRequestExecutor: RequestExecutor {
             completion(.failure(AlamofireExecutorError.canceled))
         case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut:
             completion(.failure(AlamofireExecutorError.connection))
+        case 401:
+            completion(.failure(AlamofireExecutorError.unauthorized))
+        case 500:
+            completion(.failure(AlamofireExecutorError.internalServer))
         default:
             completion(.failure(error))
         }
