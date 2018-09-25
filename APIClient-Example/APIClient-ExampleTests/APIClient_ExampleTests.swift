@@ -76,32 +76,38 @@ class APIClient_ExampleTests: XCTestCase {
         stub(everything, http(NSURLErrorCancelled))
         
         let errorExpectation = expectation(description: "Error")
-        var catchedError: AlamofireExecutorError!
+        var isCanceledError = false
         
         let request = sut.execute(request: GetUserRequest()) { result in
-            catchedError = result.error as! AlamofireExecutorError
+            if let error = result.error as? AlamofireExecutorError, error == .canceled {
+                isCanceledError = true
+            }
             errorExpectation.fulfill()
         }
         request.cancel()
         
         waitForExpectations(timeout: 1) { _ in
-            XCTAssertEqual(catchedError.hashValue, AlamofireExecutorError.canceled.hashValue)
+            XCTAssertEqual(isCanceledError, true)
         }
     }
     
     func test_GetUser_WhenTokenIsInvalid_ReturnsError() {
-        stub(everything, failure(AlamofireExecutorError.unauthorized as NSError))
+        stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
         
         let errorExpectation = expectation(description: "error")
-        var catchedError: AlamofireExecutorError!
+        var catchedErrorIsUnauthorized = false
 
         sut.execute(request: GetUserRequest()) { result in
-            catchedError = result.error as! AlamofireExecutorError
+            if let error = result.error {
+                if error is AlamofireExecutorError {
+                    catchedErrorIsUnauthorized = true
+                }
+            }
             errorExpectation.fulfill()
         }
         
         waitForExpectations(timeout: 1) { _ in
-            XCTAssertEqual(catchedError.hashValue, AlamofireExecutorError.unauthorized.hashValue)
+            XCTAssertEqual(catchedErrorIsUnauthorized, true)
         }
     }
     

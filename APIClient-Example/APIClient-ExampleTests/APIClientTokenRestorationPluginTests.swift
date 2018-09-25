@@ -31,8 +31,8 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
             plugins: [ErrorProcessor(), RequestDecorationPlugin(credentialProvider: session, restoreRequest: nil)]
         )
-        stub(everything, failure(AlamofireExecutorError.unauthorized as NSError))
-        
+        stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
+
         let tokenExpectation = expectation(description: "Token")
         
         sut.execute(request: GetProfileRequest()) { result in
@@ -59,8 +59,8 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
                 completion(result.map { $0 as Auth })
             })
         }
-        stub(everything, failure(AlamofireExecutorError.unauthorized as NSError))
-        
+        stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
+
         let tokenExpectation = expectation(description: "Token")
         sut.execute(request: GetProfileRequest()) { result in
             tokenExpectation.fulfill()
@@ -117,6 +117,7 @@ class UserSession: AccessCredentialsProvider {
     
     func invalidate() {
         accessToken = nil
+        exchangeToken = nil
     }
     
 }
