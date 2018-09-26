@@ -3,6 +3,7 @@ use_frameworks!
 target 'APIClient-Example' do
     
     pod 'APIClient/Alamofire', :path => '../'
+    pod 'SwiftLint'
     
 end
 
