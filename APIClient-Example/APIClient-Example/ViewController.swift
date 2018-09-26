@@ -14,7 +14,6 @@ class ViewController: UIViewController {
     @IBOutlet private var ipAddressTextField: UITextField!
     @IBOutlet private var dataTextView: UITextView!
     
-    
     let geoServiceNetworkClient: NetworkClient = APIClient(
         requestExecutor: AlamofireRequestExecutor(baseURL: Constants.API.geoServiceBaseURL),
         plugins: [ErrorProcessor()]
@@ -24,7 +23,6 @@ class ViewController: UIViewController {
         requestExecutor: AlamofireRequestExecutor(baseURL: Constants.API.ipServiceBaseURL),
         plugins: [ErrorProcessor()]
     )
-    
     
     @IBAction private func findCurrentIP() {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -38,9 +36,9 @@ class ViewController: UIViewController {
             case .failure(let error):
                 self?.display(error: error)
             }
-        }        
+        }
     }
-    
+
     @IBAction private func findData() {
         geoServiceNetworkClient.execute(request: IPAddressDataRequest(ipAddress: ipAddressTextField.text ?? "")) { [weak self] response in
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
