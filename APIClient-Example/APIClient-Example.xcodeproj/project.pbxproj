@@ -298,8 +298,8 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/APIClient-iOS11.2/APIClient.framework",
-				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS11.2/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/APIClient/APIClient.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
@@ -374,8 +374,8 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/APIClient-iOS11.4/APIClient.framework",
-				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS11.4/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/APIClient/APIClient.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Mockingjay/Mockingjay.framework",
 				"${BUILT_PRODUCTS_DIR}/URITemplate/URITemplate.framework",
 			);
