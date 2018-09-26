@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: move to plugins directory
 public enum AuthType {
     case `default`
     case basic

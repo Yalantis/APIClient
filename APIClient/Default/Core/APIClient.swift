@@ -21,6 +21,7 @@ open class APIClient: NSObject, NetworkClient {
     
     @discardableResult
     public func execute<T, U>(request: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U : ResponseParser {
+        // TODO: let's add some warning in case `request.multipartFormData != nil || request.progressHandler != nil` to hint on using proper method
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
             let request = self.prepare(request: request)
             self.willSend(request: request)
@@ -100,6 +101,7 @@ open class APIClient: NSObject, NetworkClient {
 
 private extension APIClient {
     
+    // TODO: inline it in `validateResult` method
     private func validate(_ response: HTTPResponse) -> Result<HTTPResponse> {
         switch response.httpResponse.statusCode {
         case 200...299:

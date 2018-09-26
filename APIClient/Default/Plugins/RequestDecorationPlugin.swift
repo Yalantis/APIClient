@@ -20,6 +20,7 @@ public protocol Auth {
     var exchangeToken: String { get set }
 }
 
+// TODO: add proper documentation
 public class RequestDecorationPlugin: PluginType {
     
     public var onRequest: ((APIRequest, @escaping (Result<Auth>) -> Void) -> Void)?

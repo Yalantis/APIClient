@@ -1,3 +1,5 @@
+// TODO: move to parser directory
+
 import Foundation
 
 public protocol ResponseParser {

@@ -2,6 +2,7 @@ import Foundation
 import Alamofire
 
 public protocol Cancelable {
+    // FIXME: need to be defined in the Core
     func cancel()
 }
 

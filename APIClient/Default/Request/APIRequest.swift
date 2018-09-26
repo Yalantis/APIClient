@@ -9,6 +9,8 @@ public enum APIRequestMethod: UInt {
 public typealias ProgressHandler = (Progress) -> ()
 public protocol APIRequestEncoding {}
 
+// TODO: need to think where separate `APIRequest` protocol for multipart request will be more convenient
+// (this will help us to destinct request in `execute` methods and not allow to `execture(request` to be applied to multipart request)
 public protocol APIRequest {
     
     var path: String { get }

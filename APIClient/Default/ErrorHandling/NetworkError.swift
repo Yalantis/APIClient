@@ -1,5 +1,7 @@
 import Foundation
 
+// TODO: this is useless right now; we need to think how to combine it with AlamofireRequestExecutor's error
+// probably we can just rename AlamofireExecutorError -> NetworkError, add `undefined` case and use that single type
 public struct NetworkError: Error, Hashable, Equatable {
     
     public let responseDictionary: [String: Any]?
