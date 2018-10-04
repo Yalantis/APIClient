@@ -5,8 +5,8 @@
 //
 //
 
-public struct APIRequestProxy: APIRequest {
-    
+public class APIRequestProxy: APIRequest {
+
     public var path: String
     public var method: APIRequestMethod
     public var encoding: APIRequestEncoding?
@@ -14,15 +14,20 @@ public struct APIRequestProxy: APIRequest {
     public var headers: [String: String]?
     public var multipartFormData: ((MultipartFormDataType) -> Void)?
     public var progressHandler: ProgressHandler?
-    
+
     public init(request: APIRequest) {
         path = request.path
         method = request.method
         encoding = request.encoding
         parameters = request.parameters
         headers = request.headers
-        multipartFormData = request.multipartFormData
-        progressHandler = request.progressHandler
+        
+        if let multipartRequest = request as? MultipartAPIRequest {
+            multipartFormData = multipartRequest.multipartFormData
+            progressHandler = multipartRequest.progressHandler
+        } else if let downloadRequest = request as? DownloadAPIRequest {
+            progressHandler = downloadRequest.progressHandler
+        }
     }
-    
+
 }

@@ -29,7 +29,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
     func test_TokenRestoration_WhenTokenExpiredAndRestoreRequestNotProvided_TerminateSession() {
         let sut = APIClient(
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
-            plugins: [ErrorProcessor(), RequestDecorationPlugin(credentialProvider: session, restoreRequest: nil)]
+            plugins: [ErrorProcessor(), RestorationTokenPlugin(credentialProvider: session)]
         )
         stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
 
@@ -45,16 +45,17 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
     }
 
     func test_TokenRestoratin_WhenTokenExpired_RestoreToken() {
-        let decorationPlugin = RequestDecorationPlugin(credentialProvider: session, restoreRequest: RestoreRequest())
+        let decorationPlugin = RestorationTokenPlugin(credentialProvider: session)
         let sut = APIClient(
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
             plugins: [ErrorProcessor(), decorationPlugin]
         )
         
-        decorationPlugin.onRequest = { (request, completion: @escaping (Result<Auth>) -> Void) -> Void in
+        decorationPlugin.onRequest = { (completion: @escaping (Result<Auth>) -> Void) -> Void in
             self.stubSuccessfulAuth()
             
-            sut.execute(request: request, parser: DecodableParser<Credentials>(), completion: { result in
+            let restoreRequest = RestoreRequest()
+            sut.execute(request: restoreRequest, parser: DecodableParser<Credentials>(), completion: { result in
                 self.stubSuccessfulUser()
                 completion(result.map { $0 as Auth })
             })
@@ -62,7 +63,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
         stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
 
         let tokenExpectation = expectation(description: "Token")
-        sut.execute(request: GetProfileRequest()) { result in
+        sut.execute(request: GetProfileRequest(), parser: ) { result in
             tokenExpectation.fulfill()
         }
         
@@ -84,15 +85,14 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
     
 }
 
-struct GetProfileRequest: SerializeableAPIRequest, DecoratableRequest {
+struct GetProfileRequest: APIRequest, CredentialProvidableRequest {
     
     let method: APIRequestMethod = .get
     let path = Constants.user
-    let parser = DecodableParser<User>(keyPath: "user")
 
 }
 
-struct RestoreRequest: APIRequest, DecoratableRequest {
+struct RestoreRequest: APIRequest, CredentialProvidableRequest {
     
     let method: APIRequestMethod = .put
     let path = Constants.restore

@@ -20,8 +20,7 @@ open class APIClient: NSObject, NetworkClient {
     // MARK: - NetworkClient
     
     @discardableResult
-    public func execute<T, U>(request: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U : ResponseParser {
-        // TODO: let's add some warning in case `request.multipartFormData != nil || request.progressHandler != nil` to hint on using proper method
+    public func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T : ResponseParser {
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
             let request = self.prepare(request: request)
             self.willSend(request: request)
@@ -32,26 +31,30 @@ open class APIClient: NSObject, NetworkClient {
     }
     
     @discardableResult
-    public func execute<T, U>(multipartRequest: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U: ResponseParser {
+    public func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
-            let request = self.prepare(request: multipartRequest)
-            self.willSend(request: multipartRequest)
+            guard let request = self.prepare(request: request) as? MultipartAPIRequest else {
+                fatalError("Unexpected request type. Expected `MultipartAPIRequest`")
+            }
+            self.willSend(request: request)
             return self.requestExecutor.execute(multipartRequest: request, completion: completion)
         }
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
     @discardableResult
-    public func execute<T, U>(downloadRequest: APIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where T == U.Representation, U : ResponseParser {
+    public func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
-            let request = self.prepare(request: downloadRequest)
-            self.willSend(request: downloadRequest)
+            guard let request = self.prepare(request: request) as? DownloadAPIRequest else {
+                fatalError("Unexpected request type. Expected `MultipartAPIRequest`")
+            }
+            self.willSend(request: request)
             return self.requestExecutor.execute(downloadRequest: request, destinationPath: destinationFilePath, completion: completion)
         }
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
-    private func _execute<T, U: ResponseParser>(_ resultProducer: @escaping (@escaping APIResultResponse) -> Cancelable, deserializer: Deserializer, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where U.Representation == T {
+    private func _execute<T>(_ resultProducer: @escaping (@escaping APIResultResponse) -> Cancelable, deserializer: Deserializer, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
         return resultProducer { response in
             let validatedResult = self.validateResult(response)
             
@@ -74,12 +77,18 @@ open class APIClient: NSObject, NetworkClient {
     private func validateResult(_ result: Result<APIClient.HTTPResponse>) -> Result<APIClient.HTTPResponse> {
         if let response = result.value {
             self.didReceive(response)
-            return self.validate(response)
+            
+            switch response.httpResponse.statusCode {
+            case 200...299:
+                return .success(response)
+            default:
+                return .failure(self.process(response) ?? NetworkError.undefined)
+            }
         }
         return result
     }
     
-    private func proccessResponse<T, U>(response: (Result<APIClient.HTTPResponse>), parser: U, completion: @escaping (Result<T>) -> Void) where U: ResponseParser, U.Representation == T {
+    private func proccessResponse<T>(response: (Result<APIClient.HTTPResponse>), parser: T, completion: @escaping (Result<T.Representation>) -> Void) where T: ResponseParser {
         
         let result = validateResult(response)
         
@@ -95,20 +104,6 @@ open class APIClient: NSObject, NetworkClient {
                 .next(parser.parse)
                 .map(self.process)
         )
-    }
-    
-}
-
-private extension APIClient {
-    
-    // TODO: inline it in `validateResult` method
-    private func validate(_ response: HTTPResponse) -> Result<HTTPResponse> {
-        switch response.httpResponse.statusCode {
-        case 200...299:
-            return .success(response)
-        default:
-            return .failure(self.process(response) ?? NetworkError.undefined)
-        }
     }
     
 }

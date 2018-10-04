@@ -1,53 +1,26 @@
 import Foundation
+import YALResult
+
+public typealias Result = YALResult.Result
 
 public protocol NetworkClient {
     
     @discardableResult
-    func execute<T>(request: T, completion: @escaping (Result<T.Parser.Representation>) -> Void) -> Cancelable where T : SerializeableAPIRequest
+    func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T : ResponseParser
     
     @discardableResult
-    func execute<T, U: ResponseParser>(request: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where U.Representation == T
-    
-    @discardableResult
-    func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where U.Representation == T
-    
-    @discardableResult
-    func execute<T: SerializeableAPIRequest>(multipartRequest: T, completion: @escaping (Result<T.Parser.Representation>) -> Void) -> Cancelable
+    func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser
     
     /// Executes download request with progress handled by `downloadRequest.progressHandler`
     ///
     /// - Parameters:
-    ///   - downloadRequest: the request itself
+    ///   - request: the request itself
     ///   - destinationFilePath: path to the where data will be saved; default is `nil`
     ///   - deserializer: deserializer for given request's response
-    ///   - parser: parser for response; by default parser from request used
-    /// - Returns: task with response object on success or appropriate error on failure
+    ///   - parser: parser for response
+    ///   - completion: result with response object on success or appropriate error on failure
+    /// - Returns: cancelation token
     @discardableResult
-    func execute<T, U: ResponseParser>(downloadRequest: APIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where U.Representation == T
-    
-}
-
-public extension NetworkClient {
-    
-    @discardableResult
-    public func execute<T>(request: T, completion: @escaping (Result<T.Parser.Representation>) -> Void) -> Cancelable where T : SerializeableAPIRequest {
-        return execute(request: request, parser: request.parser, completion: completion)
-    }
-    
-    @discardableResult
-    public func execute<T: SerializeableAPIRequest>(multipartRequest: T, completion: @escaping (Result<T.Parser.Representation>) -> Void) -> Cancelable {
-        return execute(multipartRequest: multipartRequest, parser: multipartRequest.parser, completion: completion)
-    }
-    
-    @discardableResult
-    public func execute<T, U: ResponseParser>(downloadRequest: APIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: U, completion: @escaping (Result<T>) -> Void) -> Cancelable where U.Representation == T {
-        return execute(
-            downloadRequest: downloadRequest,
-            destinationFilePath: destinationFilePath,
-            deserializer: deserializer,
-            parser: parser,
-            completion: completion
-        )
-    }
+    func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser
     
 }

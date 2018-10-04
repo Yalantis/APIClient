@@ -39,7 +39,6 @@ public final class DecodableParser<T: Decodable>: KeyPathParser, ResponseParser 
         do {
             let value = try valueForKeyPath(in: object)
             let data = try JSONSerialization.data(withJSONObject: value)
-            // TODO: I think we should add `convertFromSnakeCase`; let's have a discussion
             let decoded = try decoder.decode(T.self, from: data)
             return .success(decoded)
         } catch let error {

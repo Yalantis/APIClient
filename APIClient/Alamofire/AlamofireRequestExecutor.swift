@@ -1,11 +1,6 @@
 import Foundation
 import Alamofire
 
-public protocol Cancelable {
-    // FIXME: need to be defined in the Core
-    func cancel()
-}
-
 public enum AlamofireExecutorError: Error {
     case canceled
     case connection
@@ -16,8 +11,8 @@ public enum AlamofireExecutorError: Error {
 
 open class AlamofireRequestExecutor: RequestExecutor {
     
-    open let manager: SessionManager
-    open let baseURL: URL
+    public let manager: SessionManager
+    public let baseURL: URL
     
     public init(baseURL: URL, manager: SessionManager = SessionManager.default) {
         self.manager = manager
@@ -50,7 +45,46 @@ open class AlamofireRequestExecutor: RequestExecutor {
         return cancellationSource
     }
     
-    public func execute(downloadRequest: APIRequest, destinationPath: URL?, completion: @escaping APIResultResponse) -> Cancelable {
+    public func execute(multipartRequest: MultipartAPIRequest, completion: @escaping APIResultResponse) -> Cancelable {
+        let cancellationSource = CancellationTokenSource()
+        let requestPath = path(for: multipartRequest)
+        
+        manager
+            .upload(
+                multipartFormData: multipartRequest.multipartFormData,
+                to: requestPath,
+                method: multipartRequest.alamofireMethod,
+                headers: multipartRequest.headers,
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                    case .success(var request, _, _):
+                        cancellationSource.token.register {
+                            request.cancel()
+                        }
+                        
+                        if let progressHandler = multipartRequest.progressHandler {
+                            request = request.uploadProgress { progress in
+                                progressHandler(progress)
+                            }
+                        }
+                        request.responseJSON(completionHandler: { response in
+                            guard let httpResponse = response.response, let data = response.data else {
+                                AlamofireRequestExecutor.defineError(response.error, completion: completion)
+                                return
+                            }
+                            
+                            completion(.success((httpResponse, data)))
+                        })
+                        
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+            })
+        
+        return cancellationSource
+    }
+    
+    public func execute(downloadRequest: DownloadAPIRequest, destinationPath: URL?, completion: @escaping APIResultResponse) -> Cancelable {
         let cancellationSource = CancellationTokenSource()
         let requestPath = path(for: downloadRequest)
         
@@ -81,49 +115,6 @@ open class AlamofireRequestExecutor: RequestExecutor {
         cancellationSource.token.register {
             request.cancel()
         }
-        
-        return cancellationSource
-    }
-    
-    public func execute(multipartRequest: APIRequest, completion: @escaping APIResultResponse) -> Cancelable {
-        guard let multipartFormData = multipartRequest.multipartFormData else {
-            fatalError("Missing multipart form data")
-        }
-        
-        let cancellationSource = CancellationTokenSource()
-        let requestPath = path(for: multipartRequest)
-        
-        manager
-            .upload(
-                multipartFormData: multipartFormData,
-                to: requestPath,
-                method: multipartRequest.alamofireMethod,
-                headers: multipartRequest.headers,
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                    case .success(var request, _, _):
-                        cancellationSource.token.register {
-                            request.cancel()
-                        }
-                        
-                        if let progressHandler = multipartRequest.progressHandler {
-                            request = request.uploadProgress { progress in
-                                progressHandler(progress)
-                            }
-                        }
-                        request.responseJSON(completionHandler: { response in
-                            guard let httpResponse = response.response, let data = response.data else {
-                                AlamofireRequestExecutor.defineError(response.error, completion: completion)
-                                return
-                            }
-                            
-                            completion(.success((httpResponse, data)))
-                        })
-                        
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
-            })
         
         return cancellationSource
     }

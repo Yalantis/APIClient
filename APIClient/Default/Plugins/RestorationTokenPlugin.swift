@@ -1,5 +1,5 @@
 //
-//  RequestDecorationPlugin.swift
+//  RestorationTokenPlugin.swift
 //  APIClient
 //
 //  Created by Vodolazkyi Anton on 9/24/18.
@@ -7,44 +7,49 @@
 
 import Foundation
 
-public protocol DecoratableRequest {
+/// The request in use with `RestorationTokenPlugin`
+public protocol CredentialProvidableRequest {
+    
+    /// If true provides request with credentials from `RestorationTokenPlugin`
     var authorizationRequired: Bool { get }
 }
 
-extension DecoratableRequest {
+extension CredentialProvidableRequest {
     public var authorizationRequired: Bool { return true }
 }
+
 
 public protocol Auth {
     var accessToken: String { get set }
     var exchangeToken: String { get set }
 }
 
-// TODO: add proper documentation
-public class RequestDecorationPlugin: PluginType {
+/// The plugin to restore the token can be used as the requestor's credential provider
+public class RestorationTokenPlugin: PluginType {
     
-    public var onRequest: ((APIRequest, @escaping (Result<Auth>) -> Void) -> Void)?
-    
+    /// Callback to send a restore request
+    public var onRequest: ((@escaping (Result<Auth>) -> Void) -> Void)?
+
     private let credentialProvider: AccessCredentialsProvider
-    private let restoreRequest: APIRequest?
-    private let authType: AuthType
     
-    public init(credentialProvider: AccessCredentialsProvider, restoreRequest: APIRequest?, authType: AuthType = .default) {
+    /// Auth type to use in header
+    private let authType: AuthType
+
+    public init(credentialProvider: AccessCredentialsProvider, authType: AuthType = .default) {
         self.credentialProvider = credentialProvider
-        self.restoreRequest = restoreRequest
         self.authType = authType
     }
-    
+
     public func prepare(_ request: APIRequest) -> APIRequest {
         var requestProxy = APIRequestProxy(request: request)
-        
-        if let request = request as? DecoratableRequest {
+
+        if let request = request as? CredentialProvidableRequest {
             applyHeaders(&requestProxy, applyAuthorization: request.authorizationRequired)
         }
-        
+
         return requestProxy
     }
-    
+
     public func canResolve(_ error: Error) -> Bool {
         if (error as? AlamofireExecutorError) == .unauthorized {
             return true
@@ -57,20 +62,20 @@ public class RequestDecorationPlugin: PluginType {
             onResolved(false)
             return
         }
-        
-        guard let request = restoreRequest, credentialProvider.exchangeToken != nil else {
+
+        guard credentialProvider.exchangeToken != nil else {
             credentialProvider.invalidate()
             onResolved(false)
             return
         }
-        
-        onRequest?(request) { [weak self] result in
+
+        onRequest?() { [weak self] result in
             guard let value = result.value else {
                 self?.credentialProvider.invalidate()
                 onResolved(false)
                 return
             }
-            
+
             self?.credentialProvider.commitCredentialsUpdate { provider in
                 provider.accessToken = value.accessToken
                 provider.exchangeToken = value.exchangeToken
@@ -78,21 +83,21 @@ public class RequestDecorationPlugin: PluginType {
             }
         }
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func applyHeaders(_ request: inout APIRequestProxy, applyAuthorization: Bool) {
         var headers = request.headers ?? [:]
-        
+
         if let authToken = credentialProvider.accessToken, applyAuthorization {
             var prefix = ""
-            
+
             if let authPrefix = authType.valuePrefix {
                 prefix = authPrefix + " "
             }
             headers[authType.key] = prefix + authToken
         }
-        
+
         request.headers = headers
     }
     

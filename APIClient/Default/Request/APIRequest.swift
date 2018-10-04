@@ -1,16 +1,12 @@
 import Foundation
 
-public enum APIRequestMethod: UInt {
-    
+public enum APIRequestMethod: String {
     case options, get, head, post, put, patch, delete, trace, connect
-    
 }
 
 public typealias ProgressHandler = (Progress) -> ()
 public protocol APIRequestEncoding {}
 
-// TODO: need to think where separate `APIRequest` protocol for multipart request will be more convenient
-// (this will help us to destinct request in `execute` methods and not allow to `execture(request` to be applied to multipart request)
 public protocol APIRequest {
     
     var path: String { get }
@@ -18,9 +14,16 @@ public protocol APIRequest {
     var encoding: APIRequestEncoding? { get }
     var parameters: [String: Any]? { get }
     var headers: [String: String]? { get }
-    var multipartFormData: ((MultipartFormDataType) -> Void)? { get }
-    var progressHandler: ProgressHandler? { get }
+}
+
+public protocol DownloadAPIRequest: APIRequest {
     
+    var progressHandler: ProgressHandler? { get }
+}
+
+public protocol MultipartAPIRequest: DownloadAPIRequest {
+    
+    var multipartFormData: ((MultipartFormDataType) -> Void) { get }
 }
 
 public protocol MultipartFormDataType {
@@ -38,15 +41,6 @@ public protocol MultipartFormDataType {
     func append(_ stream: InputStream, withLength length: UInt64, headers: [String: String])
     
 }
-
-public protocol SerializeableAPIRequest: APIRequest {
-    
-    associatedtype Parser: ResponseParser
-
-    var parser: Parser { get }
-    
-}
-
 public extension APIRequest {
 
     var method: APIRequestMethod {
@@ -65,12 +59,4 @@ public extension APIRequest {
         return nil
     }
     
-    var multipartFormData: ((MultipartFormDataType) -> Void)? {
-        return nil
-    }
-    
-    var progressHandler: ProgressHandler? {
-        return nil
-    }
-
 }
