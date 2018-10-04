@@ -2,6 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "APIClient"
   s.version      = '2.0'
+  s.swift_version = '4.2'
 
   s.summary      = "Lightweight networking framework."
 
@@ -20,24 +21,13 @@ Pod::Spec.new do |s|
   s.dependency 'YALResult', '1.0'
 
   s.subspec 'Core' do |ss|
-    ss.source_files = "APIClient/Default/**/*.swift"
+    ss.source_files = "APIClient/**/*.swift"
   end
 
   s.subspec 'Alamofire' do |ss|
     ss.dependency 'APIClient/Core'
     ss.dependency 'Alamofire', '~> 4.6' 
     ss.source_files = "APIClient/Alamofire/*"
-  end
-
-  s.subspec 'StubbedClient' do |ss|
-    ss.dependency 'APIClient/Core'
-    ss.source_files = "APIClient/StubbedClient/*"
-  end
-
-  s.subspec 'OHHTTPStubs' do |ss|
-    ss.dependency 'APIClient/StubbedClient'
-    ss.dependency 'OHHTTPStubs/Swift'
-    ss.source_files = "APIClient/OHHTTPStubs/*"
   end
 
 end
