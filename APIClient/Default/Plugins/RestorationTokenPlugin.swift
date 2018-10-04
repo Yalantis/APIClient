@@ -28,7 +28,7 @@ public protocol Auth {
 public class RestorationTokenPlugin: PluginType {
     
     /// Callback to send a restore request
-    public var onRequest: ((@escaping (Result<Auth>) -> Void) -> Void)?
+    public var restorationResultProvider: ((@escaping (Result<Auth>) -> Void) -> Void)?
 
     private let credentialProvider: AccessCredentialsProvider
     
@@ -63,13 +63,13 @@ public class RestorationTokenPlugin: PluginType {
             return
         }
 
-        guard credentialProvider.exchangeToken != nil else {
+        guard credentialProvider.exchangeToken != nil && restorationResultProvider != nil else {
             credentialProvider.invalidate()
             onResolved(false)
             return
         }
-
-        onRequest?() { [weak self] result in
+ 
+        restorationResultProvider?() { [weak self] result in
             guard let value = result.value else {
                 self?.credentialProvider.invalidate()
                 onResolved(false)

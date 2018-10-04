@@ -35,7 +35,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
 
         let tokenExpectation = expectation(description: "Token")
         
-        sut.execute(request: GetProfileRequest()) { result in
+        sut.execute(request: GetProfileRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
             tokenExpectation.fulfill()
         }
         
@@ -51,7 +51,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
             plugins: [ErrorProcessor(), decorationPlugin]
         )
         
-        decorationPlugin.onRequest = { (completion: @escaping (Result<Auth>) -> Void) -> Void in
+        decorationPlugin.restorationResultProvider = { (completion: @escaping (Result<Auth>) -> Void) -> Void in
             self.stubSuccessfulAuth()
             
             let restoreRequest = RestoreRequest()
@@ -63,7 +63,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
         stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
 
         let tokenExpectation = expectation(description: "Token")
-        sut.execute(request: GetProfileRequest(), parser: ) { result in
+        sut.execute(request: GetProfileRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
             tokenExpectation.fulfill()
         }
         
