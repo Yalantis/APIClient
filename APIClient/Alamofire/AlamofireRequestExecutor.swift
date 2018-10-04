@@ -11,8 +11,8 @@ public enum AlamofireExecutorError: Error {
 
 open class AlamofireRequestExecutor: RequestExecutor {
     
-    public let manager: SessionManager
-    public let baseURL: URL
+    private let manager: SessionManager
+    private let baseURL: URL
     
     public init(baseURL: URL, manager: SessionManager = SessionManager.default) {
         self.manager = manager
