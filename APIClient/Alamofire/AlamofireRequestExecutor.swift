@@ -1,14 +1,6 @@
 import Foundation
 import Alamofire
 
-public enum AlamofireExecutorError: Error {
-    case canceled
-    case connection
-    case unauthorized
-    case internalServer
-    case undefined
-}
-
 open class AlamofireRequestExecutor: RequestExecutor {
     
     private let manager: SessionManager
@@ -139,19 +131,19 @@ open class AlamofireRequestExecutor: RequestExecutor {
     
     private class func defineError(_ error: Error?, completion: @escaping APIResultResponse) {
         guard let error = error else {
-            completion(.failure(AlamofireExecutorError.undefined))
+            completion(.failure(NetworkError.undefined))
             return
         }
         
         switch (error as NSError).code {
         case NSURLErrorCancelled:
-            completion(.failure(AlamofireExecutorError.canceled))
+            completion(.failure(NetworkError.canceled))
         case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut:
-            completion(.failure(AlamofireExecutorError.connection))
+            completion(.failure(NetworkError.connection))
         case 401:
-            completion(.failure(AlamofireExecutorError.unauthorized))
+            completion(.failure(NetworkError.unauthorized))
         case 500:
-            completion(.failure(AlamofireExecutorError.internalServer))
+            completion(.failure(NetworkError.internalServer))
         default:
             completion(.failure(error))
         }

@@ -51,14 +51,14 @@ public class RestorationTokenPlugin: PluginType {
     }
 
     public func canResolve(_ error: Error) -> Bool {
-        if (error as? AlamofireExecutorError) == .unauthorized {
+        if let error = error as? NetworkError, case .unauthorized = error {
             return true
         }
         return false
     }
 
     public func resolve(_ error: Error, onResolved: @escaping (Bool) -> Void) {
-        guard (error as? AlamofireExecutorError) == .unauthorized else {
+        if let error = error as? NetworkError, case .unauthorized = error {
             onResolved(false)
             return
         }
