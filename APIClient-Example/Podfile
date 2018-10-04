@@ -1,8 +1,11 @@
 use_frameworks!
 
+platform :ios, '11.0'
+
 target 'APIClient-Example' do
     
     pod 'APIClient/Alamofire', :path => '../'
+    pod 'SwiftLint'
     
 end
 

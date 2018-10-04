@@ -43,7 +43,7 @@ class APIClient_ExampleTests: XCTestCase {
         let userExpectation = expectation(description: "User")
         var expectedUser: User?
         
-        sut.execute(request: GetUserRequest()) { result in
+        sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
             expectedUser = result.value
             userExpectation.fulfill()
         }
@@ -60,7 +60,7 @@ class APIClient_ExampleTests: XCTestCase {
         let keyExpectation = expectation(description: "Key")
         var notFoundKey = ""
         
-        sut.execute(request: GetUserRequest()) { result in
+        sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
             if case let .keyNotFound(keys, _) = result.error as! DecodingError {
                 notFoundKey = keys.stringValue
             }
@@ -78,7 +78,7 @@ class APIClient_ExampleTests: XCTestCase {
         let errorExpectation = expectation(description: "Error")
         var isCanceledError = false
         
-        let request = sut.execute(request: GetUserRequest()) { result in
+        let request = sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
             if let error = result.error as? AlamofireExecutorError, error == .canceled {
                 isCanceledError = true
             }
@@ -97,7 +97,7 @@ class APIClient_ExampleTests: XCTestCase {
         let errorExpectation = expectation(description: "error")
         var catchedErrorIsUnauthorized = false
 
-        sut.execute(request: GetUserRequest()) { result in
+        sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
             if let error = result.error {
                 if error is AlamofireExecutorError {
                     catchedErrorIsUnauthorized = true
@@ -118,15 +118,14 @@ struct User: Codable {
     let email: String
 }
 
-struct GetUserRequest: SerializeableAPIRequest {
+struct GetUserRequest: APIRequest {
     
     let method: APIRequestMethod = .get
     let path = Constants.user
-    let parser = DecodableParser<User>(keyPath: "user")
     
 }
 
-struct WrongGetUserRequest: SerializeableAPIRequest {
+struct WrongGetUserRequest: APIRequest {
     
     let method: APIRequestMethod = .post
     let path = Constants.user

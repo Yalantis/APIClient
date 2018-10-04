@@ -9,11 +9,10 @@
 import Foundation
 import APIClient
 
-struct IPAddressDataRequest: SerializeableAPIRequest {
+struct IPAddressDataRequest: APIRequest {
     
     let method: APIRequestMethod = .get
     let path: String
-    let parser = DecodableParser<LocationMetaData>()
     
     init(ipAddress: String) {
         path = ipAddress

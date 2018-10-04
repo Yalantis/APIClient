@@ -36,7 +36,7 @@ class APIClientPluginTests: XCTestCase {
         let userExpectation = expectation(description: "User")
         var expectedUser: User?
         
-        sut.execute(request: WrongGetUserRequest()) { result in
+        sut.execute(request: WrongGetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
             expectedUser = result.value
             userExpectation.fulfill()
         }
