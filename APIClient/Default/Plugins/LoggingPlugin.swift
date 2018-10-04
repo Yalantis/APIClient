@@ -6,7 +6,7 @@
 //  Copyright © 2017 Eugene Andreyev. All rights reserved.
 //
 
-import BoltsSwift
+import Foundation
 
 public final class LoggingPlugin: PluginType {
     
@@ -38,10 +38,10 @@ public final class LoggingPlugin: PluginType {
         outputClosure("Received - \(describe(response))")
     }
     
-    public func resolve(_ error: Error) -> Task<Bool> {
+    public func resolve(_ error: Error) -> Bool {
         outputClosure("Attempt to resolve - \(error)")
         
-        return Task(false)
+        return false
     }
     
     public func processError(_ response: APIClient.HTTPResponse) -> Error? {

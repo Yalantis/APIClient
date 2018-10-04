@@ -6,7 +6,7 @@
 //  Copyright © 2018 Yalantis. All rights reserved.
 //
 
-import ObjectMapper
+import Foundation
 
 public enum CustomError: Error {
     

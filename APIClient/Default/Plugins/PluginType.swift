@@ -6,7 +6,7 @@
 //  Copyright © 2017 Eugene Andreyev. All rights reserved.
 //
 
-import BoltsSwift
+import Foundation
 
 /// Describes functions of the plugin for APIClient
 public protocol PluginType {
@@ -20,8 +20,10 @@ public protocol PluginType {
     /// Called immediately after data received.
     func didReceive(response: APIClient.HTTPResponse)
     
+    func canResolve(_ error: Error) -> Bool
+    
     /// Called to resolve error in case it happend.
-    func resolve(_ error: Error) -> Task<Bool>
+    func resolve(_ error: Error, onResolved: @escaping (Bool) -> Void)
     
     /// Called to provide error in case response isn't successful.
     func processError(_ response: APIClient.HTTPResponse) -> Error?
@@ -45,8 +47,12 @@ public extension PluginType {
     func didReceive(response: APIClient.HTTPResponse) {
     }
     
-    func resolve(_ error: Error) -> Task<Bool> {
-        return Task(false)
+    func canResolve(_ error: Error) -> Bool {
+        return false
+    }
+    
+    func resolve(_ error: Error, onResolved: @escaping (Bool) -> Void) {
+        onResolved(false)
     }
     
     func processError(_ response: APIClient.HTTPResponse) -> Error? {

@@ -6,19 +6,10 @@
 //  Copyright © 2018 Yalantis. All rights reserved.
 //
 
-import ObjectMapper
+import Foundation
 
-struct IPAddress {
+struct IPAddress: Codable {
     
-    let address: String
+    let ip: String
     
 }
-
-extension IPAddress: ImmutableMappable {
-
-    init(map: Map) throws {
-        address = try map.value("ip")
-    }
-
-}
-

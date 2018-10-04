@@ -9,10 +9,9 @@
 import Foundation
 import APIClient
 
-struct IPAddressRequest: SerializeableAPIRequest {
+struct IPAddressRequest: APIRequest {
     
     let method: APIRequestMethod = .get
     let path = ""
-    let parser = MappableParser<IPAddress>()
     
 }

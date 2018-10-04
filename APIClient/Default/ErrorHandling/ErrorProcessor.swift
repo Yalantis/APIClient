@@ -13,8 +13,8 @@ public struct NetworkErrorProcessor: ErrorProcessing {
     public init() { }
     
     public func processError(using response: APIClient.HTTPResponse) -> Error? {
-        if let dictionary = (try? deserializer.deserialize(response.httpResponse, data: response.data)) as? [String: AnyObject] {
-            return NetworkError(statusCode: response.httpResponse.statusCode, responseDictionary: dictionary)
+        if case let .success(result) = deserializer.deserialize(response.httpResponse, data: response.data), let dictionary = result as? [String: Any] {
+            return NetworkError.response(responseDictionary: dictionary, statusCode: response.httpResponse.statusCode)
         }
         
         return nil

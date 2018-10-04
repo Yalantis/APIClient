@@ -14,17 +14,8 @@ final class ErrorProcessor: PluginType {
         if let error = error as? CustomError {
             return error
         }
-        if let executorError = error as? AlamofireExecutorError, let error = executorError.error {
-            let nserror = error as NSError
-            // handle reachability
-            if nserror.code == NSURLErrorNotConnectedToInternet || nserror.code == NSURLErrorTimedOut {
-                return CustomError.connection
-            }
-            
-            return CustomError.unhandled(error: error)
-        }
         
-        return CustomError.undefined
+        return error
     }
     
     func processError(_ response: APIClient.HTTPResponse) -> Error? {

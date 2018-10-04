@@ -7,36 +7,48 @@
 //
 
 import UIKit
+import APIClient
 
 class ViewController: UIViewController {
     
     @IBOutlet private var ipAddressTextField: UITextField!
     @IBOutlet private var dataTextView: UITextView!
     
+    let geoServiceNetworkClient: NetworkClient = APIClient(
+        requestExecutor: AlamofireRequestExecutor(baseURL: Constants.API.geoServiceBaseURL),
+        plugins: [ErrorProcessor()]
+    )
+    
+    let ipServiceNetworkClient: NetworkClient = APIClient(
+        requestExecutor: AlamofireRequestExecutor(baseURL: Constants.API.ipServiceBaseURL),
+        plugins: [ErrorProcessor()]
+    )
+    
     @IBAction private func findCurrentIP() {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        ipServiceNetworkClient
-            .execute(request: IPAddressRequest())
-            .continueWith(.mainThread) { [weak self] task in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                if let result = task.result {
-                    self?.display(ipAddress: result)
-                } else if let error = task.error {
-                    self?.display(error: error)
-                }
+        
+        ipServiceNetworkClient.execute(request: IPAddressRequest(), parser: DecodableParser<IPAddress>()) { [weak self] response in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            
+            switch response {
+            case .success(let result):
+                self?.display(ipAddress: result)
+            case .failure(let error):
+                self?.display(error: error)
+            }
         }
     }
-    
+
     @IBAction private func findData() {
-        geoServiceNetworkClient
-            .execute(request: IPAddressDataRequest(ipAddress: ipAddressTextField.text ?? ""))
-            .continueWith(.mainThread) { [weak self] task in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                if let result = task.result {
-                    self?.display(data: result)
-                } else if let error = task.error {
-                    self?.display(error: error)
-                }
+        geoServiceNetworkClient.execute(request: IPAddressDataRequest(ipAddress: ipAddressTextField.text ?? ""), parser: DecodableParser<LocationMetaData>()) { [weak self] response in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            
+            switch response {
+            case .success(let result):
+                self?.display(data: result)
+            case .failure(let error):
+                self?.display(error: error)
+            }
         }
     }
     
@@ -45,12 +57,10 @@ class ViewController: UIViewController {
     }
     
     private func display(ipAddress: IPAddress) {
-        ipAddressTextField.text = ipAddress.address
+        ipAddressTextField.text = ipAddress.ip
     }
     
     private func display(data: LocationMetaData) {
         dataTextView.text = "\(data)"
     }
 }
-
-extension ViewController: NetworkClientInjectable {}

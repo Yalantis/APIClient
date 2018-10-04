@@ -1,14 +1,13 @@
 import Foundation
-import BoltsSwift
 
 open class APIClient: NSObject, NetworkClient {
     
     public typealias HTTPResponse = (httpResponse: HTTPURLResponse, data: Data)
     
-    fileprivate let responseExecutor: Executor = .queue(DispatchQueue(label: "APIClientQueue", attributes: .concurrent))
-    fileprivate let requestExecutor: RequestExecutor
-    fileprivate let deserializer: Deserializer
-    fileprivate let plugins: [PluginType]
+    private let responseQueue = DispatchQueue(label: "APIClientQueue", attributes: .concurrent)
+    private let requestExecutor: RequestExecutor
+    private let deserializer: Deserializer
+    private let plugins: [PluginType]
     
     // MARK: - Init
     
@@ -17,100 +16,96 @@ open class APIClient: NSObject, NetworkClient {
         self.deserializer = deserializer
         self.plugins = plugins
     }
-
+    
     // MARK: - NetworkClient
     
-    public func execute<T, U: ResponseParser>(request: APIRequest, parser: U) -> Task<T> where U.Representation == T {
-        let taskProducer: RequestTaskProducer = {
+    @discardableResult
+    public func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T : ResponseParser {
+        let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
+            let request = self.prepare(request: request)
             self.willSend(request: request)
-            
-            return self
-                .requestExecutor
-                .execute(request: self.prepare(request: request))
+            return self.requestExecutor.execute(request: request, completion: completion)
         }
         
-        return _execute(taskProducer, deserializer: deserializer, parser: parser)
-    }
-
-    public func execute<T, U: ResponseParser>(multipartRequest: APIRequest, parser: U) -> Task<T> where U.Representation == T {
-        let taskProducer: RequestTaskProducer = {
-            self.willSend(request: multipartRequest)
-            
-            return self
-                .requestExecutor
-                .execute(multipartRequest: self.prepare(request: multipartRequest))
-        }
-        
-        return _execute(taskProducer, deserializer: deserializer, parser: parser)
-    }
-
-    public func execute<T, U : ResponseParser>(downloadRequest: APIRequest, destinationFilePath destinationPath: URL?, deserializer: Deserializer?, parser: U) -> Task<T> where U.Representation == T {
-        let taskProducer: RequestTaskProducer = {
-            self.willSend(request: downloadRequest)
-            
-            return self
-                .requestExecutor
-                .execute(downloadRequest: self.prepare(request: downloadRequest), destinationPath: destinationPath)
-        }
-        
-        return _execute(taskProducer, deserializer: deserializer ?? self.deserializer, parser: parser)
+        return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
-}
-
-private extension APIClient {
- 
-    typealias RequestTaskProducer = () -> Task<HTTPResponse>
-    
-    func validate(_ response: HTTPResponse) -> Task<HTTPResponse> {
-        switch response.httpResponse.statusCode {
-        case (200...299):
-            return Task(response)
-        
-        default:
-            return Task(error: self.process(response) ?? NetworkError.undefined)
-        }
-    }
-    
-    func _execute<T, U: ResponseParser>(_ requestTaskProducer: @escaping RequestTaskProducer, deserializer: Deserializer, parser: U) -> Task<T> where U.Representation == T {
-        let requestTask = requestTaskProducer()
-        func validatedTask(from task: Task<HTTPResponse>) -> Task<HTTPResponse> {
-            return task.continueWithTask { responseTask in
-                if let response = responseTask.result {
-                    self.didReceive(response)
-                    
-                    return self.validate(response)
-                }
-                
-                return responseTask
+    @discardableResult
+    public func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
+        let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
+            guard let request = self.prepare(request: request) as? MultipartAPIRequest else {
+                fatalError("Unexpected request type. Expected `MultipartAPIRequest`")
             }
+            self.willSend(request: request)
+            return self.requestExecutor.execute(multipartRequest: request, completion: completion)
         }
-        
-        return validatedTask(from: requestTask)
-            .continueOnErrorWithTask { error -> Task<HTTPResponse> in
-                self.resolve(error).continueWithTask { task -> Task<HTTPResponse> in
-                    if let result = task.result, result {
-                        return validatedTask(from: requestTaskProducer())
+        return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
+    }
+    
+    @discardableResult
+    public func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
+        let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
+            guard let request = self.prepare(request: request) as? DownloadAPIRequest else {
+                fatalError("Unexpected request type. Expected `MultipartAPIRequest`")
+            }
+            self.willSend(request: request)
+            return self.requestExecutor.execute(downloadRequest: request, destinationPath: destinationFilePath, completion: completion)
+        }
+        return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
+    }
+    
+    private func _execute<T>(_ resultProducer: @escaping (@escaping APIResultResponse) -> Cancelable, deserializer: Deserializer, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
+        return resultProducer { response in
+            let validatedResult = self.validateResult(response)
+            
+            if let error = validatedResult.error {
+                self.resolve(error: error, onResolved: { isResolved in
+                    if isResolved {
+                        _ = resultProducer { response in
+                            self.proccessResponse(response: response, parser: parser, completion: completion)
+                        }
                     } else {
-                        return Task(error: error)
+                        self.proccessResponse(response: response, parser: parser, completion: completion)
                     }
-                }
+                })
+            } else {
+                self.proccessResponse(response: response, parser: parser, completion: completion)
             }
-            .continueOnSuccessWith(responseExecutor, continuation: { response, data -> AnyObject in
-                return try deserializer.deserialize(response, data: data)
-            })
-            .continueOnSuccessWith(responseExecutor, continuation: { response in
-                return try parser.parse(response)
-            })
-            .continueOnSuccessWith { response in
-                return self.process(result: response)
-            }
-            .continueOnErrorWithTask { error -> Task<T> in
-                return Task<T>(error: self.decorate(error: error))
-            }
+        }
     }
     
-
+    private func validateResult(_ result: Result<APIClient.HTTPResponse>) -> Result<APIClient.HTTPResponse> {
+        if let response = result.value {
+            self.didReceive(response)
+            
+            switch response.httpResponse.statusCode {
+            case 200...299:
+                return .success(response)
+            default:
+                return .failure(self.process(response) ?? NetworkError.undefined)
+            }
+        }
+        return result
+    }
+    
+    private func proccessResponse<T>(response: (Result<APIClient.HTTPResponse>), parser: T, completion: @escaping (Result<T.Representation>) -> Void) where T: ResponseParser {
+        
+        let result = validateResult(response)
+        
+        if case let .failure(error) = result {
+            let decoratedError = decorate(error: error)
+            completion(.failure(decoratedError))
+            return
+        }
+        
+        completion(
+            result
+                .next(self.deserializer.deserialize)
+                .next(parser.parse)
+                .map(self.process)
+        )
+    }
+    
 }
 
 // MARK: - Plugins support
@@ -121,15 +116,11 @@ private extension APIClient {
         return plugins.reduce(result) { $1.process($0) }
     }
     
-    func resolve(_ error: Error) -> Task<Bool> {
-        let tasks: [Task<Bool>] = plugins.map { $0.resolve(error) }
-        
-        return Task.whenAllResult(tasks).continueWithTask { task -> Task<Bool> in
-            if let array = task.result {
-                return Task(array.contains(true))
-            }
-            
-            return Task(false)
+    func resolve(error: Error, onResolved: @escaping (Bool) -> Void) {
+        if let plugin = plugins.first(where: { $0.canResolve(error) }) {
+            plugin.resolve(error, onResolved: onResolved)
+        } else {
+            onResolved(false)
         }
     }
     
@@ -143,7 +134,6 @@ private extension APIClient {
                 return error
             }
         }
-        
         return nil
     }
     
