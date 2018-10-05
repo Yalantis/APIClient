@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import APIClient
+import YALAPIClient
 
 class ViewController: UIViewController {
     

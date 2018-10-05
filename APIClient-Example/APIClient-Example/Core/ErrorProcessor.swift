@@ -6,7 +6,7 @@
 //  Copyright © 2018 Yalantis. All rights reserved.
 //
 
-import APIClient
+import YALAPIClient
 
 final class ErrorProcessor: PluginType {
     

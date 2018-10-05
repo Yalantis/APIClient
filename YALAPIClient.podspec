@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'Alamofire' do |ss|
-    ss.dependency 'APIClient/Core'
+    ss.dependency 'YALAPIClient/Core'
     ss.dependency 'Alamofire', '~> 4.6' 
     ss.source_files = "APIClient/Alamofire/*"
   end

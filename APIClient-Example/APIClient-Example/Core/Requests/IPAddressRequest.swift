@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import APIClient
+import YALAPIClient
 
 struct IPAddressRequest: APIRequest {
     
