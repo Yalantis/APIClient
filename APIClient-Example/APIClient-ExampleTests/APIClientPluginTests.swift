@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import APIClient_Example
-import APIClient
+import YALAPIClient
 import Mockingjay
 
 class APIClientPluginTests: XCTestCase {
