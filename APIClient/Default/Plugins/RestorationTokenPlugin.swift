@@ -58,7 +58,7 @@ public class RestorationTokenPlugin: PluginType {
     }
 
     public func resolve(_ error: Error, onResolved: @escaping (Bool) -> Void) {
-        if let error = error as? NetworkError, case .unauthorized = error {
+        guard let error = error as? NetworkError, case .unauthorized = error else {
             onResolved(false)
             return
         }

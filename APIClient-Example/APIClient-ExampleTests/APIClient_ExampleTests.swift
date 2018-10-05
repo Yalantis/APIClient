@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import APIClient_Example
-import APIClient
+import YALAPIClient
 import Mockingjay
 
 struct Constants {
@@ -79,7 +79,7 @@ class APIClient_ExampleTests: XCTestCase {
         var isCanceledError = false
         
         let request = sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
-            if let error = result.error as? AlamofireExecutorError, error == .canceled {
+            if let error = result.error as? NetworkError, case .canceled = error {
                 isCanceledError = true
             }
             errorExpectation.fulfill()
@@ -98,10 +98,8 @@ class APIClient_ExampleTests: XCTestCase {
         var catchedErrorIsUnauthorized = false
 
         sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
-            if let error = result.error {
-                if error is AlamofireExecutorError {
-                    catchedErrorIsUnauthorized = true
-                }
+            if let error = result.error as? NetworkError, case .unauthorized = error {
+                catchedErrorIsUnauthorized = true
             }
             errorExpectation.fulfill()
         }
