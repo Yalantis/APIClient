@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 
-  s.name         = "APIClient"
+  s.name         = "YALAPIClient"
   s.version      = '2.0'
   s.summary      = "Lightweight networking framework."
   s.homepage     = "https://github.com/Yalantis/APIClient.git"
