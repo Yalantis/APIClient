@@ -17,5 +17,4 @@ public final class ErrorPreprocessorPlugin: PluginType {
     public func processError(_ response: APIClient.HTTPResponse) -> Error? {
         return errorPreprocessor.processError(using: response)
     }
-    
 }

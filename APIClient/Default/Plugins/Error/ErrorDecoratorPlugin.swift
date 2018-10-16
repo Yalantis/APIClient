@@ -9,7 +9,6 @@ import Foundation
 public protocol ErrorDecoratable {
     
     func decorate(_ error: Error) -> Error
-    
 }
 
 public struct ErrorDecoratorPlugin: PluginType {
@@ -23,5 +22,4 @@ public struct ErrorDecoratorPlugin: PluginType {
     public func decorate(_ error: Error) -> Error {
         return decorator.decorate(error)
     }
-    
 }

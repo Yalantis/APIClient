@@ -7,19 +7,7 @@
 
 import Foundation
 
-/// The request in use with `RestorationTokenPlugin`
-public protocol CredentialProvidableRequest {
-    
-    /// If true provides request with credentials from `RestorationTokenPlugin`
-    var authorizationRequired: Bool { get }
-}
-
-extension CredentialProvidableRequest {
-    
-    public var authorizationRequired: Bool { return true }
-}
-
-public protocol Auth {
+public protocol TokenType {
     
     var accessToken: String { get set }
     var exchangeToken: String { get set }
@@ -29,26 +17,12 @@ public protocol Auth {
 public class RestorationTokenPlugin: PluginType {
     
     /// Callback to send a restore request
-    public var restorationResultProvider: ((@escaping (Result<Auth>) -> Void) -> Void)?
+    public var restorationResultProvider: ((@escaping (Result<TokenType>) -> Void) -> Void)?
 
     private let credentialProvider: AccessCredentialsProvider
-    
-    /// Auth type to use in header
-    private let authType: AuthType
 
-    public init(credentialProvider: AccessCredentialsProvider, authType: AuthType = .default) {
+    public init(credentialProvider: AccessCredentialsProvider) {
         self.credentialProvider = credentialProvider
-        self.authType = authType
-    }
-
-    public func prepare(_ request: APIRequest) -> APIRequest {
-        var requestProxy = APIRequestProxy(request: request)
-
-        if let request = request as? CredentialProvidableRequest {
-            applyHeaders(&requestProxy, applyAuthorization: request.authorizationRequired)
-        }
-
-        return requestProxy
     }
 
     public func canResolve(_ error: Error) -> Bool {
@@ -83,22 +57,5 @@ public class RestorationTokenPlugin: PluginType {
                 onResolved(true)
             }
         }
-    }
-
-    // MARK: - Private Methods
-
-    private func applyHeaders(_ request: inout APIRequestProxy, applyAuthorization: Bool) {
-        var headers = request.headers ?? [:]
-
-        if let authToken = credentialProvider.accessToken, applyAuthorization {
-            var prefix = ""
-
-            if let authPrefix = authType.valuePrefix {
-                prefix = authPrefix + " "
-            }
-            headers[authType.key] = prefix + authToken
-        }
-
-        request.headers = headers
     }
 }

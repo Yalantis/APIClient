@@ -82,7 +82,7 @@ open class APIClient: NSObject, NetworkClient {
             case 200...299:
                 return .success(response)
             default:
-                return .failure(self.process(response) ?? NetworkError.undefined)
+                return .failure(self.process(response) ?? NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
             }
         }
         return result

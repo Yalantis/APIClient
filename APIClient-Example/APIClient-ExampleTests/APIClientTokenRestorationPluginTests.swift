@@ -29,7 +29,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
     func test_TokenRestoration_WhenTokenExpiredAndRestoreRequestNotProvided_TerminateSession() {
         let sut = APIClient(
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
-            plugins: [ErrorProcessor(), RestorationTokenPlugin(credentialProvider: session)]
+            plugins: [RestorationTokenPlugin(credentialProvider: session)]
         )
         stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
 
@@ -48,16 +48,16 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
         let decorationPlugin = RestorationTokenPlugin(credentialProvider: session)
         let sut = APIClient(
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
-            plugins: [ErrorProcessor(), decorationPlugin]
+            plugins: [decorationPlugin]
         )
         
-        decorationPlugin.restorationResultProvider = { (completion: @escaping (Result<Auth>) -> Void) -> Void in
+        decorationPlugin.restorationResultProvider = { (completion: @escaping (Result<TokenType>) -> Void) -> Void in
             self.stubSuccessfulAuth()
             
             let restoreRequest = RestoreRequest()
             sut.execute(request: restoreRequest, parser: DecodableParser<Credentials>(), completion: { result in
                 self.stubSuccessfulUser()
-                completion(result.map { $0 as Auth })
+                completion(result.map { $0 as TokenType })
             })
         }
         stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
@@ -101,19 +101,19 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
     }
 }
 
-struct GetProfileRequest: APIRequest, CredentialProvidableRequest {
+struct GetProfileRequest: APIRequest, AuthorizableRequest {
     
     let method: APIRequestMethod = .get
     let path = Constants.user
 }
 
-struct RestoreRequest: APIRequest, CredentialProvidableRequest {
+struct RestoreRequest: APIRequest, AuthorizableRequest {
     
     let method: APIRequestMethod = .put
     let path = Constants.restore
 }
 
-struct SimpleMultipartRequest: MultipartAPIRequest, CredentialProvidableRequest {
+struct SimpleMultipartRequest: MultipartAPIRequest, AuthorizableRequest {
     
     let method: APIRequestMethod = .post
     let path = Constants.user
@@ -122,7 +122,7 @@ struct SimpleMultipartRequest: MultipartAPIRequest, CredentialProvidableRequest 
     var progressHandler: ProgressHandler?
 }
 
-struct Credentials: Codable, Auth {
+struct Credentials: Codable, TokenType {
     
     var exchangeToken: String
     var accessToken: String

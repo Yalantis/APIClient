@@ -26,8 +26,7 @@ class APIClient_ExampleTests: XCTestCase {
         super.setUp()
 
         sut = APIClient(
-            requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
-            plugins: [ErrorProcessor()]
+            requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!)
         )
     }
     

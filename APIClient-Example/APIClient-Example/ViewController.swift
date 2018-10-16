@@ -15,13 +15,11 @@ class ViewController: UIViewController {
     @IBOutlet private var dataTextView: UITextView!
     
     let geoServiceNetworkClient: NetworkClient = APIClient(
-        requestExecutor: AlamofireRequestExecutor(baseURL: Constants.API.geoServiceBaseURL),
-        plugins: [ErrorProcessor()]
+        requestExecutor: AlamofireRequestExecutor(baseURL: Constants.API.geoServiceBaseURL)
     )
     
     let ipServiceNetworkClient: NetworkClient = APIClient(
-        requestExecutor: AlamofireRequestExecutor(baseURL: Constants.API.ipServiceBaseURL),
-        plugins: [ErrorProcessor()]
+        requestExecutor: AlamofireRequestExecutor(baseURL: Constants.API.ipServiceBaseURL)
     )
     
     @IBAction private func findCurrentIP() {
@@ -53,7 +51,7 @@ class ViewController: UIViewController {
     }
     
     private func display(error: Error) {
-        dataTextView.text = error.localizedDescription
+        dataTextView.text = "\(error)"
     }
     
     private func display(ipAddress: IPAddress) {

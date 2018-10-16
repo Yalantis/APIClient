@@ -69,5 +69,4 @@ public final class LoggingPlugin: PluginType {
     private func describe(_ response: APIClient.HTTPResponse) -> String {
         return "\(response)"
     }
-    
 }
