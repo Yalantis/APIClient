@@ -105,7 +105,6 @@ open class APIClient: NSObject, NetworkClient {
                 .map(self.process)
         )
     }
-    
 }
 
 // MARK: - Plugins support
@@ -148,5 +147,4 @@ private extension APIClient {
     func decorate(error: Error) -> Error {
         return plugins.reduce(error) { $1.decorate($0) }
     }
-    
 }

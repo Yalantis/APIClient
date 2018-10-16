@@ -15,11 +15,12 @@ public protocol CredentialProvidableRequest {
 }
 
 extension CredentialProvidableRequest {
+    
     public var authorizationRequired: Bool { return true }
 }
 
-
 public protocol Auth {
+    
     var accessToken: String { get set }
     var exchangeToken: String { get set }
 }
@@ -100,5 +101,4 @@ public class RestorationTokenPlugin: PluginType {
 
         request.headers = headers
     }
-    
 }
