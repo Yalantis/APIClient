@@ -4,7 +4,6 @@ open class APIClient: NSObject, NetworkClient {
     
     public typealias HTTPResponse = (httpResponse: HTTPURLResponse, data: Data)
     
-    private let responseQueue = DispatchQueue(label: "APIClientQueue", attributes: .concurrent)
     private let requestExecutor: RequestExecutor
     private let deserializer: Deserializer
     private let plugins: [PluginType]
@@ -74,21 +73,19 @@ open class APIClient: NSObject, NetworkClient {
         }
     }
     
-    private func validateResult(_ result: Result<APIClient.HTTPResponse>) -> Result<APIClient.HTTPResponse> {
+    private func validateResult(_ result: Result<HTTPResponse>) -> Result<HTTPResponse> {
         if let response = result.value {
             self.didReceive(response)
             
             switch response.httpResponse.statusCode {
-            case 200...299:
-                return .success(response)
-            default:
-                return .failure(self.process(response) ?? NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
+            case 200...299: return .success(response)
+            default: return .failure(self.process(response) ?? NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
             }
         }
         return result
     }
     
-    private func proccessResponse<T>(response: (Result<APIClient.HTTPResponse>), parser: T, completion: @escaping (Result<T.Representation>) -> Void) where T: ResponseParser {
+    private func proccessResponse<T>(response: (Result<HTTPResponse>), parser: T, completion: @escaping (Result<T.Representation>) -> Void) where T: ResponseParser {
         
         let result = validateResult(response)
         
