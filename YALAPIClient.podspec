@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.summary      = "Lightweight networking framework."
   s.homepage     = "https://github.com/Yalantis/APIClient.git"
   s.license      = { :type => "MIT", :file => "License" }
-  s.authors      = { 'Eugene Andreyev' => 'eugene.andreyev@yalantis.com' }
+  s.authors      = { 'Eugene Andreyev' => 'eugene.andreyev@yalantis.com', 'Roman Kyrylenko' => 'roman.kyrylenko@yalantis.com', 'Anton Vodolazkyi' => 'anton.vodolazky@yalantis.com' }
   s.source       = { :git => "https://github.com/Yalantis/APIClient.git", :tag => s.version }
   s.frameworks = 'Foundation'
   s.ios.deployment_target = '10.0'
