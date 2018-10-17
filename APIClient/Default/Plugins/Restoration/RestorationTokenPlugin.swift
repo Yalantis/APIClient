@@ -16,15 +16,14 @@ public protocol TokenType {
 /// The plugin to restore the token can be used as the requestor's credential provider
 public class RestorationTokenPlugin: PluginType {
     
-    private let restorationResultProvider: ((@escaping (Result<TokenType>) -> Void) -> Void)
+    /// callback that provides result of request made to restore the session; captured
+    public var restorationResultProvider: ((@escaping (Result<TokenType>) -> Void) -> Void)?
     private let credentialProvider: AccessCredentialsProvider
-
+    
     /// - Parameters:
     ///   - credentialProvider: an access credentials provider that provides all required data to restore token; captured
-    ///   - restorationResultProvider: callback that provides result of request made to restore the session; captured
-    public init(credentialProvider: AccessCredentialsProvider, restorationResultProvider: @escaping ((@escaping (Result<TokenType>) -> Void) -> Void)) {
+    public init(credentialProvider: AccessCredentialsProvider) {
         self.credentialProvider = credentialProvider
-        self.restorationResultProvider = restorationResultProvider
     }
 
     public func canResolve(_ error: Error) -> Bool {
@@ -40,13 +39,13 @@ public class RestorationTokenPlugin: PluginType {
             return
         }
 
-        guard credentialProvider.exchangeToken != nil else {
+        guard credentialProvider.exchangeToken != nil && restorationResultProvider != nil else {
             credentialProvider.invalidate()
             onResolved(false)
             return
         }
  
-        restorationResultProvider { [weak self] result in
+        restorationResultProvider? { [weak self] result in
             guard let value = result.value else {
                 self?.credentialProvider.invalidate()
                 onResolved(false)
