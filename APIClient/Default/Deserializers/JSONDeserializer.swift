@@ -13,5 +13,4 @@ public class JSONDeserializer: Deserializer {
     }
     
     public init() {}
-    
 }
