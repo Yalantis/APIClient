@@ -16,11 +16,9 @@ public protocol NetworkClient {
     /// - Parameters:
     ///   - request: the request itself
     ///   - destinationFilePath: path to the where data will be saved; default is `nil`
-    ///   - deserializer: deserializer for given request's response
     ///   - parser: parser for response
     ///   - completion: result with response object on success or appropriate error on failure
     /// - Returns: cancelation token
     @discardableResult
-    func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser
-    
+    func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser
 }
