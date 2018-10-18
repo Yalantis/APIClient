@@ -27,6 +27,7 @@ public class RestorationTokenPlugin: PluginType {
     /// - Parameters:
     ///   - credentialProvider: an access credentials provider that provides all required data to restore token; captured
     ///   - shouldHaltRequestsTillResolve: indicates whether APIClient should halt all passing requests in case one of them failed with `unathorized` error and restart them
+    ///                                    works only with `AuthorizableRequest`s
     public init(credentialProvider: AccessCredentialsProvider, shouldHaltRequestsTillResolve: Bool = true) {
         self.credentialProvider = credentialProvider
         self.shouldHaltRequestsTillResolve = shouldHaltRequestsTillResolve

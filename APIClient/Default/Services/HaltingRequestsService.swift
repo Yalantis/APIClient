@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class HaltingRequestsService {
+final class HaltingRequestsService: NSObject {
     
     private struct HaltingRequest {
         
@@ -17,29 +17,61 @@ final class HaltingRequestsService {
     }
     
     private let supportHalting: Bool
-//    private let supportCancelling: Bool
+    private let supportCancelling: Bool
     
     private var shouldHalt = false
-//    private var shouldCancel = false
+    private var shouldCancel = false
+    private var authTimerStarted = false
+    
     private var haltingRequests: [HaltingRequest] = []
     
     init(plugins: [PluginType]) {
         let restorationPlugin = plugins.first(where: { $0 is RestorationTokenPlugin }) as? RestorationTokenPlugin
+        let authorizationPlugin = plugins.first(where: { $0 is AuthorizationPlugin }) as? AuthorizationPlugin
         supportHalting = restorationPlugin?.shouldHaltRequestsTillResolve ?? false
+        supportCancelling = authorizationPlugin?.shouldCancelRequestIfFailed ?? false
+        
+        super.init()
+        
+        if restorationPlugin == nil {
+            /// we need to know when authorization failes at least from one of the plugins
+            authorizationPlugin?.delegate = self
+        }
         restorationPlugin?.delegate = self
-//        supportCancelling = (plugins.first(where: { $0 is AuthorizationPlugin }) as? AuthorizationPlugin)?.shouldCancelRequestIfFailed ?? false
     }
     
     func shouldProceed(with request: APIRequest) -> Bool {
         guard let `request` = request as? AuthorizableRequest, request.authorizationRequired else {
             return true
         }
-        
-        return !shouldHalt// && !shouldCancel
+        return !shouldHalt && !shouldCancel
     }
     
     func add(exectuion: @escaping () -> Void, cancellation: @escaping () -> Void) {
-        haltingRequests.append(HaltingRequest(execute: exectuion, cancel: cancellation))
+        if !shouldHalt && shouldCancel && authTimerStarted {
+            cancellation()
+        } else {
+            haltingRequests.append(HaltingRequest(execute: exectuion, cancel: cancellation))
+        }
+    }
+    
+    @objc private func cancelRequests() {
+        shouldHalt = false
+        shouldCancel = false
+        authTimerStarted = false
+        haltingRequests.forEach { $0.cancel() }
+        haltingRequests.removeAll()
+    }
+}
+
+extension HaltingRequestsService: AuthorizationPluginDelegate {
+    
+    func reachAuthorizationError() {
+        shouldCancel = supportCancelling
+        if !authTimerStarted && shouldCancel {
+            authTimerStarted = true
+            perform(#selector(cancelRequests), with: nil, afterDelay: AuthorizationPlugin.requestsCancellingTimespan)
+        }
     }
 }
 
@@ -47,7 +79,7 @@ extension HaltingRequestsService: RestorationTokenPluginDelegate {
     
     func failedToRestore() {
         shouldHalt = false
-//        shouldCancel = supportCancelling
+        shouldCancel = supportCancelling
     }
     
     func reachUnauthorizedError() {
@@ -56,6 +88,7 @@ extension HaltingRequestsService: RestorationTokenPluginDelegate {
     
     func restored() {
         shouldHalt = false
+        shouldCancel = false
         haltingRequests.forEach { $0.execute() }
         haltingRequests.removeAll()
     }

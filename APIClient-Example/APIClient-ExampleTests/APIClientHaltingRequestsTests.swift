@@ -45,7 +45,7 @@ final class APIClientHaltingRequestsTests: XCTestCase {
                 firstRequestExpectation.fulfill()
             }
             sleep(1)
-            sut.execute(request: GetProfile2Request(), parser: DecodableParser<User>(keyPath: "user")) { result in
+            sut.execute(request: GetAuthorizedUser2Request(), parser: DecodableParser<User>(keyPath: "user")) { result in
                 XCTAssertNil(result.error)
                 XCTAssertEqual(result.value?.name, "bar2")
                 secondRequestExpectation.fulfill()
@@ -59,9 +59,56 @@ final class APIClientHaltingRequestsTests: XCTestCase {
             XCTAssertEqual(session.exchangeToken, "444")
         }
     }
+    
+    func test_RequestsCancelling_WhenCancellationEnabled_ShouldCancellAllNewRequests() {
+        AuthorizationPlugin.requestsCancellingTimespan = 2
+        let sut = APIClient(
+            requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
+            plugins: [AuthorizationPlugin(provider: TokenProvider(), shouldCancelRequestIfFailed: true)]
+        )
+        let firstRequestExpectation = expectation(description: "first request")
+        let secondRequestExpectation = expectation(description: "second request")
+        let thirdRequestExpectation = expectation(description: "third request")
+        let executionQueue = DispatchQueue(label: "execution queue")
+        
+        stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
+        executionQueue.async {
+            sut.execute(request: GetAuthorizedUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
+                XCTAssertNotNil(result.error as? NetworkError)
+                
+                switch result.error as! NetworkError {
+                case .unauthorized: break
+                default: XCTFail("unexpected error: \(result.error as! NetworkError)")
+                }
+                firstRequestExpectation.fulfill()
+            }
+            sleep(1)
+            sut.execute(request: GetAuthorizedUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
+                XCTAssertNotNil(result.error as? NetworkError)
+                
+                switch result.error as! NetworkError {
+                case .canceled: break
+                default: XCTFail("unexpected error: \(result.error as! NetworkError)")
+                }
+                secondRequestExpectation.fulfill()
+            }
+            sut.execute(request: GetAuthorizedUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
+                XCTAssertNotNil(result.error as? NetworkError)
+                
+                switch result.error as! NetworkError {
+                case .canceled: break
+                default: XCTFail("unexpected error: \(result.error as! NetworkError)")
+                }
+                thirdRequestExpectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 3) { error in
+            XCTAssertNil(error)
+        }
+    }
 }
 
-struct GetProfile2Request: APIRequest, AuthorizableRequest {
+struct GetAuthorizedUser2Request: APIRequest, AuthorizableRequest {
     
     let method: APIRequestMethod = .get
     let path = Constants.user2
