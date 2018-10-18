@@ -39,7 +39,7 @@ final class APIClientHaltingRequestsTests: XCTestCase {
         }
         stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
         executionQueue.async {
-            sut.execute(request: GetProfileRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
+            sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
                 XCTAssertNil(result.error)
                 XCTAssertEqual(result.value?.name, "bar")
                 firstRequestExpectation.fulfill()
@@ -59,4 +59,10 @@ final class APIClientHaltingRequestsTests: XCTestCase {
             XCTAssertEqual(session.exchangeToken, "444")
         }
     }
+}
+
+struct GetProfile2Request: APIRequest, AuthorizableRequest {
+    
+    let method: APIRequestMethod = .get
+    let path = Constants.user2
 }

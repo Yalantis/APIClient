@@ -25,6 +25,7 @@
 		B83396122017804900689B94 /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396112017804900689B94 /* CustomError.swift */; };
 		B83396142017820E00689B94 /* CustomError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396132017820E00689B94 /* CustomError+Localization.swift */; };
 		B83396162017830800689B94 /* CountryMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396152017830800689B94 /* CountryMetaData.swift */; };
+		B860BCA22178838300F3B46E /* APIClientAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B860BCA12178838300F3B46E /* APIClientAuthorizationTests.swift */; };
 		B8D3284B217784B40030F7AA /* APIClientHaltingRequestsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D3284A217784B40030F7AA /* APIClientHaltingRequestsTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +64,7 @@
 		B83396112017804900689B94 /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
 		B83396132017820E00689B94 /* CustomError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomError+Localization.swift"; sourceTree = "<group>"; };
 		B83396152017830800689B94 /* CountryMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMetaData.swift; sourceTree = "<group>"; };
+		B860BCA12178838300F3B46E /* APIClientAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientAuthorizationTests.swift; sourceTree = "<group>"; };
 		B8D3284A217784B40030F7AA /* APIClientHaltingRequestsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientHaltingRequestsTests.swift; sourceTree = "<group>"; };
 		BB518267738F9D1C3898D291 /* Pods-APIClient-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APIClient-ExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C1B5F9A5FC1F8DCAC03A2D52 /* Pods-APIClient-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APIClient-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				88FB95D1215526C80007ABE0 /* APIClient_ExampleTests.swift */,
+				B860BCA12178838300F3B46E /* APIClientAuthorizationTests.swift */,
 				B8D3284A217784B40030F7AA /* APIClientHaltingRequestsTests.swift */,
 				88FB95D92155425A0007ABE0 /* APIClientPluginTests.swift */,
 				8859650E2158FA7E00761709 /* APIClientTokenRestorationPluginTests.swift */,
@@ -405,6 +408,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				88FB95DA2155425A0007ABE0 /* APIClientPluginTests.swift in Sources */,
+				B860BCA22178838300F3B46E /* APIClientAuthorizationTests.swift in Sources */,
 				B8D3284B217784B40030F7AA /* APIClientHaltingRequestsTests.swift in Sources */,
 				8859650F2158FA7E00761709 /* APIClientTokenRestorationPluginTests.swift in Sources */,
 				88FB95D2215526C80007ABE0 /* APIClient_ExampleTests.swift in Sources */,

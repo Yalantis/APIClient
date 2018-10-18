@@ -5,18 +5,6 @@
 //  Created by Roman Kyrylenko on 10/16/18.
 //
 
-/// Adopt this protocol in order to be able to authorize your request
-public protocol AuthorizableRequest {
-    
-    /// If true provides request with credentials from `RestorationTokenPlugin`
-    var authorizationRequired: Bool { get }
-}
-
-extension AuthorizableRequest {
-    
-    public var authorizationRequired: Bool { return true }
-}
-
 /// This plugin provides support for requests' authorization through http headers
 public final class AuthorizationPlugin: PluginType {
     
@@ -41,7 +29,7 @@ public final class AuthorizationPlugin: PluginType {
         
         var headers = request.headers ?? [:]
         var prefix = ""
-        if let authPrefix = provider.authorizationType.valuePrefix {
+        if let authPrefix = provider.authorizationType.valuePrefix, !authPrefix.isEmpty {
             prefix = authPrefix + " "
         }
         headers[provider.authorizationType.key] = prefix + provider.authorizationToken

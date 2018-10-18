@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol AuthorizationCredentialsProvider: class {
+public protocol AuthorizationCredentialsProvider {
     
     var authorizationToken: String { get }
     var authorizationType: AuthType { get }
