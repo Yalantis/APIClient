@@ -70,6 +70,7 @@ extension HaltingRequestsService: AuthorizationPluginDelegate {
         shouldCancel = supportCancelling
         if !authTimerStarted && shouldCancel {
             authTimerStarted = true
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(cancelRequests), object: nil)
             perform(#selector(cancelRequests), with: nil, afterDelay: AuthorizationPlugin.requestsCancellingTimespan)
         }
     }
