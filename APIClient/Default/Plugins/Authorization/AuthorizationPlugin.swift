@@ -20,11 +20,18 @@ extension AuthorizableRequest {
 /// This plugin provides support for requests' authorization through http headers
 public final class AuthorizationPlugin: PluginType {
     
-    private let provider: AuthorizationCredentialsProvider
+    /// The timespan used to cancel any executing request in case it previously failed authorization
+    public static var requestsCancellingTimespan: TimeInterval = 1.0
     
-    /// - Parameter provider: An auth data provider used in order to authorize your requests
-    public init(provider: AuthorizationCredentialsProvider) {
+    private let provider: AuthorizationCredentialsProvider
+    let shouldCancelRequestIfFailed: Bool
+    
+    /// - Parameters:
+    ///   - provider: An auth data provider used in order to authorize your requests
+    ///   - shouldCancelRequestIfFailed: indicates whether APIClient should cancel request if authorization failed previously
+    public init(provider: AuthorizationCredentialsProvider, shouldCancelRequestIfFailed: Bool = true) {
         self.provider = provider
+        self.shouldCancelRequestIfFailed = shouldCancelRequestIfFailed
     }
     
     public func prepare(_ request: APIRequest) -> APIRequest {

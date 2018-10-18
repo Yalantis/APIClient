@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import APIClient_Example
 import YALAPIClient
 import Mockingjay
 

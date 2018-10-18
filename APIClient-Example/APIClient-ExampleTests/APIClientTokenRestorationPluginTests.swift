@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import APIClient_Example
 import YALAPIClient
 import Mockingjay
 
@@ -45,7 +44,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
     }
 
     func test_TokenRestoration_WhenTokenExpired_RestoreToken() {
-        let decorationPlugin = RestorationTokenPlugin(credentialProvider: session)
+        let decorationPlugin = RestorationTokenPlugin(credentialProvider: session, shouldHaltRequestsTillResolve: false)
         let sut = APIClient(
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
             plugins: [decorationPlugin]
@@ -107,10 +106,17 @@ struct GetProfileRequest: APIRequest, AuthorizableRequest {
     let path = Constants.user
 }
 
+struct GetProfile2Request: APIRequest, AuthorizableRequest {
+    
+    let method: APIRequestMethod = .get
+    let path = Constants.user2
+}
+
 struct RestoreRequest: APIRequest, AuthorizableRequest {
     
     let method: APIRequestMethod = .put
     let path = Constants.restore
+    var authorizationRequired: Bool = false
 }
 
 struct SimpleMultipartRequest: MultipartAPIRequest, AuthorizableRequest {

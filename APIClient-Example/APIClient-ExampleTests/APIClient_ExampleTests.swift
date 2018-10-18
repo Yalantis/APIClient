@@ -15,6 +15,7 @@ struct Constants {
     
     static let base =  "https://apiclient.com/api"
     static let user = "/user"
+    static let user2 = "/user2"
     static let restore = "/restore"
 }
 

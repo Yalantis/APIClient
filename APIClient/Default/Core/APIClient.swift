@@ -7,6 +7,7 @@ open class APIClient: NSObject, NetworkClient {
     private let requestExecutor: RequestExecutor
     private let deserializer: Deserializer
     private let plugins: [PluginType]
+    private let haltingService: HaltingRequestsService
     
     // MARK: - Init
     
@@ -14,12 +15,22 @@ open class APIClient: NSObject, NetworkClient {
         self.requestExecutor = requestExecutor
         self.deserializer = deserializer
         self.plugins = plugins
+        haltingService = HaltingRequestsService(plugins: plugins)
     }
     
     // MARK: - NetworkClient
     
     @discardableResult
     public func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T : ResponseParser {
+        if !haltingService.shouldProceed(with: request) {
+            haltingService.add(
+                exectuion: { [weak self] in self?.execute(request: request, parser: parser, completion: completion) },
+                cancellation: { completion(Result.failure(NetworkError.canceled)) }
+            )
+            // TODO:
+            return CancellationTokenSource()
+        }
+        
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
             let request = self.prepare(request: request)
             self.willSend(request: request)
