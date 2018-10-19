@@ -52,7 +52,7 @@ By default, APIClient uses `ErrorPreprocessorPlugin(errorPreprocessor: NetworkEr
 
 | Version  | Swift  | Dependencies | iOS |
 |-----------|-------|------------------|------|
-| `2.0.2`    | 4.2  | Alamofire 4.7,  YALResult 1.1 | 10 |
-| `2.0.1`    | 4.2  | Alamofire 4.6,  YALResult 1.0 | 10 |
-| `1.1.3`    | 4.0  | Alamofire 4.6,  BoltsSwift 1.4, ObjectMapper 3.3 | 9 |
-| `1.0.7`    | 3  | Alamofire 4,  BoltsSwift 1.3, ObjectMapper 2.0 | 9 |
+| `2.1`       | 4.2  | Alamofire 4.7,  YALResult 1.1 | 10 |
+| `2.0.1`   | 4.2  | Alamofire 4.6,  YALResult 1.0 | 10 |
+| `1.1.3`   | 4.0  | Alamofire 4.6,  BoltsSwift 1.4, ObjectMapper 3.3 | 9 |
+| `1.0.7`   | 3     | Alamofire 4,  BoltsSwift 1.3, ObjectMapper 2.0 | 9 |
