@@ -3,7 +3,7 @@
 //  APIClient
 //
 //  Created by Roman Kyrylenko on 2/28/17.
-//  Copyright © 2017 Eugene Andreyev. All rights reserved.
+//  Copyright © 2017 Yalantis. All rights reserved.
 //
 
 import Foundation
@@ -69,5 +69,4 @@ public final class LoggingPlugin: PluginType {
     private func describe(_ response: APIClient.HTTPResponse) -> String {
         return "\(response)"
     }
-    
 }

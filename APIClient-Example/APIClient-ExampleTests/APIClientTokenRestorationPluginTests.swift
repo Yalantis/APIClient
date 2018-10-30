@@ -29,7 +29,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
     func test_TokenRestoration_WhenTokenExpiredAndRestoreRequestNotProvided_TerminateSession() {
         let sut = APIClient(
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
-            plugins: [ErrorProcessor(), RestorationTokenPlugin(credentialProvider: session)]
+            plugins: [RestorationTokenPlugin(credentialProvider: session)]
         )
         stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
 
@@ -44,20 +44,20 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
         }
     }
 
-    func test_TokenRestoratin_WhenTokenExpired_RestoreToken() {
+    func test_TokenRestoration_WhenTokenExpired_RestoreToken() {
         let decorationPlugin = RestorationTokenPlugin(credentialProvider: session)
         let sut = APIClient(
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
-            plugins: [ErrorProcessor(), decorationPlugin]
+            plugins: [decorationPlugin]
         )
         
-        decorationPlugin.restorationResultProvider = { (completion: @escaping (Result<Auth>) -> Void) -> Void in
+        decorationPlugin.restorationResultProvider = { (completion: @escaping (Result<TokenType>) -> Void) -> Void in
             self.stubSuccessfulAuth()
             
             let restoreRequest = RestoreRequest()
             sut.execute(request: restoreRequest, parser: DecodableParser<Credentials>(), completion: { result in
                 self.stubSuccessfulUser()
-                completion(result.map { $0 as Auth })
+                completion(result.map { $0 as TokenType })
             })
         }
         stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
@@ -73,37 +73,59 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
         }
     }
     
+    func test_MultipartRequest_WithResotorationPlugin_Passes() {
+        let sut = APIClient(
+            requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
+            plugins: [RestorationTokenPlugin(credentialProvider: session)]
+        )
+        stubSuccessfulUser(.post)
+        
+        let responseExpectation = expectation(description: "Response")
+        sut.execute(request: SimpleMultipartRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
+            responseExpectation.fulfill()
+            XCTAssertNotNil(result.value)
+            XCTAssertNil(result.error)
+        }
+        
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
     private func stubSuccessfulAuth() {
         let body = ["exchange_token": "444", "access_token": "333"]
         stub(http(.put, uri: Constants.base + Constants.restore), json(body))
     }
     
-    private func stubSuccessfulUser() {
+    private func stubSuccessfulUser(_ method: HTTPMethod = .get) {
         let body = ["user": ["name": "bar", "email": "bob@me.com"]]
-        stub(http(.get, uri: Constants.base + Constants.user), json(body))
+        stub(http(method, uri: Constants.base + Constants.user), json(body))
     }
-    
 }
 
-struct GetProfileRequest: APIRequest, CredentialProvidableRequest {
+struct GetProfileRequest: APIRequest, AuthorizableRequest {
     
     let method: APIRequestMethod = .get
     let path = Constants.user
-
 }
 
-struct RestoreRequest: APIRequest, CredentialProvidableRequest {
+struct RestoreRequest: APIRequest, AuthorizableRequest {
     
     let method: APIRequestMethod = .put
     let path = Constants.restore
-    
 }
 
-struct Credentials: Codable, Auth {
+struct SimpleMultipartRequest: MultipartAPIRequest, AuthorizableRequest {
+    
+    let method: APIRequestMethod = .post
+    let path = Constants.user
+    
+    var multipartFormData: ((MultipartFormDataType) -> Void) = { _ in }
+    var progressHandler: ProgressHandler?
+}
+
+struct Credentials: Codable, TokenType {
     
     var exchangeToken: String
     var accessToken: String
-    
 }
 
 class UserSession: AccessCredentialsProvider {
@@ -119,5 +141,4 @@ class UserSession: AccessCredentialsProvider {
         accessToken = nil
         exchangeToken = nil
     }
-    
 }

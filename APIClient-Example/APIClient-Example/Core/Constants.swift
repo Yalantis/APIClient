@@ -14,7 +14,5 @@ enum Constants {
         
         static let geoServiceBaseURL = URL(string: "https://geoip.nekudo.com/api/")!
         static let ipServiceBaseURL = URL(string: "https://api.ipify.org?format=json")!
-        
     }
-    
 }

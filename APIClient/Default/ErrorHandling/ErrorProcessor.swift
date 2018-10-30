@@ -1,16 +1,10 @@
 import Foundation
 
-public protocol ErrorProcessing {
-    
-    func processError(using response: APIClient.HTTPResponse) -> Error?
-    
-}
-
 public struct NetworkErrorProcessor: ErrorProcessing {
     
     private let deserializer = JSONDeserializer()
     
-    public init() { }
+    public init() {}
     
     public func processError(using response: APIClient.HTTPResponse) -> Error? {
         if case let .success(result) = deserializer.deserialize(response.httpResponse, data: response.data), let dictionary = result as? [String: Any] {
@@ -19,5 +13,4 @@ public struct NetworkErrorProcessor: ErrorProcessing {
         
         return nil
     }
-    
 }

@@ -12,6 +12,7 @@ import YALAPIClient
 import Mockingjay
 
 struct Constants {
+    
     static let base =  "https://apiclient.com/api"
     static let user = "/user"
     static let restore = "/restore"
@@ -25,8 +26,7 @@ class APIClient_ExampleTests: XCTestCase {
         super.setUp()
 
         sut = APIClient(
-            requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
-            plugins: [ErrorProcessor()]
+            requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!)
         )
     }
     
@@ -108,10 +108,10 @@ class APIClient_ExampleTests: XCTestCase {
             XCTAssertEqual(catchedErrorIsUnauthorized, true)
         }
     }
-    
 }
 
 struct User: Codable {
+    
     let name: String
     let email: String
 }
@@ -120,7 +120,6 @@ struct GetUserRequest: APIRequest {
     
     let method: APIRequestMethod = .get
     let path = Constants.user
-    
 }
 
 struct WrongGetUserRequest: APIRequest {
@@ -128,5 +127,4 @@ struct WrongGetUserRequest: APIRequest {
     let method: APIRequestMethod = .post
     let path = Constants.user
     let parser = DecodableParser<User>(keyPath: "user")
-    
 }

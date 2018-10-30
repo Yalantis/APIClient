@@ -20,7 +20,7 @@ class APIClientPluginTests: XCTestCase {
 
         sut = APIClient(
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
-            plugins: [ErrorProcessor(), TestPlugin()]
+            plugins: [TestPlugin()]
         )
     }
     
