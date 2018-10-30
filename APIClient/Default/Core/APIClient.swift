@@ -7,6 +7,7 @@ open class APIClient: NSObject, NetworkClient {
     private let requestExecutor: RequestExecutor
     private let deserializer: Deserializer
     private let plugins: [PluginType]
+    private let haltingService: HaltingRequestsService
     
     // MARK: - Init
     
@@ -14,12 +15,27 @@ open class APIClient: NSObject, NetworkClient {
         self.requestExecutor = requestExecutor
         self.deserializer = deserializer
         self.plugins = plugins
+        haltingService = HaltingRequestsService(plugins: plugins)
     }
     
     // MARK: - NetworkClient
     
     @discardableResult
     public func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T : ResponseParser {
+        if !haltingService.shouldProceed(with: request) {
+            let source = CancellationTokenSource()
+            haltingService.add(
+                exectuion: { [weak self] in
+                    guard let self = self else { return }
+                    let newSource = self.execute(request: request, parser: parser, completion: completion)
+                    source.token.register { newSource.cancel() }
+                },
+                cancellation: { completion(Result.failure(NetworkError.canceled)) }
+            )
+            
+            return source
+        }
+        
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
             let request = self.prepare(request: request)
             self.willSend(request: request)
@@ -31,6 +47,20 @@ open class APIClient: NSObject, NetworkClient {
     
     @discardableResult
     public func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
+        if !haltingService.shouldProceed(with: request) {
+            let source = CancellationTokenSource()
+            haltingService.add(
+                exectuion: { [weak self] in
+                    guard let self = self else { return }
+                    let newSource = self.execute(request: request, parser: parser, completion: completion)
+                    source.token.register { newSource.cancel() }
+                },
+                cancellation: { completion(Result.failure(NetworkError.canceled)) }
+            )
+            
+            return source
+        }
+        
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
             guard let request = self.prepare(request: request) as? MultipartAPIRequest else {
                 fatalError("Unexpected request type. Expected `MultipartAPIRequest`")
@@ -38,11 +68,26 @@ open class APIClient: NSObject, NetworkClient {
             self.willSend(request: request)
             return self.requestExecutor.execute(multipartRequest: request, completion: completion)
         }
+        
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
     @discardableResult
-    public func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, deserializer: Deserializer?, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
+    public func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
+        if !haltingService.shouldProceed(with: request) {
+            let source = CancellationTokenSource()
+            haltingService.add(
+                exectuion: { [weak self] in
+                    guard let self = self else { return }
+                    let newSource = self.execute(request: request, parser: parser, completion: completion)
+                    source.token.register { newSource.cancel() }
+                },
+                cancellation: { completion(Result.failure(NetworkError.canceled)) }
+            )
+            
+            return source
+        }
+        
         let resultProducer: (@escaping APIResultResponse) -> Cancelable = { completion in
             guard let request = self.prepare(request: request) as? DownloadAPIRequest else {
                 fatalError("Unexpected request type. Expected `MultipartAPIRequest`")
@@ -50,6 +95,7 @@ open class APIClient: NSObject, NetworkClient {
             self.willSend(request: request)
             return self.requestExecutor.execute(downloadRequest: request, destinationPath: destinationFilePath, completion: completion)
         }
+        
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
@@ -74,19 +120,18 @@ open class APIClient: NSObject, NetworkClient {
     }
     
     private func validateResult(_ result: Result<HTTPResponse>) -> Result<HTTPResponse> {
-        if let response = result.value {
-            self.didReceive(response)
-            
-            switch response.httpResponse.statusCode {
-            case 200...299: return .success(response)
-            default: return .failure(self.process(response) ?? NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
-            }
+        guard let response = result.value else {
+            return result
         }
-        return result
+        
+        self.didReceive(response)
+        switch response.httpResponse.statusCode {
+        case 200...299: return .success(response)
+        default: return .failure(self.process(response) ?? NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
+        }
     }
     
     private func proccessResponse<T>(response: (Result<HTTPResponse>), parser: T, completion: @escaping (Result<T.Representation>) -> Void) where T: ResponseParser {
-        
         let result = validateResult(response)
         
         if case let .failure(error) = result {

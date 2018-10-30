@@ -25,6 +25,8 @@
 		B83396122017804900689B94 /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396112017804900689B94 /* CustomError.swift */; };
 		B83396142017820E00689B94 /* CustomError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396132017820E00689B94 /* CustomError+Localization.swift */; };
 		B83396162017830800689B94 /* CountryMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396152017830800689B94 /* CountryMetaData.swift */; };
+		B860BCA22178838300F3B46E /* APIClientAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B860BCA12178838300F3B46E /* APIClientAuthorizationTests.swift */; };
+		B8D3284B217784B40030F7AA /* APIClientHaltingRequestsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D3284A217784B40030F7AA /* APIClientHaltingRequestsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,8 @@
 		B83396112017804900689B94 /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
 		B83396132017820E00689B94 /* CustomError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomError+Localization.swift"; sourceTree = "<group>"; };
 		B83396152017830800689B94 /* CountryMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMetaData.swift; sourceTree = "<group>"; };
+		B860BCA12178838300F3B46E /* APIClientAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientAuthorizationTests.swift; sourceTree = "<group>"; };
+		B8D3284A217784B40030F7AA /* APIClientHaltingRequestsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientHaltingRequestsTests.swift; sourceTree = "<group>"; };
 		BB518267738F9D1C3898D291 /* Pods-APIClient-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APIClient-ExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C1B5F9A5FC1F8DCAC03A2D52 /* Pods-APIClient-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APIClient-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,6 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				88FB95D1215526C80007ABE0 /* APIClient_ExampleTests.swift */,
+				B860BCA12178838300F3B46E /* APIClientAuthorizationTests.swift */,
+				B8D3284A217784B40030F7AA /* APIClientHaltingRequestsTests.swift */,
 				88FB95D92155425A0007ABE0 /* APIClientPluginTests.swift */,
 				8859650E2158FA7E00761709 /* APIClientTokenRestorationPluginTests.swift */,
 				88FB95D3215526C80007ABE0 /* Info.plist */,
@@ -214,7 +220,7 @@
 				B83395E82017585700689B94 /* Frameworks */,
 				B83395E92017585700689B94 /* Resources */,
 				B816C15E215C01BF00C1499D /* swiftlint */,
-				4C7B0BA35E639578C2DDAE89 /* [CP] Embed Pods Frameworks */,
+				B0DE470696E579C4856C14EB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -288,32 +294,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4C7B0BA35E639578C2DDAE89 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/YALAPIClient/YALAPIClient.framework",
-				"${BUILT_PRODUCTS_DIR}/YALResult/YALResult.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YALAPIClient.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YALResult.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		A2A30DA7C1C89C838F10D8A5 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -348,6 +328,32 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B0DE470696E579C4856C14EB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/YALAPIClient/YALAPIClient.framework",
+				"${BUILT_PRODUCTS_DIR}/YALResult/YALResult.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YALAPIClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YALResult.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B816C15E215C01BF00C1499D /* swiftlint */ = {
@@ -402,6 +408,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				88FB95DA2155425A0007ABE0 /* APIClientPluginTests.swift in Sources */,
+				B860BCA22178838300F3B46E /* APIClientAuthorizationTests.swift in Sources */,
+				B8D3284B217784B40030F7AA /* APIClientHaltingRequestsTests.swift in Sources */,
 				8859650F2158FA7E00761709 /* APIClientTokenRestorationPluginTests.swift in Sources */,
 				88FB95D2215526C80007ABE0 /* APIClient_ExampleTests.swift in Sources */,
 			);

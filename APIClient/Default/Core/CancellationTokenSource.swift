@@ -3,20 +3,21 @@ import Foundation
 /// Manages cancellation tokens and signals them when cancellation is requested.
 ///
 /// All `CancellationTokenSource` methods are thread safe.
-public final class CancellationTokenSource: Cancelable {
+final class CancellationTokenSource: Cancelable {
+    
     /// Returns `true` if cancellation has been requested for this token.
-    public var isCancelling: Bool {
+    var isCancelling: Bool {
         _lock.lock(); defer { _lock.unlock() }
         return _observers == nil
     }
     
     /// Creates a new token associated with the source.
-    public var token: CancellationToken { return CancellationToken(source: self) }
+    var token: CancellationToken { return CancellationToken(source: self) }
     
     private var _observers: Bag<() -> Void>? = Bag<() -> Void>()
     
     /// Initializes the `CancellationTokenSource` instance.
-    public init() {}
+    init() {}
     
     fileprivate func register(_ closure: @escaping () -> Void) {
         if !_register(closure) {
@@ -31,7 +32,7 @@ public final class CancellationTokenSource: Cancelable {
     }
     
     /// Communicates a request for cancellation to the managed token.
-    public func cancel() {
+    func cancel() {
         if let observers = _cancel() {
             observers.forEach { $0() }
         }
@@ -60,22 +61,24 @@ private let _lock = NSLock()
 /// The registered objects can respond in whatever manner is appropriate.
 ///
 /// All `CancellationToken` methods are thread safe.
-public struct CancellationToken {
+struct CancellationToken {
+    
     fileprivate let source: CancellationTokenSource
     
     /// Returns `true` if cancellation has been requested for this token.
-    public var isCancelling: Bool { return source.isCancelling }
+    var isCancelling: Bool { return source.isCancelling }
     
     /// Registers the closure that will be called when the token is canceled.
     /// If this token is already cancelled, the closure will be run immediately
     /// and synchronously.
     /// - warning: Make sure that you don't capture token inside a closure to
     /// avoid retain cycles.
-    public func register(closure: @escaping () -> Void) { source.register(closure) }
+    func register(closure: @escaping () -> Void) { source.register(closure) }
 }
 
-/// Lightweight data structure for suitable for storing small number of elements.
+/// Lightweight data structure for storing small number of elements.
 private struct Bag<T> {
+    
     private var head: Node?
     
     private final class Node {

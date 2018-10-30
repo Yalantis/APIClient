@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import APIClient_Example
 import YALAPIClient
 import Mockingjay
 
@@ -35,7 +34,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
 
         let tokenExpectation = expectation(description: "Token")
         
-        sut.execute(request: GetProfileRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
+        sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
             tokenExpectation.fulfill()
         }
         
@@ -45,7 +44,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
     }
 
     func test_TokenRestoration_WhenTokenExpired_RestoreToken() {
-        let decorationPlugin = RestorationTokenPlugin(credentialProvider: session)
+        let decorationPlugin = RestorationTokenPlugin(credentialProvider: session, shouldHaltRequestsTillResolve: false)
         let sut = APIClient(
             requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
             plugins: [decorationPlugin]
@@ -63,7 +62,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
         stub(everything, failure(NSError(domain: "", code: 401, userInfo: nil)))
 
         let tokenExpectation = expectation(description: "Token")
-        sut.execute(request: GetProfileRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
+        sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
             tokenExpectation.fulfill()
         }
         
@@ -73,53 +72,22 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
         }
     }
     
-    func test_MultipartRequest_WithResotorationPlugin_Passes() {
-        let sut = APIClient(
-            requestExecutor: AlamofireRequestExecutor(baseURL: URL(string: Constants.base)!),
-            plugins: [RestorationTokenPlugin(credentialProvider: session)]
-        )
-        stubSuccessfulUser(.post)
-        
-        let responseExpectation = expectation(description: "Response")
-        sut.execute(request: SimpleMultipartRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
-            responseExpectation.fulfill()
-            XCTAssertNotNil(result.value)
-            XCTAssertNil(result.error)
-        }
-        
-        waitForExpectations(timeout: 1, handler: nil)
-    }
-    
     private func stubSuccessfulAuth() {
         let body = ["exchange_token": "444", "access_token": "333"]
         stub(http(.put, uri: Constants.base + Constants.restore), json(body))
     }
     
-    private func stubSuccessfulUser(_ method: HTTPMethod = .get) {
+    private func stubSuccessfulUser() {
         let body = ["user": ["name": "bar", "email": "bob@me.com"]]
-        stub(http(method, uri: Constants.base + Constants.user), json(body))
+        stub(http(.get, uri: Constants.base + Constants.user), json(body))
     }
-}
-
-struct GetProfileRequest: APIRequest, AuthorizableRequest {
-    
-    let method: APIRequestMethod = .get
-    let path = Constants.user
 }
 
 struct RestoreRequest: APIRequest, AuthorizableRequest {
     
     let method: APIRequestMethod = .put
     let path = Constants.restore
-}
-
-struct SimpleMultipartRequest: MultipartAPIRequest, AuthorizableRequest {
-    
-    let method: APIRequestMethod = .post
-    let path = Constants.user
-    
-    var multipartFormData: ((MultipartFormDataType) -> Void) = { _ in }
-    var progressHandler: ProgressHandler?
+    var authorizationRequired: Bool = false
 }
 
 struct Credentials: Codable, TokenType {
