@@ -39,11 +39,12 @@ public final class AuthorizationPlugin: PluginType {
         }
         
         var headers = request.headers ?? [:]
-        var prefix = ""
-        if let authPrefix = provider.authorizationType.valuePrefix, !authPrefix.isEmpty {
-            prefix = authPrefix + " "
+        
+        if let authPrefix = provider.authorizationType.valuePrefix, case .custom = provider.authorizationType {
+            headers[provider.authorizationType.key] = authPrefix + provider.authorizationToken
+        } else if let authPrefix = provider.authorizationType.valuePrefix, !authPrefix.isEmpty {
+            headers[provider.authorizationType.key] = authPrefix + " " + provider.authorizationToken
         }
-        headers[provider.authorizationType.key] = prefix + provider.authorizationToken
         
         return APIRequestProxy(request: request, headers: headers)
     }
