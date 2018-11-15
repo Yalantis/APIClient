@@ -140,10 +140,6 @@ open class AlamofireRequestExecutor: RequestExecutor {
             completion(.failure(NetworkError.canceled))
         case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut:
             completion(.failure(NetworkError.connection))
-        case 401:
-            completion(.failure(NetworkError.unauthorized))
-        case 500:
-            completion(.failure(NetworkError.internalServer))
         default:
             completion(.failure(error))
         }
