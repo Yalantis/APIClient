@@ -121,13 +121,31 @@ open class APIClient: NSObject, NetworkClient {
     
     private func validateResult(_ result: Result<HTTPResponse>) -> Result<HTTPResponse> {
         guard let response = result.value else {
-            return result
+            // in case we faced an error from executor try to generalize it
+            return Result.failure(generalError((result.error! as NSError).code) ?? result.error!)
         }
         
         self.didReceive(response)
         switch response.httpResponse.statusCode {
         case 200...299: return .success(response)
-        default: return .failure(self.process(response) ?? NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
+        // once we reach unsuccessfull header
+        default:
+            // try to generalize error
+            if let error = generalError(response.httpResponse.statusCode) {
+                return .failure(error)
+            // or give user chance to provide a custom error
+            } else if let error = self.process(response) {
+                return .failure(error)
+            }
+            return .failure(NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
+        }
+    }
+    
+    private func generalError(_ code: Int) -> Error? {
+        switch code {
+        case 401: return NetworkError.unauthorized
+        case 500: return NetworkError.internalServer
+        default: return nil
         }
     }
     
