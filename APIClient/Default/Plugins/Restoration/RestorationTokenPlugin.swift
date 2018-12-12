@@ -22,6 +22,7 @@ public class RestorationTokenPlugin: PluginType {
     let shouldHaltRequestsTillResolve: Bool
     weak var delegate: RestorationTokenPluginDelegate?
     
+    private var inProgress = false
     private let credentialProvider: AccessCredentialsProvider
 
     /// - Parameters:
@@ -34,7 +35,7 @@ public class RestorationTokenPlugin: PluginType {
     }
 
     public func canResolve(_ error: Error) -> Bool {
-        if let error = error as? NetworkError, case .unauthorized = error {
+        if let error = error as? NetworkError, case .unauthorized = error, inProgress == false {
             delegate?.reachUnauthorizedError()
             return true
         }
@@ -55,7 +56,10 @@ public class RestorationTokenPlugin: PluginType {
             return
         }
  
+        inProgress = true
         restorationResultProvider? { [weak self] result in
+            self?.inProgress = false
+
             guard let value = result.value else {
                 self?.credentialProvider.invalidate()
                 self?.delegate?.failedToRestore()
