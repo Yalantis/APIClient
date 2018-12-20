@@ -55,7 +55,7 @@ final class HaltingRequestsService: NSObject {
         }
     }
     
-    @objc private func cancelRequests() {
+    @objc func cancelRequests() {
         shouldHalt = false
         shouldCancel = false
         authTimerStarted = false

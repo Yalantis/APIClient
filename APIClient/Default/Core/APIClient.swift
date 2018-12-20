@@ -18,6 +18,11 @@ open class APIClient: NSObject, NetworkClient {
         haltingService = HaltingRequestsService(plugins: plugins)
     }
     
+    /// Cancels all halting requests if present
+    public func cancelHaltingRequests() {
+        haltingService.cancelRequests()
+    }
+    
     // MARK: - NetworkClient
     
     @discardableResult
