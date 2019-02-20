@@ -135,13 +135,14 @@ open class APIClient: NSObject, NetworkClient {
         case 200...299: return .success(response)
         // once we reach unsuccessfull header
         default:
-            // try to generalize error
-            if let error = generalError(response.httpResponse.statusCode) {
+            // give user chance to provide a custom error
+            if let error = self.process(response) {
                 return .failure(error)
-            // or give user chance to provide a custom error
-            } else if let error = self.process(response) {
+                // then try to generalize error
+            } else if let error = generalError(response.httpResponse.statusCode) {
                 return .failure(error)
             }
+            
             return .failure(NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
         }
     }
