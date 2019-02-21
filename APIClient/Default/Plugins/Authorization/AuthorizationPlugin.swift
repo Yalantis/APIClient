@@ -5,6 +5,8 @@
 //  Created by Roman Kyrylenko on 10/16/18.
 //
 
+public typealias AuthErrorResolving = (Error) -> Bool
+
 /// This plugin provides support for requests' authorization through http headers. Works with `AuthorizableRequest`s only.
 public final class AuthorizationPlugin: PluginType {
     
@@ -12,6 +14,7 @@ public final class AuthorizationPlugin: PluginType {
     public static var requestsCancellingTimespan: TimeInterval = 1.0
     
     private let provider: AuthorizationCredentialsProvider
+    private let authErrorResolving: AuthErrorResolving
     
     let shouldCancelRequestIfFailed: Bool
     
@@ -20,16 +23,26 @@ public final class AuthorizationPlugin: PluginType {
     /// - Parameters:
     ///   - provider: An auth data provider used in order to authorize your requests
     ///   - shouldCancelRequestIfFailed: indicates whether APIClient should cancel request if authorization failed previously and it cannot restore it
-    public init(provider: AuthorizationCredentialsProvider, shouldCancelRequestIfFailed: Bool = true) {
+    ///   - authErrorResolving: an optional callback that allows you to determine whether a given error is `unauthorized` one
+    public init(provider: AuthorizationCredentialsProvider, shouldCancelRequestIfFailed: Bool = true, authErrorResolving: AuthErrorResolving? = nil) {
         self.provider = provider
         self.shouldCancelRequestIfFailed = shouldCancelRequestIfFailed
+        self.authErrorResolving = authErrorResolving ?? { error in
+            if let error = error as? NetworkError, case .unauthorized = error {
+                return true
+            }
+            
+            return false
+        }
     }
     
     public func canResolve(_ error: Error) -> Bool {
-        if let error = error as? NetworkError, case .unauthorized = error {
+        if authErrorResolving(error) {
             delegate?.reachAuthorizationError()
+            
             return false
         }
+        
         return false
     }
     
