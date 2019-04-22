@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		44DEDCF71D2FF44C0093EE21 /* APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 44DEDCF61D2FF44C0093EE21 /* APIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B8B3C63A226E12EF00D198E6 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B3C638226E12EF00D198E6 /* Alamofire.framework */; };
-		B8B3C63B226E12EF00D198E6 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B3C639226E12EF00D198E6 /* Result.framework */; };
 		B8B3C663226E153200D198E6 /* JSONDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B3C63E226E153200D198E6 /* JSONDeserializer.swift */; };
 		B8B3C664226E153200D198E6 /* Cancelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B3C640226E153200D198E6 /* Cancelable.swift */; };
 		B8B3C665226E153200D198E6 /* APIClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B3C641226E153200D198E6 /* APIClientProtocol.swift */; };
@@ -81,8 +79,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8B3C63A226E12EF00D198E6 /* Alamofire.framework in Frameworks */,
-				B8B3C63B226E12EF00D198E6 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
