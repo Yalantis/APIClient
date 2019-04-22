@@ -1,7 +1,7 @@
 import Foundation
 import YALResult
 
-public typealias Result = YALResult.Result
+public typealias Result = YALResult
 
 public protocol NetworkClient {
     
