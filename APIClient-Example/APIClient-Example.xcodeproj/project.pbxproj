@@ -243,13 +243,13 @@
 				TargetAttributes = {
 					88FB95CE215526C70007ABE0 = {
 						CreatedOnToolsVersion = 9.4.1;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						TestTargetID = B83395EA2017585700689B94;
 					};
 					B83395EA2017585700689B94 = {
 						CreatedOnToolsVersion = 9.2;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -338,7 +338,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/YALAPIClient/YALAPIClient.framework",
 				"${BUILT_PRODUCTS_DIR}/YALResult/YALResult.framework",
@@ -353,7 +353,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B816C15E215C01BF00C1499D /* swiftlint */ = {
@@ -380,7 +380,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/YALAPIClient/YALAPIClient.framework",
 				"${BUILT_PRODUCTS_DIR}/YALResult/YALResult.framework",
@@ -397,7 +397,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-APIClient-ExampleTests/Pods-APIClient-ExampleTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -471,13 +471,12 @@
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "APIClient-ExampleTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.APIClient-ExampleTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/APIClient-Example.app/APIClient-Example";
 			};
@@ -492,13 +491,12 @@
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "APIClient-ExampleTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.APIClient-ExampleTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/APIClient-Example.app/APIClient-Example";
 			};
@@ -629,7 +627,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.APIClient-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -646,7 +644,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.APIClient-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
