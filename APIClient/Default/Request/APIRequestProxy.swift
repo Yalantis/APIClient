@@ -8,6 +8,7 @@
 
 public class APIRequestProxy: MultipartAPIRequest {
     
+    public let origin: APIRequest
     public var path: String
     public var method: APIRequestMethod
     public var encoding: APIRequestEncoding?
@@ -17,6 +18,11 @@ public class APIRequestProxy: MultipartAPIRequest {
     public var progressHandler: ProgressHandler?
     
     public init(request: APIRequest, headers: [String: String]? = nil) {
+        if let proxy = request as? APIRequestProxy {
+            origin = proxy.origin
+        } else {
+            origin = request
+        }
         path = request.path
         method = request.method
         encoding = request.encoding

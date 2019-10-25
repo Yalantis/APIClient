@@ -119,9 +119,9 @@
 			children = (
 				B83395ED2017585700689B94 /* APIClient-Example */,
 				88FB95D0215526C80007ABE0 /* APIClient-ExampleTests */,
-				B83395EC2017585700689B94 /* Products */,
-				28A30854528A8A3A7D17F9DD /* Pods */,
 				FBC56CCDB3CEF14581953FAD /* Frameworks */,
+				28A30854528A8A3A7D17F9DD /* Pods */,
+				B83395EC2017585700689B94 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -335,8 +335,6 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-APIClient-Example/Pods-APIClient-Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
@@ -344,8 +342,6 @@
 				"${BUILT_PRODUCTS_DIR}/YALResult/YALResult.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YALAPIClient.framework",
