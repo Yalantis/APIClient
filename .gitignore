@@ -33,4 +33,5 @@ Carthage/Checkouts
 # CocoaPods
 
 APIClient-Example/Pods/
+APIClient-Example/.vendor/
 APIClient-Example/Podfile.lock
