@@ -32,7 +32,7 @@ Carthage/Checkouts
 
 # CocoaPods
 
+vendor/
 APIClient-Example/Pods/
-APIClient-Example/.vendor/
-APIClient-Example/vendor/
 APIClient-Example/Podfile.lock
+APIClient-Example/Gemfile.lock
