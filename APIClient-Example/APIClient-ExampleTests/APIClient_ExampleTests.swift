@@ -62,7 +62,8 @@ class APIClient_ExampleTests: XCTestCase {
         var notFoundKey = ""
         
         sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
-            if case let .keyNotFound(keys, _) = result.error as! DecodingError {
+            if case let NetworkError.parsing(error) = result.error as! NetworkError,
+               case let DecodingError.keyNotFound(keys, _) = error as! DecodingError {
                 notFoundKey = keys.stringValue
             }
             keyExpectation.fulfill()

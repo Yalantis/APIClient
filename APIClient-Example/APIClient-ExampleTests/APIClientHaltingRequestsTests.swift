@@ -25,7 +25,7 @@ final class APIClientHaltingRequestsTests: XCTestCase {
         let restorationQueue = DispatchQueue(label: "restoration queue")
         
         var attemptsToRestore = 0
-        decorationPlugin.restorationResultProvider = { (completion: @escaping (Result<TokenType>) -> Void) -> Void in
+        decorationPlugin.restorationResultProvider = { (completion: @escaping (Result<TokenType, NetworkError>) -> Void) -> Void in
             restorationQueue.async {
                 sleep(2)
                 attemptsToRestore += 1
@@ -112,4 +112,21 @@ struct GetAuthorizedUser2Request: APIRequest, AuthorizableRequest {
     
     let method: APIRequestMethod = .get
     let path = Constants.user2
+}
+
+extension Result {
+    
+    var value: Success? {
+        switch self {
+        case .success(let result): return result
+        case .failure: return nil
+        }
+    }
+    
+    var error: Error? {
+        switch self {
+        case .success: return nil
+        case .failure(let error): return error
+        }
+    }
 }

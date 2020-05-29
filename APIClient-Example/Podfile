@@ -11,5 +11,5 @@ end
 target 'APIClient-ExampleTests' do
     
     pod 'YALAPIClient/Alamofire', :path => '../'
-    pod 'Mockingjay'
+    pod 'Mockingjay', '3.0.0-alpha.1'
 end

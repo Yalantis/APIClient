@@ -132,7 +132,11 @@ open class APIClient: NSObject, NetworkClient {
     private func validateResult(_ result: Result<HTTPResponse, NetworkError>) -> Result<HTTPResponse, NetworkError> {
         guard let response = result.value else {
             // in case we faced an error from executor try to generalize it
-            return Result.failure(NetworkError.generic(generalError((result.error! as NSError).code) ?? result.error!))
+            if let error = NetworkError.define(result.error!) {
+                return Result.failure(error)
+            }
+            
+            return Result.failure(result.error!)
         }
         
         self.didReceive(response)
@@ -142,21 +146,13 @@ open class APIClient: NSObject, NetworkClient {
         default:
             // give user chance to provide a custom error
             if let error = self.process(response) {
-                return .failure(NetworkError.generic(error))
+                return .failure(NetworkError.map(error))
                 // then try to generalize error
-            } else if let error = generalError(response.httpResponse.statusCode) {
-                return .failure(NetworkError.generic(error))
+            } else if let error = NetworkError.define(response.httpResponse.statusCode) {
+                return .failure(error)
             }
             
             return .failure(NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
-        }
-    }
-    
-    private func generalError(_ code: Int) -> Error? {
-        switch code {
-        case 401: return NetworkError.unauthorized
-        case 500: return NetworkError.internalServer
-        default: return nil
         }
     }
     
@@ -165,7 +161,7 @@ open class APIClient: NSObject, NetworkClient {
         
         if case let .failure(error) = result {
             let decoratedError = decorate(error: error)
-            completion(.failure(NetworkError.generic(decoratedError)))
+            completion(.failure(NetworkError.map(decoratedError)))
             return
         }
         

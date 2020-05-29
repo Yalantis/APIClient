@@ -132,17 +132,13 @@ open class AlamofireRequestExecutor: RequestExecutor {
     private class func defineError(_ error: Error?, completion: @escaping APIResultResponse) {
         guard let error = error else {
             completion(.failure(NetworkError.undefined))
+            
             return
         }
         
-        switch (error as NSError).code {
-        case NSURLErrorCancelled:
-            completion(.failure(NetworkError.canceled))
-        case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut:
-            completion(.failure(NetworkError.connection))
-        default:
-            completion(.failure(NetworkError.response(error)))
-        }
+        completion(.failure(
+            NetworkError.define(error) ?? NetworkError.response(error)
+        ))
     }
     
 }
