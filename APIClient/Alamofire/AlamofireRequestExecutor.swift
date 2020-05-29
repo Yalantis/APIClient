@@ -69,7 +69,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
                         })
                         
                     case .failure(let error):
-                        completion(.failure(error))
+                        completion(.failure(NetworkError.encoding(error)))
                     }
             })
         
@@ -141,7 +141,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
         case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut:
             completion(.failure(NetworkError.connection))
         default:
-            completion(.failure(error))
+            completion(.failure(NetworkError.response(error)))
         }
     }
     

@@ -6,12 +6,10 @@ target 'APIClient-Example' do
     
     pod 'YALAPIClient/Alamofire', :path => '../'
     pod 'SwiftLint'
-    
 end
 
 target 'APIClient-ExampleTests' do
     
     pod 'YALAPIClient/Alamofire', :path => '../'
     pod 'Mockingjay'
-    
 end

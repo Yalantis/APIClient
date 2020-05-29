@@ -2,6 +2,5 @@ import Foundation
 
 public protocol Deserializer {
     
-     func deserialize(_ response: HTTPURLResponse, data: Data) -> Result<AnyObject>
-    
+     func deserialize(_ response: HTTPURLResponse, data: Data) -> Result<AnyObject, NetworkError>
 }
