@@ -24,7 +24,11 @@ public final class AuthorizationPlugin: PluginType {
     ///   - provider: An auth data provider used in order to authorize your requests
     ///   - shouldCancelRequestIfFailed: indicates whether APIClient should cancel request if authorization failed previously and it cannot restore it
     ///   - authErrorResolving: an optional callback that allows you to determine whether a given error is `unauthorized` one
-    public init(provider: AuthorizationCredentialsProvider, shouldCancelRequestIfFailed: Bool = true, authErrorResolving: AuthErrorResolving? = nil) {
+    public init(
+        provider: AuthorizationCredentialsProvider,
+        shouldCancelRequestIfFailed: Bool = true,
+        authErrorResolving: AuthErrorResolving? = nil
+    ) {
         self.provider = provider
         self.shouldCancelRequestIfFailed = shouldCancelRequestIfFailed
         self.authErrorResolving = authErrorResolving ?? { error in
@@ -63,7 +67,10 @@ public final class AuthorizationPlugin: PluginType {
         }
         headers[provider.authorizationType.key] = prefix + provider.authorizationToken
         
-        return APIRequestProxy(request: request, headers: headers)
+        let proxy = APIRequestProxy(request: request)
+        proxy.headers = headers
+        
+        return proxy
     }
 }
 

@@ -9,8 +9,8 @@ import Foundation
 
 public protocol TokenType {
     
-    var accessToken: String { get set }
-    var exchangeToken: String { get set }
+    var accessToken: String { get }
+    var exchangeToken: String { get }
 }
 
 /// The plugin to restore the token can be used as the requestor's credential provider
@@ -31,7 +31,11 @@ public class RestorationTokenPlugin: PluginType {
     ///   - shouldHaltRequestsTillResolve: indicates whether APIClient should halt all passing requests in case one of them failed with `unathorized` error and restart them
     ///                                    works only with `AuthorizableRequest`s
     ///   - authErrorResolving: an optional callback that allows you to determine whether a given error is `unauthorized` one
-    public init(credentialProvider: AccessCredentialsProvider, shouldHaltRequestsTillResolve: Bool = true, authErrorResolving: AuthErrorResolving? = nil) {
+    public init(
+        credentialProvider: AccessCredentialsProvider,
+        shouldHaltRequestsTillResolve: Bool = true,
+        authErrorResolving: AuthErrorResolving? = nil
+    ) {
         self.credentialProvider = credentialProvider
         self.shouldHaltRequestsTillResolve = shouldHaltRequestsTillResolve
         self.authErrorResolving = authErrorResolving ?? { error in

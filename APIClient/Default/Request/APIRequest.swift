@@ -1,7 +1,11 @@
 import Foundation
 
 public typealias ProgressHandler = (Progress) -> ()
-public protocol APIRequestEncoding {}
+
+public enum APIRequestEncoding {
+    
+    case json, url, propertyList
+}
 
 public enum APIRequestMethod: String {
     
@@ -12,9 +16,17 @@ public protocol APIRequest {
     
     var path: String { get }
     var method: APIRequestMethod { get }
-    var encoding: APIRequestEncoding? { get }
+    var encoding: APIRequestEncoding { get }
     var parameters: [String: Any]? { get }
     var headers: [String: String]? { get }
+}
+
+public extension APIRequest {
+
+    var method: APIRequestMethod { return .get }
+    var parameters: [String: Any]? { return nil }
+    var encoding: APIRequestEncoding { return .url }
+    var headers: [String: String]? { return nil }
 }
 
 public protocol DownloadAPIRequest: APIRequest {
@@ -40,15 +52,4 @@ public protocol MultipartFormDataType {
     func append(_ fileURL: URL, withName name: String, fileName: String, mimeType: String)
     func append(_ stream: InputStream, withLength length: UInt64, name: String, fileName: String, mimeType: String)
     func append(_ stream: InputStream, withLength length: UInt64, headers: [String: String])
-}
-
-public extension APIRequest {
-
-    var method: APIRequestMethod { return .get }
-    
-    var parameters: [String: Any]? { return nil }
-
-    var encoding: APIRequestEncoding? { return nil }
-    
-    var headers: [String: String]? { return nil }
 }

@@ -11,13 +11,13 @@ public class APIRequestProxy: MultipartAPIRequest {
     public let origin: APIRequest
     public var path: String
     public var method: APIRequestMethod
-    public var encoding: APIRequestEncoding?
+    public var encoding: APIRequestEncoding
     public var parameters: [String: Any]?
     public var headers: [String: String]?
     public var multipartFormData: ((MultipartFormDataType) -> Void)
     public var progressHandler: ProgressHandler?
     
-    public init(request: APIRequest, headers: [String: String]? = nil) {
+    public init(request: APIRequest) {
         if let proxy = request as? APIRequestProxy {
             origin = proxy.origin
         } else {
@@ -27,7 +27,7 @@ public class APIRequestProxy: MultipartAPIRequest {
         method = request.method
         encoding = request.encoding
         parameters = request.parameters
-        self.headers = headers ?? request.headers
+        headers = request.headers
         multipartFormData = (request as? MultipartAPIRequest)?.multipartFormData ?? { _ in }
         progressHandler = (request as? DownloadAPIRequest)?.progressHandler
     }

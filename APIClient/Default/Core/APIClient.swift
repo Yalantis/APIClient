@@ -11,7 +11,11 @@ open class APIClient: NSObject, NetworkClient {
     
     // MARK: - Init
     
-    public init(requestExecutor: RequestExecutor, deserializer: Deserializer = JSONDeserializer(), plugins: [PluginType] = [ErrorPreprocessorPlugin(errorPreprocessor: NetworkErrorProcessor())]) {
+    public init(
+        requestExecutor: RequestExecutor,
+        deserializer: Deserializer = JSONDeserializer(),
+        plugins: [PluginType] = [ErrorPreprocessorPlugin(errorPreprocessor: NetworkErrorProcessor())]
+    ) {
         self.requestExecutor = requestExecutor
         self.deserializer = deserializer
         self.plugins = plugins
@@ -26,11 +30,15 @@ open class APIClient: NSObject, NetworkClient {
     // MARK: - NetworkClient
     
     @discardableResult
-    public func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation, NetworkError>) -> Void) -> Cancelable where T : ResponseParser {
+    public func execute<T>(
+        request: APIRequest,
+        parser: T,
+        completion: @escaping (Result<T.Representation, NetworkError>) -> Void
+    ) -> Cancelable where T : ResponseParser {
         if !haltingService.shouldProceed(with: request) {
             let source = CancellationTokenSource()
             haltingService.add(
-                exectuion: { [weak self] in
+                execution: { [weak self] in
                     guard let self = self else { return }
                     let newSource = self.execute(request: request, parser: parser, completion: completion)
                     source.token.register { newSource.cancel() }
@@ -51,11 +59,15 @@ open class APIClient: NSObject, NetworkClient {
     }
     
     @discardableResult
-    public func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Result<T.Representation, NetworkError>) -> Void) -> Cancelable where T: ResponseParser {
+    public func execute<T>(
+        request: MultipartAPIRequest,
+        parser: T,
+        completion: @escaping (Result<T.Representation, NetworkError>) -> Void
+    ) -> Cancelable where T: ResponseParser {
         if !haltingService.shouldProceed(with: request) {
             let source = CancellationTokenSource()
             haltingService.add(
-                exectuion: { [weak self] in
+                execution: { [weak self] in
                     guard let self = self else { return }
                     let newSource = self.execute(request: request, parser: parser, completion: completion)
                     source.token.register { newSource.cancel() }
@@ -78,11 +90,16 @@ open class APIClient: NSObject, NetworkClient {
     }
     
     @discardableResult
-    public func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, parser: T, completion: @escaping (Result<T.Representation, NetworkError>) -> Void) -> Cancelable where T: ResponseParser {
+    public func execute<T>(
+        request: DownloadAPIRequest,
+        destinationFilePath: URL?,
+        parser: T,
+        completion: @escaping (Result<T.Representation, NetworkError>) -> Void
+    ) -> Cancelable where T: ResponseParser {
         if !haltingService.shouldProceed(with: request) {
             let source = CancellationTokenSource()
             haltingService.add(
-                exectuion: { [weak self] in
+                execution: { [weak self] in
                     guard let self = self else { return }
                     let newSource = self.execute(request: request, parser: parser, completion: completion)
                     source.token.register { newSource.cancel() }
@@ -117,14 +134,14 @@ open class APIClient: NSObject, NetworkClient {
                 self.resolve(error: error, onResolved: { isResolved in
                     if isResolved {
                         _ = resultProducer { response in
-                            self.proccessResponse(response: response, parser: parser, completion: completion)
+                            self.processResponse(response: response, parser: parser, completion: completion)
                         }
                     } else {
-                        self.proccessResponse(response: response, parser: parser, completion: completion)
+                        self.processResponse(response: response, parser: parser, completion: completion)
                     }
                 })
             } else {
-                self.proccessResponse(response: response, parser: parser, completion: completion)
+                self.processResponse(response: response, parser: parser, completion: completion)
             }
         }
     }
@@ -142,7 +159,7 @@ open class APIClient: NSObject, NetworkClient {
         self.didReceive(response)
         switch response.httpResponse.statusCode {
         case 200...299: return .success(response)
-        // once we reach unsuccessfull header
+        // once we reach unsuccessful header
         default:
             // give user chance to provide a custom error
             if let error = self.process(response) {
@@ -156,7 +173,11 @@ open class APIClient: NSObject, NetworkClient {
         }
     }
     
-    private func proccessResponse<T>(response: (Result<HTTPResponse, NetworkError>), parser: T, completion: @escaping (Result<T.Representation, NetworkError>) -> Void) where T: ResponseParser {
+    private func processResponse<T>(
+        response: (Result<HTTPResponse, NetworkError>),
+        parser: T,
+        completion: @escaping (Result<T.Representation, NetworkError>) -> Void
+    ) where T: ResponseParser {
         let result = validateResult(response)
         
         if case let .failure(error) = result {

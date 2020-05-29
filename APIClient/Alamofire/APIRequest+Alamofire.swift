@@ -8,11 +8,10 @@ public extension APIRequest {
     }
 
     var alamofireEncoding: ParameterEncoding {
-        return encoding as? ParameterEncoding ?? URLEncoding.default
+        switch encoding {
+        case .json: return Alamofire.JSONEncoding.default
+        case .url: return Alamofire.URLEncoding.default
+        case .propertyList: return Alamofire.PropertyListEncoding.default
+        }
     }
-    
 }
-
-extension URLEncoding: APIRequestEncoding {}
-extension PropertyListEncoding: APIRequestEncoding {}
-extension JSONEncoding: APIRequestEncoding {}

@@ -140,7 +140,6 @@ open class AlamofireRequestExecutor: RequestExecutor {
             NetworkError.define(error) ?? NetworkError.response(error)
         ))
     }
-    
 }
 
 extension Alamofire.MultipartFormData: MultipartFormDataType {}

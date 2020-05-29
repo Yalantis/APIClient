@@ -34,7 +34,7 @@ final class HaltingRequestsService: NSObject {
         super.init()
         
         if restorationPlugin == nil {
-            /// we need to know when authorization failes at least from one of the plugins
+            /// we need to know when authorization fails at least from one of the plugins
             authorizationPlugin?.delegate = self
         }
         restorationPlugin?.delegate = self
@@ -47,11 +47,11 @@ final class HaltingRequestsService: NSObject {
         return !shouldHalt && !shouldCancel
     }
     
-    func add(exectuion: @escaping () -> Void, cancellation: @escaping () -> Void) {
+    func add(execution: @escaping () -> Void, cancellation: @escaping () -> Void) {
         if !shouldHalt && shouldCancel && authTimerStarted {
             cancellation()
         } else {
-            haltingRequests.append(HaltingRequest(execute: exectuion, cancel: cancellation))
+            haltingRequests.append(HaltingRequest(execute: execution, cancel: cancellation))
         }
     }
     

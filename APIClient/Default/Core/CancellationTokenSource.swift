@@ -46,7 +46,7 @@ final class CancellationTokenSource: Cancelable {
     }
 }
 
-// We use the same lock across differnet tokens because the design of CTS
+// We use the same lock across different tokens because the design of CTS
 // prevents potential issues. For example, closures registered with a token
 // are never executed inside a lock.
 private let _lock = NSLock()

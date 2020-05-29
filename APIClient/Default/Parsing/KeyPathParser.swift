@@ -10,6 +10,7 @@ import Foundation
 internal typealias JSON = [String: Any]
 
 public enum ParserError: Error {
+    
     case keyNotFound
 }
 
@@ -21,7 +22,7 @@ open class KeyPathParser {
         self.keyPath = keyPath
     }
     
-    internal func valueForKeyPath(in object: Any) throws -> Any {
+    func valueForKeyPath(in object: Any) throws -> Any {
         if let keyPath = keyPath, let dictionary = object as? JSON {
             if let value = dictionary[keyPath] {
                 return value
@@ -31,5 +32,4 @@ open class KeyPathParser {
             return object
         }
     }
-    
 }

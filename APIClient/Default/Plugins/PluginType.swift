@@ -22,7 +22,7 @@ public protocol PluginType {
     
     func canResolve(_ error: Error) -> Bool
     
-    /// Called to resolve error in case it happend.
+    /// Called to resolve error in case it happened.
     func resolve(_ error: Error, onResolved: @escaping (Bool) -> Void)
     
     /// Called to provide error in case response isn't successful.
@@ -66,5 +66,4 @@ public extension PluginType {
     func decorate(_ error: Error) -> Error {
         return error
     }
-    
 }
