@@ -24,7 +24,17 @@ open class AlamofireRequestExecutor: RequestExecutor {
             )
             .response { response in
                 guard let httpResponse = response.response, let data = response.data else {
-                    AlamofireRequestExecutor.defineError(response.error, completion: completion)
+                    let networkError: NetworkError
+                    if let error = response.error, let definedError = NetworkError.define(error) {
+                        networkError = definedError
+                    } else if let code = response.response?.statusCode, let definedError = NetworkError.define(code) {
+                        networkError = definedError
+                    } else {
+                        networkError = .undefined
+                    }
+                    
+                    completion(.failure(networkError))
+                    
                     return
                 }
                 completion(.success((httpResponse, data)))
@@ -61,7 +71,19 @@ open class AlamofireRequestExecutor: RequestExecutor {
                         }
                         request.responseJSON(completionHandler: { response in
                             guard let httpResponse = response.response, let data = response.data else {
-                                AlamofireRequestExecutor.defineError(response.error, completion: completion)
+                                let networkError: NetworkError
+                                if let error = response.error, let definedError = NetworkError.define(error) {
+                                    networkError = definedError
+                                } else if let code = response.response?.statusCode, let definedError = NetworkError.define(code) {
+                                    networkError = definedError
+                                } else if let error = response.result.error, let definedError = NetworkError.define(error) {
+                                    networkError = definedError
+                                } else {
+                                    networkError = .undefined
+                                }
+                                
+                                completion(.failure(networkError))
+                                
                                 return
                             }
                             
@@ -97,8 +119,21 @@ open class AlamofireRequestExecutor: RequestExecutor {
         
         request.responseData { response in
             guard let httpResponse = response.response, let data = response.result.value else {
-                AlamofireRequestExecutor.defineError(response.error, completion: completion)
+                let networkError: NetworkError
+                if let error = response.error, let definedError = NetworkError.define(error) {
+                    networkError = definedError
+                } else if let code = response.response?.statusCode, let definedError = NetworkError.define(code) {
+                    networkError = definedError
+                } else if let error = response.result.error, let definedError = NetworkError.define(error) {
+                    networkError = definedError
+                } else {
+                    networkError = .undefined
+                }
+                
+                completion(.failure(networkError))
+                
                 return
+
             }
             
             completion(.success((httpResponse, data)))
@@ -127,18 +162,6 @@ open class AlamofireRequestExecutor: RequestExecutor {
         }
         
         return destination
-    }
-    
-    private class func defineError(_ error: Error?, completion: @escaping APIResultResponse) {
-        guard let error = error else {
-            completion(.failure(NetworkError.undefined))
-            
-            return
-        }
-        
-        completion(.failure(
-            NetworkError.define(error) ?? NetworkError.response(error)
-        ))
     }
 }
 

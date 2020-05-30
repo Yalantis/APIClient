@@ -2,19 +2,25 @@ import Foundation
 
 public enum NetworkError: Error {
     
-    case response(responseDictionary: [String: Any], statusCode: Int)
-    case undefined
+    // general unsatisfied header (e,g, not in range 100...299)
     case unsatisfiedHeader(code: Int)
+    // request cancelled
     case canceled
+    // bad internet connection, request timed out
     case connection
+    // performing authorized action without proper authorization (401)
     case unauthorized
+    // internal server error (500)
     case internalServer
-    case deserialization(Error)
+    
+    // failed to encode params, url or multipart data
     case encoding(Error)
-    case response(Error)
+    // failed to parse or deserialize response
     case parsing(Error)
-    case resultValidation(Error)
+    // user defined error provided in plugin
     case userDefined(Error)
+    
+    case undefined
 }
 
 extension NetworkError {

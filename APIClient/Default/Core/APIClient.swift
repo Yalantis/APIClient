@@ -14,7 +14,7 @@ open class APIClient: NSObject, NetworkClient {
     public init(
         requestExecutor: RequestExecutor,
         deserializer: Deserializer = JSONDeserializer(),
-        plugins: [PluginType] = [ErrorPreprocessorPlugin(errorPreprocessor: NetworkErrorProcessor())]
+        plugins: [PluginType] = []
     ) {
         self.requestExecutor = requestExecutor
         self.deserializer = deserializer
@@ -158,7 +158,7 @@ open class APIClient: NSObject, NetworkClient {
         
         self.didReceive(response)
         switch response.httpResponse.statusCode {
-        case 200...299: return .success(response)
+        case 100...299: return .success(response)
         // once we reach unsuccessful header
         default:
             // give user chance to provide a custom error

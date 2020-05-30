@@ -22,8 +22,6 @@
 		B833960A20177C1600689B94 /* LocationMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B833960920177C1600689B94 /* LocationMetaData.swift */; };
 		B833960C20177C5A00689B94 /* IPAddressRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B833960B20177C5A00689B94 /* IPAddressRequest.swift */; };
 		B833960E20177E6D00689B94 /* IPAddressDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B833960D20177E6D00689B94 /* IPAddressDataRequest.swift */; };
-		B83396122017804900689B94 /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396112017804900689B94 /* CustomError.swift */; };
-		B83396142017820E00689B94 /* CustomError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396132017820E00689B94 /* CustomError+Localization.swift */; };
 		B83396162017830800689B94 /* CountryMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83396152017830800689B94 /* CountryMetaData.swift */; };
 		B860BCA22178838300F3B46E /* APIClientAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B860BCA12178838300F3B46E /* APIClientAuthorizationTests.swift */; };
 		B8D3284B217784B40030F7AA /* APIClientHaltingRequestsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D3284A217784B40030F7AA /* APIClientHaltingRequestsTests.swift */; };
@@ -61,8 +59,6 @@
 		B833960920177C1600689B94 /* LocationMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMetaData.swift; sourceTree = "<group>"; };
 		B833960B20177C5A00689B94 /* IPAddressRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddressRequest.swift; sourceTree = "<group>"; };
 		B833960D20177E6D00689B94 /* IPAddressDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddressDataRequest.swift; sourceTree = "<group>"; };
-		B83396112017804900689B94 /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
-		B83396132017820E00689B94 /* CustomError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomError+Localization.swift"; sourceTree = "<group>"; };
 		B83396152017830800689B94 /* CountryMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMetaData.swift; sourceTree = "<group>"; };
 		B860BCA12178838300F3B46E /* APIClientAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientAuthorizationTests.swift; sourceTree = "<group>"; };
 		B8D3284A217784B40030F7AA /* APIClientHaltingRequestsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientHaltingRequestsTests.swift; sourceTree = "<group>"; };
@@ -140,7 +136,6 @@
 				B83395EE2017585700689B94 /* AppDelegate.swift */,
 				B83395F52017585700689B94 /* Assets.xcassets */,
 				B8339600201764F800689B94 /* Core */,
-				B83396132017820E00689B94 /* CustomError+Localization.swift */,
 				B83395FA2017585700689B94 /* Info.plist */,
 				B83395F72017585700689B94 /* LaunchScreen.storyboard */,
 				B83395F22017585700689B94 /* Main.storyboard */,
@@ -153,7 +148,6 @@
 			isa = PBXGroup;
 			children = (
 				B833960320176C2400689B94 /* Constants.swift */,
-				B83396112017804900689B94 /* CustomError.swift */,
 				B833960620177B7F00689B94 /* Models */,
 				B833960520177B7500689B94 /* Requests */,
 			);
@@ -416,8 +410,6 @@
 				B83395EF2017585700689B94 /* AppDelegate.swift in Sources */,
 				B833960C20177C5A00689B94 /* IPAddressRequest.swift in Sources */,
 				B833960A20177C1600689B94 /* LocationMetaData.swift in Sources */,
-				B83396122017804900689B94 /* CustomError.swift in Sources */,
-				B83396142017820E00689B94 /* CustomError+Localization.swift in Sources */,
 				B833960820177BAC00689B94 /* IPAddress.swift in Sources */,
 				B833960420176C2400689B94 /* Constants.swift in Sources */,
 				B833960E20177E6D00689B94 /* IPAddressDataRequest.swift in Sources */,
