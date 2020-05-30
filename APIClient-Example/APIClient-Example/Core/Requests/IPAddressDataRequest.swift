@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import YALAPIClient
+import APIClient
 
 struct IPAddressDataRequest: APIRequest {
     
@@ -17,5 +17,4 @@ struct IPAddressDataRequest: APIRequest {
     init(ipAddress: String) {
         path = ipAddress
     }
-    
 }

@@ -4,12 +4,12 @@ platform :ios, '11.0'
 
 target 'APIClient-Example' do
     
-    pod 'YALAPIClient/Alamofire', :path => '../'
+    pod 'APIClient', :path => '../'
     pod 'SwiftLint'
 end
 
 target 'APIClient-ExampleTests' do
     
-    pod 'YALAPIClient/Alamofire', :path => '../'
+    pod 'APIClient', :path => '../'
     pod 'Mockingjay', '3.0.0-alpha.1'
 end

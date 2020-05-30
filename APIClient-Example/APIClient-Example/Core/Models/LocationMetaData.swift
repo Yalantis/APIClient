@@ -8,9 +8,8 @@
 
 import Foundation
 
-struct LocationMetaData: Codable {
+struct LocationMetaData: Decodable {
     
     let city: String?
     let country: CountryMetaData?
-    
 }

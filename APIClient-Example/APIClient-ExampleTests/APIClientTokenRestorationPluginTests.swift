@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import YALAPIClient
+import APIClient
 import Mockingjay
 
 class APIClientTokenRestorationPluginTests: XCTestCase {

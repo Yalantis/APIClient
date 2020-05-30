@@ -1,13 +1,15 @@
 # APIClient
 
-[![cocoapods](https://img.shields.io/cocoapods/v/YALAPIClient.svg)](https://img.shields.io/cocoapods/v/APIClient.svg) ![swift](https://img.shields.io/badge/Swift-5.0-orange.svg) ![Platform](http://img.shields.io/badge/platform-iOS-blue.svg?style=flat) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/Yalantis/APIClient/blob/master/LICENSE)
+[![cocoapods](https://img.shields.io/badge/pod-3.0-blue)] ![swift](https://img.shields.io/badge/Swift-5.0-orange.svg) ![Platform](http://img.shields.io/badge/platform-iOS-blue.svg?style=flat) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/Yalantis/APIClient/blob/master/LICENSE)
 
 ## Integration (Cocoapods)
 
-There're three podspecs:
+`pod 'APIClient', :git => "https://github.com/rnkyr/APIClient", :tag => "3.0"`
+
+There're two podspecs:
 
 - `APIClient/Core` contain pure interface / types used to abstract from implementation. Use it only in case you're about to provide custom implementation of request executor.
-- `APIClient/Alamofire` contain AlamofireRequestExecutor implementation.
+- `APIClient/Alamofire` (default one) contain AlamofireRequestExecutor implementation.
 
 ## Usage
 
@@ -18,7 +20,7 @@ Next step is to declare your request. Requests are pure objects(values) that use
 Your request should conform to one of the three available types: `APIRequest`,  `DownloadAPIRequest`, or `MultipartAPIRequest` (names corresponds to their roles).
 Both `DownloadAPIRequest` and `MultipartAPIRequest` are inherited from `APIRequest` so you can provide any required data (like headers, parameters, encoding etc). You must at least specify `path` for basic request.
 
-Finally, you call `execute(request:parser:completion:` method of your client in order to execute your request. Here you also have to specify parser (an instance of `ResponseParser` protocol). You got [`DecodableParser`](https://github.com/Yalantis/APIClient/blob/master/APIClient/Default/Parser/DecodableParser.swift) and You got [`JSONParser`](https://github.com/Yalantis/APIClient/blob/master/APIClient/Default/Parser/ResponseParser.swift) out of the box.
+Finally, you call `execute(request:parser:completion:` method of your client in order to execute your request. Here you also have to specify parser (an instance of `ResponseParser` protocol). You got [`DecodableParser`](https://github.com/rnlyr/APIClient/blob/master/APIClient/Default/Parser/DecodableParser.swift) and you got [`JSONParser`](https://github.com/rnkyr/APIClient/blob/master/APIClient/Default/Parser/ResponseParser.swift) out of the box.
 
 ## PluginType
 
@@ -33,7 +35,6 @@ allows you to authorize your requests by passing token in it's headers. To use i
 
 ##### `RestorationTokenPlugin`
 allows you to restore your session in case of token expiration. To use it you need to provide `AccessCredentialsProvider` (used to obtain token-related information; it also has callbacks to handle restoration results) and callback to provide executed restoration request's result. 
-
 ##### `LoggingPlugin`
 simply logs any entries to the plugin using optionally provided closure.
 
@@ -52,6 +53,7 @@ By default, APIClient uses `ErrorPreprocessorPlugin(errorPreprocessor: NetworkEr
 
 | Version  | Swift  | Dependencies | iOS |
 |-----------|-------|------------------|------|
+| `3.0`       | 5.0  | Alamofire 5.2.1 | 10 |
 | `2.9.1`       | 5.0  | Alamofire 4.9,  YALResult 1.4 | 10 |
 | `2.9`       | 5.0  | Alamofire 4.8,  YALResult 1.4 | 10 |
 | `2.8`       | 4.2  | Alamofire 4.7,  YALResult 1.1 | 10 |

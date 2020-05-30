@@ -7,11 +7,10 @@
 //
 
 import Foundation
-import YALAPIClient
+import APIClient
 
 struct IPAddressRequest: APIRequest {
     
     let method: APIRequestMethod = .get
     let path = ""
-    
 }

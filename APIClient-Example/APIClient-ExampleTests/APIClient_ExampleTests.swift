@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import APIClient_Example
-import YALAPIClient
+import APIClient
 import Mockingjay
 
 struct Constants {

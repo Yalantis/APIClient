@@ -7,10 +7,10 @@
 //
 
 import XCTest
-import YALAPIClient
+import APIClient
 import Mockingjay
 
-final class APICLientAuthorizationTests: XCTestCase {
+final class APIClientAuthorizationTests: XCTestCase {
     
     func test_SimpleRequest_NotAuthorizedButWithPlugin_ShouldNotHaveAuthorizationHeader() {
         let pluginExpectation = expectation(description: "plugin")

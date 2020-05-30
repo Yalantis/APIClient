@@ -8,8 +8,7 @@
 
 import Foundation
 
-struct IPAddress: Codable {
+struct IPAddress: Decodable {
     
     let ip: String
-    
 }
