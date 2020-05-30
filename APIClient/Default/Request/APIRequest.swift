@@ -4,7 +4,7 @@ public typealias ProgressHandler = (Progress) -> ()
 
 public enum APIRequestEncoding {
     
-    case json, url, propertyList
+    case json, url
 }
 
 public enum APIRequestMethod: String {
@@ -45,9 +45,7 @@ public protocol MultipartFormDataType {
     var contentLength: UInt64 { get }
     var boundary: String { get }
     
-    func append(_ data: Data, withName name: String)
-    func append(_ data: Data, withName name: String, mimeType: String)
-    func append(_ data: Data, withName name: String, fileName: String, mimeType: String)
+    func append(_ data: Data, withName name: String, fileName: String?, mimeType: String?)
     func append(_ fileURL: URL, withName name: String)
     func append(_ fileURL: URL, withName name: String, fileName: String, mimeType: String)
     func append(_ stream: InputStream, withLength length: UInt64, name: String, fileName: String, mimeType: String)

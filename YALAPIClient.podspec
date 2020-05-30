@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'YALAPIClient'
-  s.version      = '2.9.1'
+  s.version      = '3.0'
   s.summary      = 'Lightweight networking framework.'
   s.homepage     = 'https://github.com/Yalantis/APIClient.git'
   s.license      = { type: 'MIT', file: 'License' }
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Alamofire' do |ss|
     ss.dependency 'YALAPIClient/Core'
-    ss.dependency 'Alamofire', '4.9'
+    ss.dependency 'Alamofire', '5.2.1'
     ss.source_files = 'APIClient/Alamofire/*'
   end
 end
