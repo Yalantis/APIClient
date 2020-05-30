@@ -12,34 +12,30 @@ open class AlamofireRequestExecutor: RequestExecutor {
     public func execute(request: APIRequest, completion: @escaping APIResultResponse) -> Cancelable {
         let cancellationSource = CancellationTokenSource()
         let requestPath = path(for: request)
-        let request = AF
-            .request(
-                requestPath,
-                method: request.alamofireMethod,
-                parameters: request.parameters,
-                encoding: request.alamofireEncoding,
-                headers: request.alamofireHeaders
-            )
-            .response { response in
-                guard let httpResponse = response.response, let data = response.data else {
-                    let networkError: NetworkError
-                    if let error = response.error, let definedError = NetworkError.define(error) {
-                        networkError = definedError
-                    } else if let code = response.response?.statusCode, let definedError = NetworkError.define(code) {
-                        networkError = definedError
-                    } else {
-                        networkError = .undefined
-                    }
-                    
-                    completion(.failure(networkError))
-                    
-                    return
-                }
-                completion(.success((httpResponse, data)))
-        }
-        
+        let request = AF.request(
+            requestPath,
+            method: request.afMethod,
+            parameters: request.parameters,
+            encoding: request.afEncoding,
+            headers: request.afHeaders
+        )
         cancellationSource.token.register {
             request.cancel()
+        }
+        
+        request.response { (response: DataResponse<Data?, AFError>) in
+            if let httpResponse = response.response, let data = response.data {
+                completion(Result.success((httpResponse, data)))
+                
+                return
+            }
+            
+            completion(Result.failure(
+                AlamofireRequestExecutor.defineError(
+                    responseError: response.error,
+                    responseStatusCode: response.response?.statusCode
+                )
+            ))
         }
         
         return cancellationSource
@@ -49,42 +45,35 @@ open class AlamofireRequestExecutor: RequestExecutor {
         let cancellationSource = CancellationTokenSource()
         let requestPath = path(for: multipartRequest)
         
-        var request = AF.upload(
+        let request = AF.upload(
             multipartFormData: multipartRequest.multipartFormData,
             to: requestPath,
-            method: multipartRequest.alamofireMethod,
-            headers: multipartRequest.alamofireHeaders
+            method: multipartRequest.afMethod,
+            headers: multipartRequest.afHeaders
         )
         cancellationSource.token.register {
             request.cancel()
         }
-        
         if let progressHandler = multipartRequest.progressHandler {
-            request = request.uploadProgress { progress in
+            request.uploadProgress { (progress: Progress) in
                 progressHandler(progress)
             }
         }
         
-        request.responseJSON(completionHandler: { response in
-            guard let httpResponse = response.response, let data = response.data else {
-                let networkError: NetworkError
-                if let error = response.error, let definedError = NetworkError.define(error) {
-                    networkError = definedError
-                } else if let code = response.response?.statusCode, let definedError = NetworkError.define(code) {
-                    networkError = definedError
-                } else if let error = response.result.error, let definedError = NetworkError.define(error) {
-                    networkError = definedError
-                } else {
-                    networkError = .undefined
-                }
-                
-                completion(.failure(networkError))
+        request.responseJSON { (response: DataResponse<Any, AFError>) in
+            if let httpResponse = response.response, let data = response.data {
+                completion(Result.success((httpResponse, data)))
                 
                 return
             }
             
-            completion(.success((httpResponse, data)))
-        })
+            completion(Result.failure(
+                AlamofireRequestExecutor.defineError(
+                    responseError: response.error,
+                    responseStatusCode: response.response?.statusCode
+                )
+            ))
+        }
         
         return cancellationSource
     }
@@ -93,45 +82,36 @@ open class AlamofireRequestExecutor: RequestExecutor {
         let cancellationSource = CancellationTokenSource()
         let requestPath = path(for: downloadRequest)
         
-        var request = AF.download(
+        let request = AF.download(
             requestPath,
-            method: downloadRequest.alamofireMethod,
+            method: downloadRequest.afMethod,
             parameters: downloadRequest.parameters,
-            encoding: downloadRequest.alamofireEncoding,
-            headers: downloadRequest.alamofireHeaders,
+            encoding: downloadRequest.afEncoding,
+            headers: downloadRequest.afHeaders,
             to: destination(for: destinationPath)
         )
-        
+        cancellationSource.token.register {
+            request.cancel()
+        }
         if let progressHandler = downloadRequest.progressHandler {
-            request = request.downloadProgress { progress in
+            request.downloadProgress { (progress: Progress) in
                 progressHandler(progress)
             }
         }
         
-        request.responseData { response in
-            guard let httpResponse = response.response, let data = response.result.value else {
-                let networkError: NetworkError
-                if let error = response.error, let definedError = NetworkError.define(error) {
-                    networkError = definedError
-                } else if let code = response.response?.statusCode, let definedError = NetworkError.define(code) {
-                    networkError = definedError
-                } else if let error = response.result.error, let definedError = NetworkError.define(error) {
-                    networkError = definedError
-                } else {
-                    networkError = .undefined
-                }
-                
-                completion(.failure(networkError))
+        request.responseData { (response: DownloadResponse<Data, AFError>) in
+            if let httpResponse = response.response, let data = response.result.value {
+                completion(Result.success((httpResponse, data)))
                 
                 return
-
             }
             
-            completion(.success((httpResponse, data)))
-        }
-        
-        cancellationSource.token.register {
-            request.cancel()
+            completion(Result.failure(
+                AlamofireRequestExecutor.defineError(
+                    responseError: response.error,
+                    responseStatusCode: response.response?.statusCode
+                )
+            ))
         }
         
         return cancellationSource
@@ -148,11 +128,58 @@ open class AlamofireRequestExecutor: RequestExecutor {
         guard let url = url else {
             return nil
         }
-        let destination: DownloadRequest.Destination = { _, _ in
+        
+        let destination: DownloadRequest.Destination = { _, _ -> (URL, DownloadRequest.Options) in
             return (url, [.removePreviousFile, .createIntermediateDirectories])
         }
         
         return destination
+    }
+    
+    private static func defineError(responseError: AFError?, responseStatusCode: Int?) -> NetworkClientError {
+        guard let error = responseError else {
+            if let code = responseStatusCode, let definedError = NetworkClientError.define(code) {
+                return definedError
+            }
+            
+            return NetworkClientError.undefined(responseError)
+        }
+        
+        if let definedError = NetworkClientError.define(error) {
+           return definedError
+        }
+        
+        return NetworkClientError.map(error)
+    }
+}
+
+extension NetworkClientError {
+    
+    static func map(_ error: AFError) -> NetworkClientError {
+        if let code = error.responseCode, let definedError = NetworkClientError.define(code) {
+            return definedError
+        }
+        
+        if let underlyingError = error.underlyingError, let definedError = NetworkClientError.define(underlyingError) {
+            return definedError
+        }
+        
+        switch error {
+        case .explicitlyCancelled: return NetworkClientError.network(.canceled)
+        case .responseSerializationFailed: return NetworkClientError.serialization(.parsing(error))
+        case .responseValidationFailed(let reason):
+            switch reason {
+            case .unacceptableStatusCode(let code):
+                if let definedError = NetworkClientError.define(code) {
+                    return definedError
+                }
+            default: break
+            }
+            
+        default: break
+        }
+        
+        return NetworkClientError.executor(error)
     }
 }
 

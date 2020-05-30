@@ -1,6 +1,6 @@
 import Foundation
 
-public typealias APIResultResponse = (Result<APIClient.HTTPResponse, NetworkError>) -> Void
+public typealias APIResultResponse = (Result<APIClient.HTTPResponse, NetworkClientError>) -> Void
 
 public protocol RequestExecutor {
     

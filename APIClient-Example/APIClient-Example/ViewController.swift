@@ -24,7 +24,6 @@ class ViewController: UIViewController {
     
     @IBAction private func findCurrentIP() {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        
         ipServiceNetworkClient.execute(
             request: IPAddressRequest(),
             parser: DecodableParser<IPAddress>()

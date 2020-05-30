@@ -32,7 +32,8 @@ public final class AuthorizationPlugin: PluginType {
         self.provider = provider
         self.shouldCancelRequestIfFailed = shouldCancelRequestIfFailed
         self.authErrorResolving = authErrorResolving ?? { error in
-            if let error = error as? NetworkError, case .unauthorized = error {
+            if let error = (error as? NetworkClientError)?.underlyingError as? NetworkClientError.NetworkError,
+                case .unauthorized = error {
                 return true
             }
             

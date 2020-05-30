@@ -17,7 +17,7 @@ public protocol TokenType {
 public class RestorationTokenPlugin: PluginType {
     
     /// callback that provides result of request made to restore the session; captured
-    public var restorationResultProvider: ((@escaping (Result<TokenType, NetworkError>) -> Void) -> Void)?
+    public var restorationResultProvider: ((@escaping (Response<TokenType>) -> Void) -> Void)?
     
     let shouldHaltRequestsTillResolve: Bool
     weak var delegate: RestorationTokenPluginDelegate?
@@ -39,7 +39,8 @@ public class RestorationTokenPlugin: PluginType {
         self.credentialProvider = credentialProvider
         self.shouldHaltRequestsTillResolve = shouldHaltRequestsTillResolve
         self.authErrorResolving = authErrorResolving ?? { error in
-            if let error = error as? NetworkError, case .unauthorized = error {
+            if let error = (error as? NetworkClientError)?.underlyingError as? NetworkClientError.NetworkError,
+                case .unauthorized = error {
                 return true
             }
             

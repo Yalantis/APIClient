@@ -62,10 +62,21 @@ class APIClient_ExampleTests: XCTestCase {
         var notFoundKey = ""
         
         sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
-            if case let NetworkError.parsing(error) = result.error as! NetworkError,
-               case let DecodingError.keyNotFound(keys, _) = error as! DecodingError {
-                notFoundKey = keys.stringValue
+            XCTAssertNotNil(result.error)
+            
+            let error = result.error!
+            switch error {
+            case .serialization(let error):
+                switch error {
+                case .parsing(let error):
+                    if case let DecodingError.keyNotFound(keys, _) = error as! DecodingError {
+                        notFoundKey = keys.stringValue
+                    }
+                default: break
+                }
+            default: break
             }
+            
             keyExpectation.fulfill()
         }
         
@@ -81,9 +92,18 @@ class APIClient_ExampleTests: XCTestCase {
         var isCanceledError = false
         
         let request = sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
-            if let error = result.error as? NetworkError, case .canceled = error {
-                isCanceledError = true
+            XCTAssertNotNil(result.error)
+            
+            let error = result.error!
+            switch error {
+            case .network(let error):
+                switch error {
+                case .canceled: isCanceledError = true
+                default: break
+                }
+            default: break
             }
+            
             errorExpectation.fulfill()
         }
         request.cancel()
@@ -100,8 +120,16 @@ class APIClient_ExampleTests: XCTestCase {
         var catchedErrorIsUnauthorized = false
 
         sut.execute(request: GetUserRequest(), parser: DecodableParser<User>(keyPath: "user")) { result in
-            if let error = result.error as? NetworkError, case .unauthorized = error {
-                catchedErrorIsUnauthorized = true
+            XCTAssertNotNil(result.error)
+            
+            let error = result.error!
+            switch error {
+            case .network(let error):
+                switch error {
+                case .unauthorized: catchedErrorIsUnauthorized = true
+                default: break
+                }
+            default: break
             }
             errorExpectation.fulfill()
         }

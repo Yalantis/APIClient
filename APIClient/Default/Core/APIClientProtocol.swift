@@ -1,19 +1,21 @@
 import Foundation
 
+public typealias Response<T> = Result<T, NetworkClientError>
+
 public protocol NetworkClient {
     
     @discardableResult
     func execute<T>(
         request: APIRequest,
         parser: T,
-        completion: @escaping (Result<T.Representation, NetworkError>) -> Void
+        completion: @escaping (Response<T.Representation>) -> Void
     ) -> Cancelable where T : ResponseParser
     
     @discardableResult
     func execute<T>(
         request: MultipartAPIRequest,
         parser: T,
-        completion: @escaping (Result<T.Representation, NetworkError>) -> Void
+        completion: @escaping (Response<T.Representation>) -> Void
     ) -> Cancelable where T: ResponseParser
     
     /// Executes download request with progress handled by `downloadRequest.progressHandler`
@@ -29,6 +31,6 @@ public protocol NetworkClient {
         request: DownloadAPIRequest,
         destinationFilePath: URL?,
         parser: T,
-        completion: @escaping (Result<T.Representation, NetworkError>) -> Void
+        completion: @escaping (Response<T.Representation>) -> Void
     ) -> Cancelable where T: ResponseParser
 }

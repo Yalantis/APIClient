@@ -50,7 +50,7 @@ class APIClientTokenRestorationPluginTests: XCTestCase {
             plugins: [decorationPlugin]
         )
         
-        decorationPlugin.restorationResultProvider = { (completion: @escaping (Result<TokenType, NetworkError>) -> Void) -> Void in
+        decorationPlugin.restorationResultProvider = { (completion: @escaping (Result<TokenType, NetworkClientError>) -> Void) -> Void in
             self.stubSuccessfulAuth()
             
             let restoreRequest = RestoreRequest()
