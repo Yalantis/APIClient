@@ -25,7 +25,7 @@ public class RestorationTokenPlugin: PluginType {
     private var inProgress = false
     private let credentialProvider: AccessCredentialsProvider
     private let authErrorResolving: AuthErrorResolving
-
+    private var queue: [(Bool) -> Void] = []
     /// - Parameters:
     ///   - credentialProvider: an access credentials provider that provides all required data to restore token; captured
     ///   - shouldHaltRequestsTillResolve: indicates whether APIClient should halt all passing requests in case one of them failed with `unathorized` error and restart them
@@ -44,43 +44,55 @@ public class RestorationTokenPlugin: PluginType {
     }
 
     public func canResolve(_ error: Error) -> Bool {
-        if authErrorResolving(error), inProgress == false {
+        if authErrorResolving(error) {
             delegate?.reachUnauthorizedError()
             return true
         }
-        return false
+        return inProgress
     }
 
     public func resolve(_ error: Error, onResolved: @escaping (Bool) -> Void) {
-        guard authErrorResolving(error) else {
-            delegate?.failedToRestore()
-            onResolved(false)
-            return
-        }
-
-        guard credentialProvider.exchangeToken != nil && restorationResultProvider != nil else {
-            credentialProvider.invalidate()
-            delegate?.failedToRestore()
-            onResolved(false)
-            return
-        }
- 
-        inProgress = true
-        restorationResultProvider? { [weak self] result in
-            self?.inProgress = false
-
-            guard let value = result.value else {
-                self?.credentialProvider.invalidate()
-                self?.delegate?.failedToRestore()
+        if inProgress {
+            queue.append(onResolved)
+        } else {
+            guard authErrorResolving(error) else {
+                delegate?.failedToRestore()
                 onResolved(false)
+                queue.forEach { $0(false) }
+                queue.removeAll()
                 return
             }
 
-            self?.credentialProvider.commitCredentialsUpdate { provider in
-                provider.accessToken = value.accessToken
-                provider.exchangeToken = value.exchangeToken
-                self?.delegate?.restored()
-                onResolved(true)
+            guard credentialProvider.exchangeToken != nil && restorationResultProvider != nil else {
+                credentialProvider.invalidate()
+                delegate?.failedToRestore()
+                onResolved(false)
+                queue.forEach { $0(false) }
+                queue.removeAll()
+                return
+            }
+     
+            inProgress = true
+            restorationResultProvider? { [weak self] result in
+                self?.inProgress = false
+
+                guard let value = result.value else {
+                    self?.credentialProvider.invalidate()
+                    self?.delegate?.failedToRestore()
+                    onResolved(false)
+                    self?.queue.forEach { $0(false) }
+                    self?.queue.removeAll()
+                    return
+                }
+
+                self?.credentialProvider.commitCredentialsUpdate { provider in
+                    provider.accessToken = value.accessToken
+                    provider.exchangeToken = value.exchangeToken
+                    self?.delegate?.restored()
+                    onResolved(true)
+                    self?.queue.forEach { $0(true) }
+                    self?.queue.removeAll()
+                }
             }
         }
     }
