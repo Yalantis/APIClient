@@ -51,7 +51,7 @@ public final class AuthorizationPlugin: PluginType {
             return request
         }
         
-        var headers = request.headers ?? [:]
+        var headers = request.alamofireHeaders
         
         let prefix: String
         if let authPrefix = provider.authorizationType.valuePrefix, case .custom = provider.authorizationType {
@@ -61,6 +61,7 @@ public final class AuthorizationPlugin: PluginType {
         } else {
             prefix = ""
         }
+
         headers[provider.authorizationType.key] = prefix + provider.authorizationToken
         
         return APIRequestProxy(request: request, headers: headers)
