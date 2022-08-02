@@ -51,7 +51,7 @@ public final class AuthorizationPlugin: PluginType {
             return request
         }
         
-        var headers = request.alamofireHeaders
+        var headers = request.headers ?? [:]
         
         let prefix: String
         if let authPrefix = provider.authorizationType.valuePrefix, case .custom = provider.authorizationType {
