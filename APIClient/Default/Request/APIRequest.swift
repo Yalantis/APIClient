@@ -1,4 +1,4 @@
-import Foundation
+import Alamofire
 
 public typealias ProgressHandler = (Progress) -> ()
 public protocol APIRequestEncoding {}
@@ -15,6 +15,7 @@ public protocol APIRequest {
     var encoding: APIRequestEncoding? { get }
     var parameters: [String: Any]? { get }
     var headers: [String: String]? { get }
+  
 }
 
 public protocol DownloadAPIRequest: APIRequest {
@@ -32,14 +33,12 @@ public protocol MultipartFormDataType {
     var contentType: String { get }
     var contentLength: UInt64 { get }
     var boundary: String { get }
-    
-    func append(_ data: Data, withName name: String)
-    func append(_ data: Data, withName name: String, mimeType: String)
-    func append(_ data: Data, withName name: String, fileName: String, mimeType: String)
+  
+    func append(_ data: Data, withName name: String, fileName: String?, mimeType: String?)
     func append(_ fileURL: URL, withName name: String)
     func append(_ fileURL: URL, withName name: String, fileName: String, mimeType: String)
     func append(_ stream: InputStream, withLength length: UInt64, name: String, fileName: String, mimeType: String)
-    func append(_ stream: InputStream, withLength length: UInt64, headers: [String: String])
+    func append(_ stream: InputStream, withLength length: UInt64, headers: HTTPHeaders)
 }
 
 public extension APIRequest {
