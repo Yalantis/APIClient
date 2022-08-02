@@ -67,7 +67,8 @@ public final class AuthorizationPlugin: PluginType {
     }
 }
 
-protocol AuthorizationPluginDelegate: class {
+protocol AuthorizationPluginDelegate: AnyObject {
     
     func reachAuthorizationError()
+  
 }
