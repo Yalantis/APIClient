@@ -4,15 +4,15 @@ import Alamofire
 public extension APIRequest {
 
     var alamofireMethod: HTTPMethod {
-      HTTPMethod(rawValue: method.rawValue.uppercased())
+        HTTPMethod(rawValue: method.rawValue.uppercased())
     }
 
     var alamofireEncoding: ParameterEncoding {
-      encoding as? ParameterEncoding ?? URLEncoding.default
+        encoding as? ParameterEncoding ?? URLEncoding.default
     }
     
     var alamofireHeaders: HTTPHeaders {
-      HTTPHeaders(headers ?? [:])
+        HTTPHeaders(headers ?? [:])
     }
     
 }

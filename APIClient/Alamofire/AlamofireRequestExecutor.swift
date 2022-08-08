@@ -42,28 +42,28 @@ open class AlamofireRequestExecutor: RequestExecutor {
         let requestPath = path(for: multipartRequest)
       
       manager.upload(
-        multipartFormData: multipartRequest.multipartFormData,
-        to: requestPath,
-        method: multipartRequest.alamofireMethod,
-        headers: multipartRequest.alamofireHeaders)
+          multipartFormData: multipartRequest.multipartFormData,
+          to: requestPath,
+          method: multipartRequest.alamofireMethod,
+          headers: multipartRequest.alamofireHeaders)
       .uploadProgress(queue: .main, closure: { progress in
-        if let progressHandler = multipartRequest.progressHandler {
-          progressHandler(progress)
-        }
+          if let progressHandler = multipartRequest.progressHandler {
+              progressHandler(progress)
+          }
       })
       .responseJSON { response in
-        switch response.result {
-        case .success:
-          guard
-            let httpResponse = response.response,
-            let data = response.data
-          else {
-            AlamofireRequestExecutor.defineError(response.error, completion: completion)
+          switch response.result {
+          case .success:
+            guard
+                let httpResponse = response.response,
+                let data = response.data
+            else {
+                AlamofireRequestExecutor.defineError(response.error, completion: completion)
             
-            return
-          }
+                return
+            }
           
-          completion(.success((httpResponse, data)))
+            completion(.success((httpResponse, data)))
 
         case .failure(let error):
             completion(.failure(error))
