@@ -1,6 +1,8 @@
 import Foundation
 import Alamofire
 
+public typealias APIHTTPHeaders = HTTPHeaders
+
 public extension APIRequest {
 
     var alamofireMethod: HTTPMethod {
