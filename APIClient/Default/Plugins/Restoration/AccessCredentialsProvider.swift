@@ -8,7 +8,7 @@
 import Foundation
 
 /// Describes required entity for `RequestDecorationPlugin`
-public protocol AccessCredentialsProvider: class {
+public protocol AccessCredentialsProvider: AnyObject {
     
     var accessToken: String? { get set }
     var exchangeToken: String? { get set }
@@ -20,4 +20,5 @@ public protocol AccessCredentialsProvider: class {
     
     /// Called in case of not successful update
     func invalidate()
+  
 }
