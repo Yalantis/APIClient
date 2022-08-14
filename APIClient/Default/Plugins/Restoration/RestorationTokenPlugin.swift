@@ -17,7 +17,7 @@ public protocol TokenType {
 public class RestorationTokenPlugin: PluginType {
     
     /// callback that provides result of request made to restore the session; captured
-    public var restorationResultProvider: ((@escaping (Result<TokenType>) -> Void) -> Void)?
+    public var restorationResultProvider: ((@escaping (Swift.Result<TokenType, Error>) -> Void) -> Void)?
     
     let shouldHaltRequestsTillResolve: Bool
     weak var delegate: RestorationTokenPluginDelegate?
@@ -25,7 +25,7 @@ public class RestorationTokenPlugin: PluginType {
     private var inProgress = false
     private let credentialProvider: AccessCredentialsProvider
     private let authErrorResolving: AuthErrorResolving
-
+    
     /// - Parameters:
     ///   - credentialProvider: an access credentials provider that provides all required data to restore token; captured
     ///   - shouldHaltRequestsTillResolve: indicates whether APIClient should halt all passing requests in case one of them failed with `unathorized` error and restart them
@@ -42,7 +42,7 @@ public class RestorationTokenPlugin: PluginType {
             return false
         }
     }
-
+    
     public func canResolve(_ error: Error) -> Bool {
         if authErrorResolving(error), inProgress == false {
             delegate?.reachUnauthorizedError()
@@ -50,38 +50,41 @@ public class RestorationTokenPlugin: PluginType {
         }
         return false
     }
-
+    
     public func resolve(_ error: Error, onResolved: @escaping (Bool) -> Void) {
         guard authErrorResolving(error) else {
             delegate?.failedToRestore()
             onResolved(false)
             return
         }
-
+        
         guard credentialProvider.exchangeToken != nil && restorationResultProvider != nil else {
             credentialProvider.invalidate()
             delegate?.failedToRestore()
             onResolved(false)
             return
         }
- 
+        
         inProgress = true
         restorationResultProvider? { [weak self] result in
-            self?.inProgress = false
-
-            guard let value = result.value else {
+            switch result {
+            case .success(let token):
+                self?.credentialProvider.commitCredentialsUpdate { provider in
+                    provider.accessToken = token.accessToken
+                    provider.exchangeToken = token.exchangeToken
+                    self?.delegate?.restored()
+                    onResolved(true)
+                }
+            
+            case .failure:
                 self?.credentialProvider.invalidate()
                 self?.delegate?.failedToRestore()
                 onResolved(false)
+                
                 return
             }
-
-            self?.credentialProvider.commitCredentialsUpdate { provider in
-                provider.accessToken = value.accessToken
-                provider.exchangeToken = value.exchangeToken
-                self?.delegate?.restored()
-                onResolved(true)
-            }
+            
+            self?.inProgress = false
         }
     }
 }
@@ -91,5 +94,5 @@ protocol RestorationTokenPluginDelegate: AnyObject {
     func reachUnauthorizedError()
     func restored()
     func failedToRestore()
-  
+    
 }

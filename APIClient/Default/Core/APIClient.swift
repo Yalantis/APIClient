@@ -26,7 +26,7 @@ open class APIClient: NSObject, NetworkClient {
     // MARK: - NetworkClient
     
     @discardableResult
-    public func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T : ResponseParser {
+    public func execute<T>(request: APIRequest, parser: T, completion: @escaping (Swift.Result<T.Representation, Error>) -> Void) -> Cancelable where T : ResponseParser {
         if !haltingService.shouldProceed(with: request) {
             let source = CancellationTokenSource()
             haltingService.add(
@@ -35,7 +35,7 @@ open class APIClient: NSObject, NetworkClient {
                     let newSource = self.execute(request: request, parser: parser, completion: completion)
                     source.token.register { newSource.cancel() }
                 },
-                cancellation: { completion(Result.failure(NetworkError.canceled)) }
+                cancellation: { completion(Swift.Result.failure(NetworkError.canceled)) }
             )
             
             return source
@@ -51,7 +51,7 @@ open class APIClient: NSObject, NetworkClient {
     }
     
     @discardableResult
-    public func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
+    public func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Swift.Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser {
         if !haltingService.shouldProceed(with: request) {
             let source = CancellationTokenSource()
             haltingService.add(
@@ -60,7 +60,7 @@ open class APIClient: NSObject, NetworkClient {
                     let newSource = self.execute(request: request, parser: parser, completion: completion)
                     source.token.register { newSource.cancel() }
                 },
-                cancellation: { completion(Result.failure(NetworkError.canceled)) }
+                cancellation: { completion(Swift.Result.failure(NetworkError.canceled)) }
             )
             
             return source
@@ -78,7 +78,7 @@ open class APIClient: NSObject, NetworkClient {
     }
     
     @discardableResult
-    public func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
+    public func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, parser: T, completion: @escaping (Swift.Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser {
         if !haltingService.shouldProceed(with: request) {
             let source = CancellationTokenSource()
             haltingService.add(
@@ -87,7 +87,7 @@ open class APIClient: NSObject, NetworkClient {
                     let newSource = self.execute(request: request, parser: parser, completion: completion)
                     source.token.register { newSource.cancel() }
                 },
-                cancellation: { completion(Result.failure(NetworkError.canceled)) }
+                cancellation: { completion(Swift.Result.failure(NetworkError.canceled)) }
             )
             
             return source
@@ -104,11 +104,15 @@ open class APIClient: NSObject, NetworkClient {
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
-    private func _execute<T>(_ resultProducer: @escaping (@escaping APIResultResponse) -> Cancelable, deserializer: Deserializer, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser {
+    private func _execute<T>(_ resultProducer: @escaping (@escaping APIResultResponse) -> Cancelable, deserializer: Deserializer, parser: T, completion: @escaping (Swift.Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser {
         return resultProducer { response in
             let validatedResult = self.validateResult(response)
             
-            if let error = validatedResult.error {
+            switch validatedResult {
+            case .success:
+                self.proccessResponse(response: response, parser: parser, completion: completion)
+                
+            case .failure(let error):
                 self.resolve(error: error, onResolved: { isResolved in
                     if isResolved {
                         _ = resultProducer { response in
@@ -118,32 +122,31 @@ open class APIClient: NSObject, NetworkClient {
                         self.proccessResponse(response: response, parser: parser, completion: completion)
                     }
                 })
-            } else {
-                self.proccessResponse(response: response, parser: parser, completion: completion)
             }
         }
     }
     
-    private func validateResult(_ result: Result<HTTPResponse>) -> Result<HTTPResponse> {
-        guard let response = result.value else {
-            // in case we faced an error from executor try to generalize it
-            return Result.failure(generalError((result.error! as NSError).code) ?? result.error!)
-        }
-        
-        self.didReceive(response)
-        switch response.httpResponse.statusCode {
-        case 200...299: return .success(response)
-        // once we reach unsuccessfull header
-        default:
-            // give user chance to provide a custom error
-            if let error = self.process(response) {
-                return .failure(error)
-                // then try to generalize error
-            } else if let error = generalError(response.httpResponse.statusCode) {
-                return .failure(error)
+    private func validateResult(_ result: Result<HTTPResponse, Error>) -> Swift.Result<HTTPResponse, Error> {
+        switch result {
+        case .success(let response):
+            self.didReceive(response)
+            switch response.httpResponse.statusCode {
+            case 200...299: return .success(response)
+                // once we reach unsuccessfull header
+            default:
+                // give user chance to provide a custom error
+                if let error = self.process(response) {
+                    return .failure(error)
+                    // then try to generalize error
+                } else if let error = generalError(response.httpResponse.statusCode) {
+                    return .failure(error)
+                }
+                
+                return .failure(NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
             }
-            
-            return .failure(NetworkError.unsatisfiedHeader(code: response.httpResponse.statusCode))
+        case .failure(let error):
+            // in case we faced an error from executor try to generalize it
+            return Result.failure(error)
         }
     }
     
@@ -155,21 +158,23 @@ open class APIClient: NSObject, NetworkClient {
         }
     }
     
-    private func proccessResponse<T>(response: (Result<HTTPResponse>), parser: T, completion: @escaping (Result<T.Representation>) -> Void) where T: ResponseParser {
+    private func proccessResponse<T>(response: (Swift.Result<HTTPResponse, Error>), parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) where T: ResponseParser {
         let result = validateResult(response)
         
-        if case let .failure(error) = result {
+        switch result {
+        case .success(let response):
+            let deserializeData = deserializer.deserialize(response.httpResponse, data: response.data)
+            
+            if case let .success(data) = deserializeData {
+                let parseData = parser.parse(data).map(process)
+                completion(parseData)
+            }
+            
+        case .failure(let error):
             let decoratedError = decorate(error: error)
             completion(.failure(decoratedError))
-            return
         }
         
-        completion(
-            result
-                .next(self.deserializer.deserialize)
-                .next(parser.parse)
-                .map(self.process)
-        )
     }
 }
 
