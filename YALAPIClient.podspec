@@ -8,7 +8,6 @@ Pod::Spec.new do |s|
   s.source       = { git: 'https://github.com/Yalantis/APIClient.git', tag: s.version }
   s.frameworks = 'Foundation'
   s.ios.deployment_target = '10.0'
-  s.dependency 'YALResult', '1.4'
   s.default_subspec = 'Core'
 
   s.subspec 'Core' do |ss|
