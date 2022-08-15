@@ -3,10 +3,10 @@ import Alamofire
 
 open class AlamofireRequestExecutor: RequestExecutor {
     
-    private let manager: SessionManager
+    private let manager: Session
     private let baseURL: URL
     
-    public init(baseURL: URL, manager: SessionManager = SessionManager.default) {
+    public init(baseURL: URL, manager: Session = .default) {
         self.manager = manager
         self.baseURL = baseURL
     }
@@ -20,7 +20,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
                 method: request.alamofireMethod,
                 parameters: request.parameters,
                 encoding: request.alamofireEncoding,
-                headers: request.headers    
+                headers: request.alamofireHeaders
             )
             .response { response in
                 guard let httpResponse = response.response, let data = response.data else {
@@ -40,39 +40,36 @@ open class AlamofireRequestExecutor: RequestExecutor {
     public func execute(multipartRequest: MultipartAPIRequest, completion: @escaping APIResultResponse) -> Cancelable {
         let cancellationSource = CancellationTokenSource()
         let requestPath = path(for: multipartRequest)
-        
-        manager
-            .upload(
-                multipartFormData: multipartRequest.multipartFormData,
-                to: requestPath,
-                method: multipartRequest.alamofireMethod,
-                headers: multipartRequest.headers,
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                    case .success(var request, _, _):
-                        cancellationSource.token.register {
-                            request.cancel()
-                        }
-                        
-                        if let progressHandler = multipartRequest.progressHandler {
-                            request = request.uploadProgress { progress in
-                                progressHandler(progress)
-                            }
-                        }
-                        request.responseJSON(completionHandler: { response in
-                            guard let httpResponse = response.response, let data = response.data else {
-                                AlamofireRequestExecutor.defineError(response.error, completion: completion)
-                                return
-                            }
-                            
-                            completion(.success((httpResponse, data)))
-                        })
-                        
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
-            })
-        
+      
+      manager.upload(
+          multipartFormData: multipartRequest.multipartFormData,
+          to: requestPath,
+          method: multipartRequest.alamofireMethod,
+          headers: multipartRequest.alamofireHeaders)
+      .uploadProgress(queue: .main, closure: { progress in
+          if let progressHandler = multipartRequest.progressHandler {
+              progressHandler(progress)
+          }
+      })
+      .responseJSON { response in
+          switch response.result {
+          case .success:
+            guard
+                let httpResponse = response.response,
+                let data = response.data
+            else {
+                AlamofireRequestExecutor.defineError(response.error, completion: completion)
+            
+                return
+            }
+          
+            completion(.success((httpResponse, data)))
+
+        case .failure(let error):
+            completion(.failure(error))
+        }
+      }
+     
         return cancellationSource
     }
     
@@ -85,7 +82,7 @@ open class AlamofireRequestExecutor: RequestExecutor {
             method: downloadRequest.alamofireMethod,
             parameters: downloadRequest.parameters,
             encoding: downloadRequest.alamofireEncoding,
-            headers: downloadRequest.headers,
+            headers: downloadRequest.alamofireHeaders,
             to: destination(for: destinationPath)
         )
         
@@ -96,9 +93,12 @@ open class AlamofireRequestExecutor: RequestExecutor {
         }
         
         request.responseData { response in
-            guard let httpResponse = response.response, let data = response.result.value else {
-                AlamofireRequestExecutor.defineError(response.error, completion: completion)
-                return
+            guard
+              let httpResponse = response.response,
+              let data = response.value
+            else {
+              AlamofireRequestExecutor.defineError(response.error, completion: completion)
+              return
             }
             
             completion(.success((httpResponse, data)))
@@ -118,11 +118,11 @@ open class AlamofireRequestExecutor: RequestExecutor {
             .removingPercentEncoding!
     }
     
-    private func destination(for url: URL?) -> DownloadRequest.DownloadFileDestination? {
+    private func destination(for url: URL?) -> DownloadRequest.Destination? {
         guard let url = url else {
             return nil
         }
-        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+        let destination: DownloadRequest.Destination = { _, _ in
             return (url, [.removePreviousFile, .createIntermediateDirectories])
         }
         

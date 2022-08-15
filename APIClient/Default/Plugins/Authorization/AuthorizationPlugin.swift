@@ -61,13 +61,15 @@ public final class AuthorizationPlugin: PluginType {
         } else {
             prefix = ""
         }
+
         headers[provider.authorizationType.key] = prefix + provider.authorizationToken
         
         return APIRequestProxy(request: request, headers: headers)
     }
 }
 
-protocol AuthorizationPluginDelegate: class {
+protocol AuthorizationPluginDelegate: AnyObject {
     
     func reachAuthorizationError()
+  
 }
