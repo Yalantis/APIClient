@@ -1,15 +1,12 @@
 import Foundation
-import YALResult
-
-public typealias Result = YALResult
 
 public protocol NetworkClient {
     
     @discardableResult
-    func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T : ResponseParser
+    func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) -> Cancelable where T : ResponseParser
     
     @discardableResult
-    func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser
+    func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser
     
     /// Executes download request with progress handled by `downloadRequest.progressHandler`
     ///
@@ -20,5 +17,5 @@ public protocol NetworkClient {
     ///   - completion: result with response object on success or appropriate error on failure
     /// - Returns: cancelation token
     @discardableResult
-    func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, parser: T, completion: @escaping (Result<T.Representation>) -> Void) -> Cancelable where T: ResponseParser
+    func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser
 }
