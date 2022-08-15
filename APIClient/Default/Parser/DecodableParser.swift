@@ -35,7 +35,7 @@ public final class DecodableParser<T: Decodable>: KeyPathParser, ResponseParser 
         super.init(keyPath: keyPath)
     }
     
-    public func parse(_ object: AnyObject) -> Swift.Result<T, Error> {
+    public func parse(_ object: AnyObject) -> Result<T, Error> {
         do {
             let value = try valueForKeyPath(in: object)
             let data = try JSONSerialization.data(withJSONObject: value)

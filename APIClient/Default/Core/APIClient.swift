@@ -26,7 +26,7 @@ open class APIClient: NSObject, NetworkClient {
     // MARK: - NetworkClient
     
     @discardableResult
-    public func execute<T>(request: APIRequest, parser: T, completion: @escaping (Swift.Result<T.Representation, Error>) -> Void) -> Cancelable where T : ResponseParser {
+    public func execute<T>(request: APIRequest, parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) -> Cancelable where T : ResponseParser {
         if !haltingService.shouldProceed(with: request) {
             let source = CancellationTokenSource()
             haltingService.add(
@@ -35,7 +35,7 @@ open class APIClient: NSObject, NetworkClient {
                     let newSource = self.execute(request: request, parser: parser, completion: completion)
                     source.token.register { newSource.cancel() }
                 },
-                cancellation: { completion(Swift.Result.failure(NetworkError.canceled)) }
+                cancellation: { completion(Result.failure(NetworkError.canceled)) }
             )
             
             return source
@@ -51,7 +51,7 @@ open class APIClient: NSObject, NetworkClient {
     }
     
     @discardableResult
-    public func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Swift.Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser {
+    public func execute<T>(request: MultipartAPIRequest, parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser {
         if !haltingService.shouldProceed(with: request) {
             let source = CancellationTokenSource()
             haltingService.add(
@@ -60,7 +60,7 @@ open class APIClient: NSObject, NetworkClient {
                     let newSource = self.execute(request: request, parser: parser, completion: completion)
                     source.token.register { newSource.cancel() }
                 },
-                cancellation: { completion(Swift.Result.failure(NetworkError.canceled)) }
+                cancellation: { completion(Result.failure(NetworkError.canceled)) }
             )
             
             return source
@@ -78,7 +78,7 @@ open class APIClient: NSObject, NetworkClient {
     }
     
     @discardableResult
-    public func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, parser: T, completion: @escaping (Swift.Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser {
+    public func execute<T>(request: DownloadAPIRequest, destinationFilePath: URL?, parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser {
         if !haltingService.shouldProceed(with: request) {
             let source = CancellationTokenSource()
             haltingService.add(
@@ -87,7 +87,7 @@ open class APIClient: NSObject, NetworkClient {
                     let newSource = self.execute(request: request, parser: parser, completion: completion)
                     source.token.register { newSource.cancel() }
                 },
-                cancellation: { completion(Swift.Result.failure(NetworkError.canceled)) }
+                cancellation: { completion(Result.failure(NetworkError.canceled)) }
             )
             
             return source
@@ -104,7 +104,7 @@ open class APIClient: NSObject, NetworkClient {
         return _execute(resultProducer, deserializer: self.deserializer, parser: parser, completion: completion)
     }
     
-    private func _execute<T>(_ resultProducer: @escaping (@escaping APIResultResponse) -> Cancelable, deserializer: Deserializer, parser: T, completion: @escaping (Swift.Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser {
+    private func _execute<T>(_ resultProducer: @escaping (@escaping APIResultResponse) -> Cancelable, deserializer: Deserializer, parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) -> Cancelable where T: ResponseParser {
         return resultProducer { response in
             let validatedResult = self.validateResult(response)
             
@@ -126,7 +126,7 @@ open class APIClient: NSObject, NetworkClient {
         }
     }
     
-    private func validateResult(_ result: Result<HTTPResponse, Error>) -> Swift.Result<HTTPResponse, Error> {
+    private func validateResult(_ result: Result<HTTPResponse, Error>) -> Result<HTTPResponse, Error> {
         switch result {
         case .success(let response):
             self.didReceive(response)
@@ -158,7 +158,7 @@ open class APIClient: NSObject, NetworkClient {
         }
     }
     
-    private func proccessResponse<T>(response: (Swift.Result<HTTPResponse, Error>), parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) where T: ResponseParser {
+    private func proccessResponse<T>(response: (Result<HTTPResponse, Error>), parser: T, completion: @escaping (Result<T.Representation, Error>) -> Void) where T: ResponseParser {
         let result = validateResult(response)
         
         switch result {

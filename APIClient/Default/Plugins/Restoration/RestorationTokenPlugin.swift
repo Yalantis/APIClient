@@ -17,7 +17,7 @@ public protocol TokenType {
 public class RestorationTokenPlugin: PluginType {
     
     /// callback that provides result of request made to restore the session; captured
-    public var restorationResultProvider: ((@escaping (Swift.Result<TokenType, Error>) -> Void) -> Void)?
+    public var restorationResultProvider: ((@escaping (Result<TokenType, Error>) -> Void) -> Void)?
     
     let shouldHaltRequestsTillResolve: Bool
     weak var delegate: RestorationTokenPluginDelegate?
